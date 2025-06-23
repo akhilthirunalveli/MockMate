@@ -5,11 +5,29 @@ import { validateEmail } from "../../utils/helper";
 import axiosInstance from "../../utils/axiosInstance";
 import { API_PATHS } from "../../utils/apiPaths";
 import { UserContext } from "../../context/userContext";
+// Add Firebase imports at the top
+import { initializeApp, getApps } from "firebase/app";
+import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+
+// Initialize Firebase app if not already initialized
+if (!getApps().length) {
+  initializeApp({
+    apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+    authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+    projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+    storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+    messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+    appId: import.meta.env.VITE_FIREBASE_APP_ID,
+    measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID
+  });
+}
 
 const Login = ({ setCurrentPage }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
+  // Add loading state for Google login
+  const [googleLoading, setGoogleLoading] = useState(false);
 
   const { updateUser } = useContext(UserContext);
 
@@ -46,11 +64,49 @@ const Login = ({ setCurrentPage }) => {
         navigate("/dashboard");
       }
     } catch (error) {
-      if (error.response && error.response.data.message) {
+      // Log error for debugging
+      console.error("Login error:", error);
+
+      // Show backend error message if available, otherwise generic message
+      if (error.response && error.response.data && error.response.data.message) {
         setError(error.response.data.message);
+      } else if (error.message) {
+        setError(error.message);
       } else {
-        setError("Something went wrong. Please try again.");
+        setError("Server error. Please try again later.");
       }
+    }
+  };
+
+  // Add Google login handler
+  const handleGoogleLogin = async () => {
+    setGoogleLoading(true);
+    const auth = getAuth();
+    const provider = new GoogleAuthProvider();
+    try {
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+      if (!user) throw new Error("No user found");
+      const idToken = await user.getIdToken();
+      // NOTE: This endpoint must be implemented in your backend!
+      // It should accept { idToken } and return { token, ...userInfo }
+      const response = await axiosInstance.post("/api/auth/firebase-login", { idToken });
+      const { token, ...userInfo } = response.data;
+      if (token) {
+        localStorage.setItem("token", token);
+        updateUser(userInfo);
+        // Force reload to re-initialize context from localStorage if needed
+        window.location.href = "/dashboard";
+      }
+    } catch (error) {
+      // Show a more descriptive error if endpoint is missing
+      if (error.response && error.response.status === 404) {
+        setError("Google login is not available. Please ask the admin to enable /api/auth/firebase-login on the backend.");
+      } else {
+        setError("Google login failed. Please try again.");
+      }
+    } finally {
+      setGoogleLoading(false);
     }
   };
 
@@ -115,11 +171,9 @@ const Login = ({ setCurrentPage }) => {
           {/* Login with Google button */}
           <button
             type="button"
-            className="w-full flex items-center justify-center gap-2 mt-3 py-2 rounded-lg border border-gray-300 bg-white hover:bg-gray-50 transition font-medium text-gray-700 shadow-sm"
-            onClick={() => {
-              // You can implement your Google login logic here
-              window.location.href = "/api/auth/google"; // or your OAuth endpoint
-            }}
+            className="w-full flex items-center justify-center gap-2 mt-3 py-2 rounded-lg border border-gray-300 bg-white hover:bg-gray-50 transition font-medium text-gray-700 shadow-sm cursor-pointer"
+            onClick={handleGoogleLogin}
+            disabled={googleLoading}
           >
             <svg width="20" height="20" viewBox="0 0 48 48" className="mr-2" style={{ display: "inline" }}>
               <g>
@@ -129,7 +183,7 @@ const Login = ({ setCurrentPage }) => {
                 <path fill="#EA4335" d="M43.6 20.5h-1.9V20H24v8h11.3c-0.7 2-2.1 3.8-4.1 5.1l6.9 5.7C41.9 37.1 44 31.9 44 25c0-1.3-.1-2.7-.4-4.5z"/>
               </g>
             </svg>
-            Login with Google
+            {googleLoading ? "Logging in..." : "Login with Google"}
           </button>
 
           <p className="text-[13px] text-slate-800 mt-3">

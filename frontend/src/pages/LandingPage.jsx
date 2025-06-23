@@ -245,8 +245,8 @@ function LandingPage() {
               {user ? (
                 <button
                   style={{
-                    background: "#000", // changed to solid black
-                    border: "2px solid #fff", // changed to solid white border
+                    background: "#000",
+                    border: "2px solid #fff",
                     borderRadius: "10em",
                     padding: "0.4em 1.6em",
                     color: "#fff",
@@ -265,7 +265,12 @@ function LandingPage() {
                   onClick={() => navigate("/dashboard")}
                 >
                   <img
-                    src={user.profileImageUrl || "https://ui-avatars.com/api/?name=" + encodeURIComponent(user.name || user.email || "U")}
+                    src={
+                      user.profileImageUrl ||
+                      user.photoURL ||
+                      "https://ui-avatars.com/api/?name=" +
+                        encodeURIComponent(user.name || user.email || "U")
+                    }
                     alt="profile"
                     style={{
                       width: "2.5em",
@@ -275,6 +280,7 @@ function LandingPage() {
                       marginRight: "0.9em",
                       background: "#222"
                     }}
+                    referrerPolicy="no-referrer"
                   />
                   <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start" }}>
                     <span style={{ fontWeight: 700, fontSize: "1.08em", color: "#fff" }}>

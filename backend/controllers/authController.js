@@ -1,6 +1,7 @@
 const User = require("../models/User");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const admin = require("firebase-admin");
 
 // Generate JWT Token
 const generateToken = (userId) => {
@@ -91,4 +92,54 @@ const getUserProfile = async (req, res) => {
   }
 };
 
-module.exports = { registerUser, loginUser, getUserProfile };
+// @desc    Login/Register user with Firebase OAuth
+// @route   POST /api/auth/firebase-login
+// @access  Public
+const firebaseLogin = async (req, res) => {
+  try {
+    const { idToken } = req.body;
+    if (!idToken) {
+      return res.status(400).json({ message: "No Firebase ID token provided" });
+    }
+
+    // Verify Firebase token
+    const decodedToken = await admin.auth().verifyIdToken(idToken);
+    const { email, name, picture, uid } = decodedToken;
+
+    if (!email) {
+      return res.status(400).json({ message: "No email found in Firebase token" });
+    }
+
+    // Try to find user in DB
+    let user = await User.findOne({ email });
+
+    // If user doesn't exist, create one
+    if (!user) {
+      user = await User.create({
+        name: name || "Firebase User",
+        email,
+        password: uid, // Store UID as password hash placeholder (not used)
+        profileImageUrl: picture || null,
+      });
+    } else {
+      // Always update profileImageUrl if changed (for returning users)
+      if (picture && user.profileImageUrl !== picture) {
+        user.profileImageUrl = picture;
+        await user.save();
+      }
+    }
+
+    // Return user data with JWT
+    res.json({
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      profileImageUrl: user.profileImageUrl,
+      token: generateToken(user._id),
+    });
+  } catch (error) {
+    res.status(401).json({ message: "Firebase authentication failed", error: error.message });
+  }
+};
+
+module.exports = { registerUser, loginUser, getUserProfile, firebaseLogin };

@@ -1,5 +1,5 @@
 const express = require("express");
-const { registerUser, loginUser, getUserProfile } = require("../controllers/authController");
+const { registerUser, loginUser, getUserProfile, firebaseLogin } = require("../controllers/authController");
 const { protect } = require("../middlewares/authMiddleware");
 const upload = require("../middlewares/uploadMiddleware");
 
@@ -10,14 +10,11 @@ router.post("/register", registerUser);   // Register User
 router.post("/login", loginUser);         // Login User
 router.get("/profile", protect, getUserProfile);  // Get User Profile
 
-router.post("/upload-image", upload.single("image"), (req, res) => {
-  if (!req.file) {
-    return res.status(400).json({ message: "No file uploaded" });
-  }
-  const imageUrl = `${req.protocol}://${req.get("host")}/uploads/${
-    req.file.filename
-  }`;
-  res.status(200).json({ imageUrl });
+// Firebase OAuth login
+router.post("/firebase-login", async (req, res) => {
+  const { idToken } = req.body;
+  return firebaseLogin(req, res);
 });
+
 
 module.exports = router;

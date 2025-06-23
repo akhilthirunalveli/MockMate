@@ -34,11 +34,18 @@ const ProfileInfoCard = () => {
           className="flex items-center cursor-pointer"
           onClick={() => setIsOpen(!isOpen)}
         >
-          <img
-            src={user.profileImageUrl}
-            alt={user.name}
-            className="w-10 h-9 bg-gray-900 rounded-full mr-3"
-          />
+          {user.profileImageUrl || user.photoURL ? (
+            <img
+              src={user.profileImageUrl || user.photoURL}
+              alt={user.name}
+              className="w-10 h-10 bg-gray-900 rounded-full mr-3 object-cover"
+              referrerPolicy="no-referrer"
+            />
+          ) : (
+            <div className="w-10 h-10 bg-gray-900 rounded-full mr-3 flex items-center justify-center text-white font-bold text-lg">
+              {user.name ? user.name[0] : "U"}
+            </div>
+          )}
           <div>
             <div className="text-[15px] text-white font-bold leading-3">
               {user.name || ""}
@@ -65,3 +72,4 @@ const ProfileInfoCard = () => {
 };
 
 export default ProfileInfoCard;
+  
