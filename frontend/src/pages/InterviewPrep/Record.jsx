@@ -4,32 +4,35 @@ import { MdMic, MdMicOff, MdVideocam, MdVideocamOff, MdFlipCameraAndroid, MdHome
 
 const Record = () => {
   const videoRef = useRef(null);
-  const [micOn, setMicOn] = useState(true);
-  const [cameraOn, setCameraOn] = useState(true);
-  const [mirrored, setMirrored] = useState(true);
+  const [micOn, setMicOn] = useState(false);
+  const [cameraOn, setCameraOn] = useState(false);
+  const [mirrored, setMirrored] = useState(false);
 
-  useEffect(() => {
-    const getCamera = async () => {
-      try {
-        const stream = await navigator.mediaDevices.getUserMedia({
-          video: { facingMode: "user" },
-          audio: true,
-        });
-        if (videoRef.current) {
-          videoRef.current.srcObject = stream;
-        }
-      } catch (err) {
-        console.error("Error accessing camera:", err);
-      }
-    };
-    getCamera();
-    return () => {
-      if (videoRef.current && videoRef.current.srcObject) {
-        const tracks = videoRef.current.srcObject.getTracks();
-        tracks.forEach((track) => track.stop());
-      }
-    };
-  }, []);
+  // useEffect(() => {
+  //   const getCamera = async () => {
+  //     try {
+  //       const stream = await navigator.mediaDevices.getUserMedia({
+  //         video: { facingMode: "user" },
+  //         audio: true,
+  //       });
+  //       if (videoRef.current) {
+  //         videoRef.current.srcObject = stream;
+  //         // Disable all tracks by default
+  //         stream.getAudioTracks().forEach((track) => (track.enabled = false));
+  //         stream.getVideoTracks().forEach((track) => (track.enabled = false));
+  //       }
+  //     } catch (err) {
+  //       console.error("Error accessing camera:", err);
+  //     }
+  //   };
+  //   getCamera();
+  //   return () => {
+  //     if (videoRef.current && videoRef.current.srcObject) {
+  //       const tracks = videoRef.current.srcObject.getTracks();
+  //       tracks.forEach((track) => track.stop());
+  //     }
+  //   };
+  // }, []);
 
   // Prevent scrolling on this page
   useEffect(() => {
