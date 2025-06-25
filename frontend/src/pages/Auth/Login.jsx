@@ -28,6 +28,7 @@ const Login = ({ setCurrentPage }) => {
   const [error, setError] = useState(null);
   // Add loading state for Google login
   const [googleLoading, setGoogleLoading] = useState(false);
+  const [loginLoading, setLoginLoading] = useState(false);
 
   const { updateUser } = useContext(UserContext);
 
@@ -36,14 +37,16 @@ const Login = ({ setCurrentPage }) => {
   // Handle Login Form Submit
   const handleLogin = async (e) => {
     e.preventDefault();
-
+    setLoginLoading(true);
     if (!validateEmail(email)) {
       setError("Please enter a valid email address.");
+      setLoginLoading(false);
       return;
     }
 
     if (!password) {
       setError("Please enter the password");
+      setLoginLoading(false);
       return;
     }
 
@@ -63,6 +66,7 @@ const Login = ({ setCurrentPage }) => {
         updateUser(response.data)
         navigate("/dashboard");
       }
+      setLoginLoading(false);
     } catch (error) {
       // Log error for debugging
       console.error("Login error:", error);
@@ -75,6 +79,7 @@ const Login = ({ setCurrentPage }) => {
       } else {
         setError("Server error. Please try again later.");
       }
+      setLoginLoading(false);
     }
   };
 
@@ -164,8 +169,8 @@ const Login = ({ setCurrentPage }) => {
 
           {error && <p className="text-red-500 text-xs pb-2.5">{error}</p>}
 
-          <button type="submit" className="btn-primary">
-            LOGIN
+          <button type="submit" className="btn-primary" disabled={loginLoading || googleLoading}>
+            {loginLoading ? "Logging in..." : "LOGIN"}
           </button>
 
           {/* Login with Google button */}
@@ -187,7 +192,7 @@ const Login = ({ setCurrentPage }) => {
           </button>
 
           <p className="text-[13px] text-slate-800 mt-3">
-            Don’t have an account?{" "}
+            Don't have an account?{" "}
             <button
               className="font-medium text-primary underline cursor-pointer"
               onClick={() => {
