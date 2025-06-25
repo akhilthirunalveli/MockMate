@@ -76,8 +76,6 @@ GOOGLE_TTS_API_KEY=your_google_tts_key
 JWT_SECRET=your_jwt_secret
 ```
 
----
-
 ## 📊 System Architecture
 
 ```mermaid
