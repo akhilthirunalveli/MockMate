@@ -38,7 +38,9 @@ const App = () => {
           }}
         />
       </div>
+      <Analytics/>
     </UserProvider>
+    
   );
 };
 
