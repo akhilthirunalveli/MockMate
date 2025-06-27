@@ -39,6 +39,7 @@ const App = () => {
         />
       </div>
       <Analytics/>
+      <SpeedInsights/>
     </UserProvider>
     
   );
