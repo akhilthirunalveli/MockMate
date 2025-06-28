@@ -10,49 +10,5 @@
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
-  <script>
-    // Add this to your HTML or JS file
-    // Optimized cursor JavaScript - no lag
-document.addEventListener('DOMContentLoaded', function() {
-    const cursor = document.createElement('div');
-    cursor.className = 'custom-cursor';
-    document.body.appendChild(cursor);
-
-    let mouseX = 0;
-    let mouseY = 0;
-
-    // Use requestAnimationFrame for smooth movement
-    function updateCursor() {
-        cursor.style.left = mouseX + 'px';
-        cursor.style.top = mouseY + 'px';
-        requestAnimationFrame(updateCursor);
-    }
-
-    document.addEventListener('mousemove', (e) => {
-        mouseX = e.clientX;
-        mouseY = e.clientY;
-    });
-
-    // Start the animation loop
-    updateCursor();
-
-    // Add hover effects (throttled)
-    let hoverTimeout;
-    document.querySelectorAll('a, button, .btn-primary, .btn-small, [role="button"]').forEach(el => {
-        el.addEventListener('mouseenter', () => {
-            clearTimeout(hoverTimeout);
-            cursor.classList.add('hover');
-        });
-        el.addEventListener('mouseleave', () => {
-            hoverTimeout = setTimeout(() => {
-                cursor.classList.remove('hover');
-            }, 50);
-        });
-    });
-
-    // Add click effects
-    document.addEventListener('mousedown', () => cursor.classList.add('click'));
-    document.addEventListener('mouseup', () => cursor.classList.remove('click'));
-});
-  </script>
+  
 </html>
