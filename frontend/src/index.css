@@ -6,7 +6,6 @@
 
 @theme {
   --font-display: "nunito", sans-serif;
-
 }
 
 @layer base {
@@ -17,21 +16,71 @@
   body {
     background-color: #fcfbfc;
     overflow-x: hidden;
+    cursor: none; /* Hide default cursor */
+  }
+
+  /* Hide default cursor on all elements */
+  * {
+    cursor: none !important;
   }
 }
+/* Custom Colorful Cursor - Optimized */
+.custom-cursor {
+  position: fixed;
+  width: 16px;
+  height: 16px;
+  background: radial-gradient(circle, #ff6b6b, #4ecdc4);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  will-change: transform;
+  transform: translate(-50%, -50%);
+  transition: all 0.1s ease-out;
+}
 
-/* Custom scrollbar styling */
+@keyframes cursor-color-shift {
+  0% { background: radial-gradient(circle, #ff6b6b, #4ecdc4); }
+  25% { background: radial-gradient(circle, #4ecdc4, #45b7d1); }
+  50% { background: radial-gradient(circle, #45b7d1, #feca57); }
+  75% { background: radial-gradient(circle, #feca57, #ff9ff3); }
+  100% { background: radial-gradient(circle, #ff9ff3, #ff6b6b); }
+}
+
+.custom-cursor {
+  animation: cursor-color-shift 4s linear infinite;
+}
+
+/* Cursor hover effects */
+.custom-cursor.hover {
+  transform: translate(-50%, -50%) scale(1.3);
+  filter: brightness(1.2);
+}
+
+.custom-cursor.click {
+  transform: translate(-50%, -50%) scale(0.7);
+  background: radial-gradient(circle, #ff0080, #8800ff);
+}
+
+
+/* Custom scrollbar styling for WebKit browsers */
 .custom-scrollbar::-webkit-scrollbar {
-  width: 2px;
+  width: 8px;
+  height: 8px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background-color: rgba(100, 100, 100, 0.4);
+  background-color: rgba(0, 0, 0, 0.4);
   border-radius: 10px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-track {
   background: transparent;
+}
+
+/* Optional: Firefox support */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0,0,0,0.4) transparent;
 }
 
 @layer utilities {
@@ -85,11 +134,9 @@
 }
 
 .btn-primary {
-  @apply w-full flex items-center justify-center gap-3 text-sm font-medium text-white bg-black  p-[10px] rounded-md my-1 cursor-pointer;
+  @apply w-full flex items-center justify-center gap-3 text-sm font-medium text-white bg-black  p-[10px] rounded-md my-1;
 }
 
 .btn-small {
-  @apply flex items-center justify-center gap-3 bg-black text-sm font-semibold text-white px-7 py-2 rounded-lg hover:bg-black hover:text-white transition-colors cursor-pointer
+  @apply flex items-center justify-center gap-3 bg-black text-sm font-semibold text-white px-7 py-2 rounded-lg hover:bg-black hover:text-white transition-colors
 }
-
-
