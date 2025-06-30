@@ -1,4 +1,3 @@
-More actions
 # Mockmate
 
 <div align="center">
