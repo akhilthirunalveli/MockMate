@@ -63,7 +63,8 @@ const Login = ({ setCurrentPage }) => {
 
       if (token) {
         localStorage.setItem("token", token);
-        updateUser(response.data)
+        updateUser(response.data);
+        // Use navigate instead of window.location.href for SPA speed
         navigate("/dashboard");
       }
       setLoginLoading(false);

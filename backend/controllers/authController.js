@@ -53,23 +53,24 @@ const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    const user = await User.findOne({ email });
+    // Use lean for faster query, select only needed fields
+    const user = await User.findOne({ email }).select("+password name email profileImageUrl").lean();
     if (!user) {
       return res.status(500).json({ message: "Invalid email or password" });
     }
 
-    // Compare password
+    // Compare password (need to use bcrypt.compare with hashed password)
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return res.status(500).json({ message: "Invalid email or password" });
     }
 
+    // Remove password from user object before sending
+    delete user.password;
+
     // Return user data with JWT
     res.json({
-      _id: user._id,
-      name: user.name,
-      email: user.email,
-      profileImageUrl: user.profileImageUrl,
+      ...user,
       token: generateToken(user._id),
     });
   } catch (error) {
