@@ -34,7 +34,7 @@ Integrated  Gemini API  for question generation and response evaluation, coupled
 
 - Configured MongoDB  database schemas  with optimized indexing strategies for efficient storage and retrieval of user profiles, interview sessions, and performance metrics. 
 
-## 🏃‍♂️ Quick Start
+## Quick Start
 
 ## Video
 ### Prerequisites
@@ -78,7 +78,7 @@ JWT_SECRET=your_jwt_secret
 
 ---
 
-## 📊 System Architecture
+## System Architecture
 
 ```mermaid
 graph TB
