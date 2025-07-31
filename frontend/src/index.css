@@ -90,7 +90,7 @@
 }
 
 .btn-primary {
-  @apply w-full flex items-center justify-center gap-3 text-sm font-medium text-white bg-black  p-[10px] rounded-md my-1;
+  @apply w-full flex items-center justify-center gap-3 text-sm font-medium text-white bg-black  p-[10px] rounded-md my-1 cursor-pointer;
 }
 
 .btn-small {

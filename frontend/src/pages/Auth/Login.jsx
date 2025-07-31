@@ -72,8 +72,10 @@ const Login = ({ setCurrentPage }) => {
       // Log error for debugging
       console.error("Login error:", error);
 
-      // Show backend error message if available, otherwise generic message
-      if (error.response && error.response.data && error.response.data.message) {
+      // Improved error handling for status 500
+      if (error.response && error.response.status === 500) {
+        setError("Server error (500). Please try again later or contact support.");
+      } else if (error.response && error.response.data && error.response.data.message) {
         setError(error.response.data.message);
       } else if (error.message) {
         setError(error.message);
@@ -128,6 +130,7 @@ const Login = ({ setCurrentPage }) => {
         overflow: "hidden",
       }}
     >
+
       <style>
         {`
           @keyframes gradientBG {

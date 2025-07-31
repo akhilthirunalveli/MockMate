@@ -45,7 +45,7 @@ app.use(
 connectDB()
 
 // Middleware
-app.use(express.json());
+app.use(express.json()); // <-- This must be before your routes
 
 // Routes
 app.use("/api/auth", authRoutes);

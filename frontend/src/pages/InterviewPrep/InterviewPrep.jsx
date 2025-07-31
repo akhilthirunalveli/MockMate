@@ -120,9 +120,9 @@ const InterviewPrep = () => {
       }
     } catch (error) {
       if (error.response && error.response.data.message) {
-        setError(error.response.data.message);
+        setErrorMsg(error.response.data.message); // <-- fix: use setErrorMsg
       } else {
-        setError("Something went wrong. Please try again.");
+        setErrorMsg("Something went wrong. Please try again."); // <-- fix: use setErrorMsg
       }
     } finally {
       setIsUpdateLoader(false);

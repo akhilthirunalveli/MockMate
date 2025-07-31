@@ -5,6 +5,7 @@ import Login from "./Auth/Login";
 import SignUp from "./Auth/SignUp";
 import { UserContext } from "../context/userContext";
 import GeminiLogo from "../assets/gemini-color.svg"; // add this line
+import GithubLogo from "../assets/github.png"; // add GitHub logo import
 
 const TYPEWRITER_TEXT = "MockMate";
 const TYPING_SPEED = 100; // smoother, slightly faster
@@ -321,6 +322,50 @@ function LandingPage() {
           )}
         </>
       )}
+      {/* Add this block for the credit */}
+      <div
+        className="credit-bar"
+        style={{
+          position: "fixed",
+          right: "1.5vw",
+          bottom: "1.2vw",
+          display: "flex",
+          alignItems: "center",
+          gap: "0.5em",
+          background: "rgba(0,0,0,0.12)",
+          color: "#b6b6b6",
+          fontSize: "1.05em",
+          fontWeight: 400,
+          borderRadius: "999px",
+          padding: "0.35em 1.1em 0.35em 0.7em",
+          zIndex: 99,
+          opacity: 0.45,
+          boxShadow: "0 2px 12px 0 rgba(0,0,0,0.08)",
+          transition: "opacity 0.2s, background 0.2s, color 0.2s",
+          userSelect: "none",
+          WebkitUserSelect: "none",
+          MozUserSelect: "none",
+          msUserSelect: "none"
+        }}
+      >
+        Developed By
+        <img
+          src={GithubLogo}
+          alt="GitHub"
+          style={{
+            height: "1.25em",
+            width: "1.25em",
+            marginRight: "0.3em",
+            verticalAlign: "middle",
+            opacity: 0.45,
+            filter: "grayscale(0.7)",
+            transition: "filter 0.2s, opacity 0.2s",
+            userSelect: "none",
+            pointerEvents: "none"
+          }}
+        />
+        akhilthirunalveli
+      </div>
       <style>
         {`
           @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;600&display=swap');
@@ -361,6 +406,21 @@ function LandingPage() {
             color: #fff;
             box-shadow: 0 4px 24px 0 rgba(0,0,0,0.22);
             transform: scale(1.045);
+          }
+          .credit-bar:hover {
+            opacity: 1;
+            background: rgba(0,0,0,0.38);
+            color: #fff;
+          }
+          .credit-bar:hover img {
+            filter: none;
+            opacity: 1;
+          }
+          .credit-bar, .credit-bar * {
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
           }
         `}
       </style>
