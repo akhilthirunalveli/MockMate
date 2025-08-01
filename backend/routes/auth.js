@@ -5,6 +5,8 @@ const {
   loginUser,
   getUserProfile,
   firebaseLogin,
+  getAllUsers,
+  deleteUser, // Added this function
 } = require("../controllers/authController");
 const { protect } = require("../middlewares/authMiddleware");
 
@@ -14,24 +16,23 @@ const router = express.Router();
 router.post("/register", registerUser); // Register User
 router.post("/login", loginUser); // Login User
 router.get("/profile", protect, getUserProfile); // Get User Profile
-
-// Firebase OAuth login
+router.get("/users", getAllUsers); // Get all users
+router.delete("/users/:id", deleteUser); // Delete User// Firebase OAuth login
 router.post("/firebase-login", firebaseLogin);
 
 // Start Google OAuth
 router.get(
-  "/google",
-  passport.authenticate("google", { scope: ["profile", "email"] })
+  "/google",
+  passport.authenticate("google", { scope: ["profile", "email"] })
 );
 
 // Google OAuth callback
 router.get(
-  "/google/callback",
-  passport.authenticate("google", {
-    successRedirect: "/dashboard", // or wherever you want
-    failureRedirect: "/login",
-  })
+  "/google/callback",
+  passport.authenticate("google", {
+    successRedirect: "/dashboard", // or wherever you want
+    failureRedirect: "/login",
+  })
 );
-
 
 module.exports = router;

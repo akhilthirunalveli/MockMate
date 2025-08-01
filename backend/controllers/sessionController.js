@@ -105,3 +105,18 @@ exports.deleteSession = async (req, res) => {
     res.status(500).json({ success: false, message: "Server Error" });
   }
 };
+
+// @desc    Get all sessions for admin
+// @route   GET /api/sessions/all
+// @access  Public (Admin)
+exports.getAllSessions = async (req, res) => {
+  try {
+    const sessions = await Session.find({})
+      .populate("user", "name email")
+      .populate("questions")
+      .sort({ createdAt: -1 });
+    res.status(200).json(sessions);
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Server Error" });
+  }
+};

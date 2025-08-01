@@ -8,6 +8,10 @@ import Dashboard from "./pages/Home/Dashboard";
 import InterviewPrep from "./pages/InterviewPrep/InterviewPrep";
 import UserProvider from "./context/userContext";
 import Record from "./pages/InterviewPrep/Record";
+import Admin from "./pages/admin";
+
+
+
 
 const App = () => {
   return (
@@ -15,17 +19,11 @@ const App = () => {
       <div>
         <Router>
           <Routes>
-            {/* Default Route */}
             <Route path="/" element={<LandingPage />} />
             <Route path="/dashboard" element={<Dashboard />} />
-            <Route
-              path="/interview-prep/:sessionId"
-              element={<InterviewPrep />}
-            />
-            <Route
-              path="/interview-prep/record"
-              element={<Record />}
-            />
+            <Route path="/admin" element={<Admin />} />
+            <Route path="/interview-prep/:sessionId" element={<InterviewPrep />}/>
+            <Route path="/interview-prep/record" element={<Record />}/>
           </Routes>
         </Router>
 

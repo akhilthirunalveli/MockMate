@@ -81,3 +81,23 @@ exports.updateQuestionNote = async (req, res) => {
     res.status(500).json({ message: "Server Error" });
   }
 };
+
+// @desc    Get all questions for admin
+// @route   GET /api/questions/all
+// @access  Public (Admin)
+exports.getAllQuestions = async (req, res) => {
+  try {
+    const questions = await Question.find({})
+      .populate({
+        path: "session",
+        populate: {
+          path: "user",
+          select: "name email"
+        }
+      })
+      .sort({ createdAt: -1 });
+    res.status(200).json(questions);
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Server Error" });
+  }
+};
