@@ -259,7 +259,9 @@ const LoginPage = ({ onLogin }) => {
 
         <form onSubmit={handleSubmit}>
           <input
-            type="text"
+            type="tel"
+            inputMode="numeric"
+            pattern="[0-9]*"
             value={code}
             onChange={handleCodeChange}
             placeholder="••••"
@@ -762,10 +764,13 @@ const AdminDashboard = () => {
       <div style={{ 
         marginBottom: "clamp(0.8rem, 2.5vw, 1.2rem)", 
         display: "flex", 
-        flexWrap: "wrap", 
+        flexWrap: "nowrap", 
         gap: "clamp(0.3rem, 1.2vw, 0.4rem)",
         justifyContent: "flex-start",
-        width: "100%"
+        width: "100%",
+        overflowX: "auto",
+        scrollbarWidth: "thin",
+        WebkitOverflowScrolling: "touch"
       }}>
 
         <button
@@ -1603,6 +1608,31 @@ const AdminDashboard = () => {
         </>
       )}
       </div>
+      <style>{`
+        /* Custom scrollbar styling for tab navigation */
+        div[style*="overflowX: auto"]::-webkit-scrollbar {
+          height: 4px;
+        }
+        
+        div[style*="overflowX: auto"]::-webkit-scrollbar-track {
+          background: rgba(255, 255, 255, 0.1);
+          border-radius: 2px;
+        }
+        
+        div[style*="overflowX: auto"]::-webkit-scrollbar-thumb {
+          background: rgba(255, 255, 255, 0.3);
+          border-radius: 2px;
+        }
+        
+        div[style*="overflowX: auto"]::-webkit-scrollbar-thumb:hover {
+          background: rgba(255, 255, 255, 0.5);
+        }
+        
+        /* Firefox scrollbar styling */
+        div[style*="overflowX: auto"] {
+          scrollbar-color: rgba(255, 255, 255, 0.3) rgba(255, 255, 255, 0.1);
+        }
+      `}</style>
     </div>
   );
 };
