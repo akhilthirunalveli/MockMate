@@ -1,20 +1,22 @@
 import React, { useEffect, useState, lazy, Suspense } from "react";
 import { BASE_URL } from "../utils/apiPaths";
 
-// Lazy load chart components
-const PieChart = lazy(() => import("recharts").then(module => ({ default: module.PieChart })));
-const Pie = lazy(() => import("recharts").then(module => ({ default: module.Pie })));
-const Cell = lazy(() => import("recharts").then(module => ({ default: module.Cell })));
-const ResponsiveContainer = lazy(() => import("recharts").then(module => ({ default: module.ResponsiveContainer })));
-const Legend = lazy(() => import("recharts").then(module => ({ default: module.Legend })));
-const Tooltip = lazy(() => import("recharts").then(module => ({ default: module.Tooltip })));
-const BarChart = lazy(() => import("recharts").then(module => ({ default: module.BarChart })));
-const Bar = lazy(() => import("recharts").then(module => ({ default: module.Bar })));
-const XAxis = lazy(() => import("recharts").then(module => ({ default: module.XAxis })));
-const YAxis = lazy(() => import("recharts").then(module => ({ default: module.YAxis })));
-const CartesianGrid = lazy(() => import("recharts").then(module => ({ default: module.CartesianGrid })));
-const LineChart = lazy(() => import("recharts").then(module => ({ default: module.LineChart })));
-const Line = lazy(() => import("recharts").then(module => ({ default: module.Line })));
+// Import Recharts components directly to avoid lazy loading timing issues
+import { 
+  PieChart, 
+  Pie, 
+  Cell, 
+  ResponsiveContainer, 
+  Legend, 
+  Tooltip, 
+  BarChart, 
+  Bar, 
+  XAxis, 
+  YAxis, 
+  CartesianGrid, 
+  LineChart, 
+  Line 
+} from "recharts";
 
 // Loading skeleton component for charts
 const ChartSkeleton = ({ height = "300px" }) => (
@@ -161,7 +163,218 @@ if (!document.querySelector('link[href*="Montserrat"]')) {
   document.head.appendChild(link);
 }
 
+// Login Component
+const LoginPage = ({ onLogin }) => {
+  const [code, setCode] = useState("");
+  const [error, setError] = useState("");
+  const [isShaking, setIsShaking] = useState(false);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (code === "1110") {
+      onLogin();
+      setError("");
+    } else {
+      setError("Invalid access code. Please try again.");
+      setIsShaking(true);
+      setTimeout(() => setIsShaking(false), 500);
+      setCode("");
+    }
+  };
+
+  const handleCodeChange = (e) => {
+    const value = e.target.value.replace(/\D/g, "").slice(0, 4);
+    setCode(value);
+    if (error) setError("");
+  };
+
+  return (
+    <div style={{
+      minHeight: "100vh",
+      width: "100vw",
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "center",
+      alignItems: "center",
+      backgroundColor: "#000000",
+      backgroundImage: "radial-gradient(#222 1px, #000000 1px)",
+      backgroundSize: "20px 20px",
+      fontFamily: "'Montserrat', sans-serif",
+      position: "relative"
+    }}>
+      {/* Background blur elements for glass effect */}
+      <div style={{
+        position: "absolute",
+        top: "20%",
+        left: "20%",
+        width: "200px",
+        height: "200px",
+        background: "linear-gradient(45deg, rgba(0, 123, 255, 0.3), rgba(40, 167, 69, 0.3))",
+        borderRadius: "50%",
+        filter: "blur(60px)",
+        animation: "float1 6s ease-in-out infinite"
+      }}></div>
+      
+      <div style={{
+        position: "absolute",
+        top: "60%",
+        right: "15%",
+        width: "150px",
+        height: "150px",
+        background: "linear-gradient(45deg, rgba(255, 193, 7, 0.3), rgba(220, 53, 69, 0.3))",
+        borderRadius: "50%",
+        filter: "blur(50px)",
+        animation: "float2 8s ease-in-out infinite"
+      }}></div>
+
+      <div style={{
+        background: "rgba(255, 255, 255, 0.05)",
+        backdropFilter: "blur(20px)",
+        WebkitBackdropFilter: "blur(20px)",
+        border: "1px solid rgba(255, 255, 255, 0.1)",
+        borderRadius: "20px",
+        padding: "3rem 2.5rem",
+        maxWidth: "400px",
+        width: "90%",
+        textAlign: "center",
+        boxShadow: "0 25px 50px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.05)",
+        animation: isShaking ? "shake 0.5s ease-in-out" : "none",
+        position: "relative",
+        zIndex: 10
+      }}>
+        <h1 style={{
+          color: "rgba(255, 255, 255, 0.95)",
+          marginBottom: "0.5rem",
+          fontSize: "clamp(1.8rem, 4vw, 2.5rem)",
+          fontWeight: "700",
+          fontFamily: "'Montserrat', sans-serif",
+          textShadow: "0 2px 10px rgba(0, 0, 0, 0.3)"
+        }}>Admin Access</h1>
+        
+        <p style={{
+          color: "rgba(255, 255, 255, 0.7)",
+          marginBottom: "2rem",
+          fontSize: "clamp(0.9rem, 2.5vw, 1rem)"
+        }}>Enter 4-digit access code</p>
+
+        <form onSubmit={handleSubmit}>
+          <input
+            type="text"
+            value={code}
+            onChange={handleCodeChange}
+            placeholder="••••"
+            style={{
+              width: "100%",
+              padding: "1rem",
+              fontSize: "clamp(1.2rem, 3vw, 1.5rem)",
+              textAlign: "center",
+              background: "rgba(255, 255, 255, 0.08)",
+              backdropFilter: "blur(10px)",
+              WebkitBackdropFilter: "blur(10px)",
+              border: "1px solid rgba(255, 255, 255, 0.15)",
+              borderRadius: "12px",
+              color: "white",
+              marginBottom: "1rem",
+              fontFamily: "'Montserrat', sans-serif",
+              letterSpacing: "0.5rem",
+              outline: "none",
+              transition: "all 0.3s ease"
+            }}
+            onFocus={(e) => {
+              e.target.style.borderColor = "rgba(0, 123, 255, 0.5)";
+              e.target.style.boxShadow = "0 0 20px rgba(0, 123, 255, 0.2)";
+            }}
+            onBlur={(e) => {
+              e.target.style.borderColor = "rgba(255, 255, 255, 0.15)";
+              e.target.style.boxShadow = "none";
+            }}
+            maxLength="4"
+            autoFocus
+          />
+
+          {error && (
+            <div style={{
+              color: "rgba(220, 53, 69, 0.9)",
+              fontSize: "0.9rem",
+              marginBottom: "1rem",
+              padding: "0.5rem",
+              background: "rgba(220, 53, 69, 0.1)",
+              backdropFilter: "blur(10px)",
+              WebkitBackdropFilter: "blur(10px)",
+              border: "1px solid rgba(220, 53, 69, 0.3)",
+              borderRadius: "8px"
+            }}>
+              {error}
+            </div>
+          )}
+
+          <button
+            type="submit"
+            disabled={code.length !== 4}
+            style={{
+              width: "100%",
+              padding: "1rem",
+              fontSize: "clamp(1rem, 2.5vw, 1.1rem)",
+              fontWeight: "600",
+              background: code.length === 4 
+                ? "linear-gradient(135deg, rgba(0, 123, 255, 0.8), rgba(0, 86, 179, 0.8))"
+                : "rgba(255, 255, 255, 0.1)",
+              backdropFilter: "blur(10px)",
+              WebkitBackdropFilter: "blur(10px)",
+              color: "white",
+              border: code.length === 4 
+                ? "1px solid rgba(0, 123, 255, 0.3)" 
+                : "1px solid rgba(255, 255, 255, 0.2)",
+              borderRadius: "12px",
+              cursor: code.length === 4 ? "pointer" : "not-allowed",
+              fontFamily: "'Montserrat', sans-serif",
+              transition: "all 0.3s ease",
+              opacity: code.length === 4 ? 1 : 0.6,
+              boxShadow: code.length === 4 ? "0 8px 25px rgba(0, 123, 255, 0.2)" : "none"
+            }}
+            onMouseEnter={(e) => {
+              if (code.length === 4) {
+                e.target.style.transform = "translateY(-2px)";
+                e.target.style.boxShadow = "0 12px 35px rgba(0, 123, 255, 0.3)";
+              }
+            }}
+            onMouseLeave={(e) => {
+              if (code.length === 4) {
+                e.target.style.transform = "translateY(0px)";
+                e.target.style.boxShadow = "0 8px 25px rgba(0, 123, 255, 0.2)";
+              }
+            }}
+          >
+            Access Dashboard
+          </button>
+        </form>
+      </div>
+
+      <style>{`
+        @keyframes shake {
+          0%, 100% { transform: translateX(0); }
+          10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+          20%, 40%, 60%, 80% { transform: translateX(5px); }
+        }
+        
+        @keyframes float1 {
+          0%, 100% { transform: translate(0, 0) rotate(0deg); }
+          33% { transform: translate(30px, -30px) rotate(120deg); }
+          66% { transform: translate(-20px, 20px) rotate(240deg); }
+        }
+        
+        @keyframes float2 {
+          0%, 100% { transform: translate(0, 0) rotate(0deg); }
+          33% { transform: translate(-25px, -20px) rotate(-120deg); }
+          66% { transform: translate(25px, 25px) rotate(-240deg); }
+        }
+      `}</style>
+    </div>
+  );
+};
+
 const AdminDashboard = () => {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [users, setUsers] = useState([]);
   const [sessions, setSessions] = useState([]);
   const [questions, setQuestions] = useState([]);
@@ -171,6 +384,14 @@ const AdminDashboard = () => {
   const [expandedUsers, setExpandedUsers] = useState(new Set());
   const [connectionStatus, setConnectionStatus] = useState("testing");
   const [loadedTabs, setLoadedTabs] = useState(new Set(["analytics"])); // Track which tabs have been loaded
+
+  // Check for existing authentication on component mount
+  useEffect(() => {
+    const authStatus = localStorage.getItem("adminAuthenticated");
+    if (authStatus === "true") {
+      setIsAuthenticated(true);
+    }
+  }, []);
 
   // Test backend connectivity
   const testConnection = async () => {
@@ -218,6 +439,9 @@ const AdminDashboard = () => {
   };
 
   useEffect(() => {
+    // Only fetch data if authenticated
+    if (!isAuthenticated) return;
+    
     const fetchData = async () => {
       setLoading(true);
       setError("");
@@ -289,7 +513,22 @@ const AdminDashboard = () => {
     };
 
     fetchData();
-  }, []);
+  }, [isAuthenticated]);
+
+  const handleLogin = () => {
+    setIsAuthenticated(true);
+    localStorage.setItem("adminAuthenticated", "true");
+  };
+
+  const handleLogout = () => {
+    setIsAuthenticated(false);
+    localStorage.removeItem("adminAuthenticated");
+  };
+
+  // Show login page if not authenticated
+  if (!isAuthenticated) {
+    return <LoginPage onLogin={handleLogin} />;
+  }
 
   const handleDeleteUser = async (userId) => {
     if (!window.confirm("Are you sure you want to delete this user? This will also delete all their sessions and questions.")) {
@@ -419,58 +658,114 @@ const AdminDashboard = () => {
   return (
     <div style={{
       minHeight: "100vh",
-      width: "100vw",
-      display: "flex",
-      flexDirection: "column",
-      justifyContent: "center",
-      alignItems: "center",
+      width: "100%",
       backgroundColor: "#000000",
       backgroundImage: "radial-gradient(#222 1px, #000000 1px)",
       backgroundSize: "20px 20px",
-      padding: "0 4vw",
       transition: "background 0.3s, color 0.3s",
-      fontFamily: "'Montserrat', sans-serif"
+      fontFamily: "'Montserrat', sans-serif",
+      margin: "0",
+      padding: "0"
     }}>
       <div style={{ 
-        position: "fixed",
-        top: "0",
-        padding: "3rem 3rem", 
+        padding: "clamp(1.5rem, 2vw, 1.5rem)", 
         width: "100%", 
-        height: "100%",
-        overflowY: "auto",
-        zIndex: 1000,
-        maxWidth: "100vw"
+        minHeight: "100vh",
+        boxSizing: "border-box",
+        maxWidth: "100vw",
+        overflow: "hidden"
       }}>
-        <h1 style={{ 
-          color: "white", 
-          textAlign: "left", 
-          marginBottom: "1.5rem",
-          fontSize: "clamp(2rem, 5vw, 3.5rem)",
-          fontWeight: "700",
-          fontFamily: "'Montserrat', sans-serif"
-        }}>Dashboard</h1>
+        <div style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          marginBottom: "clamp(0.75rem, 2vw, 1rem)",
+          flexWrap: "wrap",
+          gap: "1rem",
+          width: "100%"
+        }}>
+          <h1 style={{ 
+            color: "white", 
+            textAlign: "left", 
+            margin: "0",
+            fontSize: "clamp(1.5rem, 3.5vw, 2.5rem)",
+            fontWeight: "700",
+            fontFamily: "'Montserrat', sans-serif"
+          }}>Dashboard</h1>
+
+          <button
+            onClick={handleLogout}
+            style={{
+              padding: "clamp(0.35rem, 1.5vw, 0.45rem) clamp(0.7rem, 2.5vw, 0.9rem)",
+              backgroundColor: "#dc3545",
+              color: "white",
+              border: "none",
+              borderRadius: "20px",
+              cursor: "pointer",
+              fontSize: "clamp(0.75rem, 2vw, 0.85rem)",
+              fontFamily: "'Montserrat', sans-serif",
+              fontWeight: "500",
+              transition: "all 0.2s ease",
+              display: "flex",
+              alignItems: "center",
+              gap: "0.5rem"
+            }}
+            onMouseEnter={(e) => e.target.style.backgroundColor = "#c82333"}
+            onMouseLeave={(e) => e.target.style.backgroundColor = "#dc3545"}
+          >
+            Logout
+          </button>
+        </div>
 
         {/* Connection Status Indicator */}
         <div style={{ 
-          marginBottom: "1rem", 
-          padding: "0.5rem 1rem", 
-          borderRadius: "20px", 
-          display: "inline-block",
+          marginBottom: "clamp(0.6rem, 2vw, 0.8rem)", 
+          padding: "clamp(0.4rem, 2vw, 0.6rem) clamp(0.6rem, 2.5vw, 0.8rem)", 
+          borderRadius: "clamp(6px, 1.5vw, 10px)", 
+          display: "block",
+          width: "100%",
+          maxWidth: "100%",
           backgroundColor: connectionStatus === "connected" ? "#28a745" : connectionStatus === "failed" ? "#dc3545" : "#ffc107",
           color: "white",
-          fontSize: "0.8rem",
-          fontWeight: "500"
+          fontSize: "clamp(0.7rem, 2vw, 0.8rem)",
+          fontWeight: "500",
+          fontFamily: "'Montserrat', sans-serif",
+          boxSizing: "border-box"
         }}>
-          Backend: {connectionStatus === "connected" ? "✓ Connected" : connectionStatus === "failed" ? "✗ Disconnected" : "⏳ Testing..."}
-          {connectionStatus === "connected" && ` (${BASE_URL})`}
+          <div style={{ 
+            display: "flex", 
+            flexDirection: "column",
+            gap: "clamp(0.2rem, 0.8vw, 0.4rem)",
+            alignItems: "flex-start"
+          }}>
+            <div style={{
+              fontSize: "clamp(0.7rem, 2vw, 0.8rem)",
+              fontWeight: "600"
+            }}>
+              Backend: {connectionStatus === "connected" ? "✓ Connected" : connectionStatus === "failed" ? "✗ Disconnected" : "⏳ Testing..."}
+            </div>
+            {connectionStatus === "connected" && (
+              <div style={{ 
+                fontSize: "clamp(0.6rem, 1.6vw, 0.7rem)", 
+                opacity: "0.85",
+                wordBreak: "break-all",
+                lineHeight: "1.3",
+                fontWeight: "400",
+                color: "rgba(255, 255, 255, 0.9)"
+              }}>
+                {BASE_URL}
+              </div>
+            )}
+          </div>
         </div>
       
       <div style={{ 
-        marginBottom: "1.5rem", 
+        marginBottom: "clamp(0.8rem, 2.5vw, 1.2rem)", 
         display: "flex", 
         flexWrap: "wrap", 
-        gap: "0.5rem",
-        justifyContent: "flex-start"
+        gap: "clamp(0.3rem, 1.2vw, 0.4rem)",
+        justifyContent: "flex-start",
+        width: "100%"
       }}>
 
         <button
@@ -479,15 +774,15 @@ const AdminDashboard = () => {
             setLoadedTabs(prev => new Set([...prev, "analytics"]));
           }}
           style={{
-            padding: "8px 16px",
+            padding: "clamp(5px, 1.5vw, 7px) clamp(10px, 2.5vw, 14px)",
             backgroundColor: activeTab === "analytics" ? "#000000ff" : "#333",
             color: "white",
             border: "1px solid #555",
-            borderRadius: "25px",
+            borderRadius: "20px",
             cursor: "pointer",
             fontFamily: "'Montserrat', sans-serif",
             fontWeight: "500",
-            fontSize: "clamp(0.8rem, 2vw, 1rem)",
+            fontSize: "clamp(0.7rem, 1.8vw, 0.8rem)",
             minWidth: "fit-content"
           }}
         >
@@ -499,15 +794,15 @@ const AdminDashboard = () => {
             setLoadedTabs(prev => new Set([...prev, "users"]));
           }}
           style={{
-            padding: "8px 16px",
+            padding: "clamp(5px, 1.5vw, 7px) clamp(10px, 2.5vw, 14px)",
             backgroundColor: activeTab === "users" ? "#000000ff" : "#333",
             color: "white",
             border: "1px solid #555",
-            borderRadius: "25px",
+            borderRadius: "20px",
             cursor: "pointer",
             fontFamily: "'Montserrat', sans-serif",
             fontWeight: "500",
-            fontSize: "clamp(0.8rem, 2vw, 1rem)",
+            fontSize: "clamp(0.7rem, 1.8vw, 0.8rem)",
             minWidth: "fit-content"
           }}
         >
@@ -519,15 +814,15 @@ const AdminDashboard = () => {
             setLoadedTabs(prev => new Set([...prev, "sessions"]));
           }}
           style={{
-            padding: "8px 16px",
+            padding: "clamp(5px, 1.5vw, 7px) clamp(10px, 2.5vw, 14px)",
             backgroundColor: activeTab === "sessions" ? "#000000ff" : "#333",
             color: "white",
             border: "1px solid #555",
-            borderRadius: "25px",
+            borderRadius: "20px",
             cursor: "pointer",
             fontFamily: "'Montserrat', sans-serif",
             fontWeight: "500",
-            fontSize: "clamp(0.8rem, 2vw, 1rem)",
+            fontSize: "clamp(0.7rem, 1.8vw, 0.8rem)",
             minWidth: "fit-content"
           }}
         >
@@ -539,15 +834,15 @@ const AdminDashboard = () => {
             setLoadedTabs(prev => new Set([...prev, "questions"]));
           }}
           style={{
-            padding: "8px 16px",
+            padding: "clamp(5px, 1.5vw, 7px) clamp(10px, 2.5vw, 14px)",
             backgroundColor: activeTab === "questions" ? "#000000ff" : "#333",
             color: "white",
             border: "1px solid #555",
-            borderRadius: "25px",
+            borderRadius: "20px",
             cursor: "pointer",
             fontFamily: "'Montserrat', sans-serif",
             fontWeight: "500",
-            fontSize: "clamp(0.8rem, 2vw, 1rem)",
+            fontSize: "clamp(0.7rem, 1.8vw, 0.8rem)",
             minWidth: "fit-content"
           }}
         >
@@ -997,39 +1292,42 @@ const AdminDashboard = () => {
                   }}>User Registrations by Month</h3>
                   
                   {chartData.length > 0 ? (
-                    <div style={{ width: "100%", height: "clamp(250px, 40vw, 300px)" }}>
-                      <Suspense fallback={<ChartSkeleton height="clamp(250px, 40vw, 300px)" />}>
-                        <ResponsiveContainer width="100%" height="100%">
-                          <PieChart>
-                            <Pie
-                              data={chartData}
-                              cx="50%"
-                              cy="50%"
-                              labelLine={false}
-                              label={({ name, percentage }) => `${percentage}%`}
-                              outerRadius="80%"
-                              fill="#d7c246ff"
-                              dataKey="value"
-                            >
-                              {chartData.map((entry, index) => (
-                                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                              ))}
-                            </Pie>
-                            <Tooltip 
-                              contentStyle={{
-                                backgroundColor: "#ffffffff",
-                                border: "1px solid #555",
-                                borderRadius: "8px",
-                                color: "white"
-                              }}
-                              formatter={(value) => [`${value} users`, "Count"]}
-                            />
-                            <Legend 
-                              wrapperStyle={{ color: "white", fontSize: "clamp(10px, 2vw, 12px)" }}
-                            />
-                          </PieChart>
-                        </ResponsiveContainer>
-                      </Suspense>
+                    <div style={{ 
+                      width: "100%", 
+                      height: "clamp(250px, 40vw, 300px)",
+                      minWidth: "250px",
+                      minHeight: "250px"
+                    }}>
+                      <ResponsiveContainer width="100%" height="100%" minHeight={250}>
+                        <PieChart>
+                          <Pie
+                            data={chartData}
+                            cx="50%"
+                            cy="50%"
+                            labelLine={false}
+                            label={({ name, percentage }) => `${percentage}%`}
+                            outerRadius="80%"
+                            fill="#d7c246ff"
+                            dataKey="value"
+                          >
+                            {chartData.map((entry, index) => (
+                              <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                            ))}
+                          </Pie>
+                          <Tooltip 
+                            contentStyle={{
+                              backgroundColor: "#ffffffff",
+                              border: "1px solid #555",
+                              borderRadius: "8px",
+                              color: "white"
+                            }}
+                            formatter={(value) => [`${value} users`, "Count"]}
+                          />
+                          <Legend 
+                            wrapperStyle={{ color: "white", fontSize: "clamp(10px, 2vw, 12px)" }}
+                          />
+                        </PieChart>
+                      </ResponsiveContainer>
                     </div>
                   ) : (
                     <div style={{ height: "clamp(250px, 40vw, 300px)", display: "flex", alignItems: "center", justifyContent: "center" }}>
@@ -1056,32 +1354,35 @@ const AdminDashboard = () => {
                   }}>Sessions by Experience Level</h3>
                   
                   {sessionData.length > 0 ? (
-                    <div style={{ width: "100%", height: "clamp(250px, 40vw, 300px)" }}>
-                      <Suspense fallback={<ChartSkeleton height="clamp(250px, 40vw, 300px)" />}>
-                        <ResponsiveContainer width="100%" height="100%">
-                          <BarChart data={sessionData}>
-                            <CartesianGrid strokeDasharray="3 3" stroke="#333" />
-                            <XAxis 
-                              dataKey="name" 
-                              tick={{ fill: 'white', fontSize: 'clamp(8px, 1.5vw, 12px)' }}
-                              axisLine={{ stroke: '#555' }}
-                            />
-                            <YAxis 
-                              tick={{ fill: 'white', fontSize: 'clamp(8px, 1.5vw, 12px)' }}
-                              axisLine={{ stroke: '#555' }}
-                            />
-                            <Tooltip 
-                              contentStyle={{
-                                backgroundColor: "#2a2a2a",
-                                border: "1px solid #555",
-                                borderRadius: "8px",
-                                color: "white"
-                              }}
-                            />
-                            <Bar dataKey="value" fill="#002145ff" />
-                          </BarChart>
-                        </ResponsiveContainer>
-                      </Suspense>
+                    <div style={{ 
+                      width: "100%", 
+                      height: "clamp(250px, 40vw, 300px)",
+                      minWidth: "250px",
+                      minHeight: "250px"
+                    }}>
+                      <ResponsiveContainer width="100%" height="100%" minHeight={250}>
+                        <BarChart data={sessionData}>
+                          <CartesianGrid strokeDasharray="3 3" stroke="#333" />
+                          <XAxis 
+                            dataKey="name" 
+                            tick={{ fill: 'white', fontSize: 'clamp(8px, 1.5vw, 12px)' }}
+                            axisLine={{ stroke: '#555' }}
+                          />
+                          <YAxis 
+                            tick={{ fill: 'white', fontSize: 'clamp(8px, 1.5vw, 12px)' }}
+                            axisLine={{ stroke: '#555' }}
+                          />
+                          <Tooltip 
+                            contentStyle={{
+                              backgroundColor: "#2a2a2a",
+                              border: "1px solid #555",
+                              borderRadius: "8px",
+                              color: "white"
+                            }}
+                          />
+                          <Bar dataKey="value" fill="#002145ff" />
+                        </BarChart>
+                      </ResponsiveContainer>
                     </div>
                   ) : (
                     <div style={{ height: "clamp(250px, 40vw, 300px)", display: "flex", alignItems: "center", justifyContent: "center" }}>
@@ -1110,38 +1411,41 @@ const AdminDashboard = () => {
                 }}>Questions Generated Over Time</h3>
                 
                 {questionTimeData.length > 0 ? (
-                  <div style={{ width: "100%", height: "350px" }}>
-                    <Suspense fallback={<ChartSkeleton height="350px" />}>
-                      <ResponsiveContainer width="100%" height="100%">
-                        <LineChart data={questionTimeData}>
-                          <CartesianGrid strokeDasharray="3 3" stroke="#333" />
-                          <XAxis 
-                            dataKey="name" 
-                            tick={{ fill: 'white', fontSize: 12 }}
-                            axisLine={{ stroke: '#555' }}
-                          />
-                          <YAxis 
-                            tick={{ fill: 'white', fontSize: 12 }}
-                            axisLine={{ stroke: '#555' }}
-                          />
-                          <Tooltip 
-                            contentStyle={{
-                              backgroundColor: "#2a2a2a",
-                              border: "1px solid #555",
-                              borderRadius: "8px",
-                              color: "white"
-                            }}
-                          />
-                          <Line 
-                            type="monotone" 
-                            dataKey="questions" 
-                            stroke="#28a745" 
-                            strokeWidth={3}
-                            dot={{ fill: "#28a745", strokeWidth: 2, r: 4 }}
-                          />
-                        </LineChart>
-                      </ResponsiveContainer>
-                    </Suspense>
+                  <div style={{ 
+                    width: "100%", 
+                    height: "350px",
+                    minWidth: "300px",
+                    minHeight: "350px"
+                  }}>
+                    <ResponsiveContainer width="100%" height="100%" minHeight={350}>
+                      <LineChart data={questionTimeData}>
+                        <CartesianGrid strokeDasharray="3 3" stroke="#333" />
+                        <XAxis 
+                          dataKey="name" 
+                          tick={{ fill: 'white', fontSize: 12 }}
+                          axisLine={{ stroke: '#555' }}
+                        />
+                        <YAxis 
+                          tick={{ fill: 'white', fontSize: 12 }}
+                          axisLine={{ stroke: '#555' }}
+                        />
+                        <Tooltip 
+                          contentStyle={{
+                            backgroundColor: "#2a2a2a",
+                            border: "1px solid #555",
+                            borderRadius: "8px",
+                            color: "white"
+                          }}
+                        />
+                        <Line 
+                          type="monotone" 
+                          dataKey="questions" 
+                          stroke="#28a745" 
+                          strokeWidth={3}
+                          dot={{ fill: "#28a745", strokeWidth: 2, r: 4 }}
+                        />
+                      </LineChart>
+                    </ResponsiveContainer>
                   </div>
                 ) : (
                   <div style={{ height: "350px", display: "flex", alignItems: "center", justifyContent: "center" }}>
