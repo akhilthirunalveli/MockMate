@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip, BarChart, Bar, XAxis, YAxis, CartesianGrid, LineChart, Line } from "recharts";
+import { BASE_URL } from "../utils/apiPaths";
 
 if (!document.querySelector('link[href*="Montserrat"]')) {
   const link = document.createElement('link');
@@ -7,6 +8,7 @@ if (!document.querySelector('link[href*="Montserrat"]')) {
   link.rel = 'stylesheet';
   document.head.appendChild(link);
 }
+
 const AdminDashboard = () => {
   const [users, setUsers] = useState([]);
   const [sessions, setSessions] = useState([]);
@@ -15,33 +17,125 @@ const AdminDashboard = () => {
   const [error, setError] = useState("");
   const [activeTab, setActiveTab] = useState("analytics");
   const [expandedUsers, setExpandedUsers] = useState(new Set());
+  const [connectionStatus, setConnectionStatus] = useState("testing");
+
+  // Test backend connectivity
+  const testConnection = async () => {
+    try {
+      console.log("Testing connection to:", BASE_URL);
+      
+      // Try a simple GET request first
+      const response = await fetch(`${BASE_URL}/api/auth/users`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        // Add no-cors mode as fallback, but prefer cors
+        mode: 'cors'
+      });
+      
+      console.log("Connection test response:", {
+        status: response.status,
+        statusText: response.statusText,
+        ok: response.ok,
+        headers: Object.fromEntries(response.headers.entries())
+      });
+      
+      setConnectionStatus(response.ok ? "connected" : "failed");
+      return response.ok;
+    } catch (error) {
+      console.error("Connection test failed:", error);
+      
+      // Try with a different approach if CORS fails
+      try {
+        console.log("Trying alternative connection test...");
+        const img = new Image();
+        img.onload = () => setConnectionStatus("partial");
+        img.onerror = () => setConnectionStatus("failed");
+        img.src = `${BASE_URL}/favicon.ico?t=${Date.now()}`;
+        
+        setConnectionStatus("failed");
+        return false;
+      } catch (secondError) {
+        console.error("Alternative connection test also failed:", secondError);
+        setConnectionStatus("failed");
+        return false;
+      }
+    }
+  };
 
   useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      setError("");
+      
+      // First test connection
+      const isConnected = await testConnection();
+      if (!isConnected) {
+        setError("Cannot connect to backend server. Please check if the server is running.");
+        setLoading(false);
+        return;
+      }
+      
+      try {
+        // Get auth token from localStorage if available
+        const token = localStorage.getItem("token");
+        const headers = {
+          "Content-Type": "application/json",
+        };
+        
+        if (token) {
+          headers.Authorization = `Bearer ${token}`;
+        }
 
-    fetch("/api/auth/users")
-      .then((res) => {
-        if (!res.ok) throw new Error("Failed to fetch users");
-        return res.json();
-      })
-      .then((data) => setUsers(Array.isArray(data) ? data : []))
-      .catch(() => setError("Could not load users."));
+        // Fetch users
+        console.log("Fetching users from:", `${BASE_URL}/api/auth/users`);
+        const usersResponse = await fetch(`${BASE_URL}/api/auth/users`, { headers });
+        console.log("Users response status:", usersResponse.status);
+        
+        if (!usersResponse.ok) {
+          const errorText = await usersResponse.text();
+          throw new Error(`Failed to fetch users: ${usersResponse.status} ${usersResponse.statusText}. Response: ${errorText}`);
+        }
+        const usersData = await usersResponse.json();
+        console.log("Users data:", usersData);
+        setUsers(Array.isArray(usersData) ? usersData : []);
 
-    fetch("/api/sessions/all")
-      .then((res) => {
-        if (!res.ok) throw new Error("Failed to fetch sessions");
-        return res.json();
-      })
-      .then((data) => setSessions(Array.isArray(data) ? data : []))
-      .catch(() => setError("Could not load sessions."));
+        // Fetch sessions
+        console.log("Fetching sessions from:", `${BASE_URL}/api/sessions/all`);
+        const sessionsResponse = await fetch(`${BASE_URL}/api/sessions/all`, { headers });
+        console.log("Sessions response status:", sessionsResponse.status);
+        
+        if (!sessionsResponse.ok) {
+          const errorText = await sessionsResponse.text();
+          throw new Error(`Failed to fetch sessions: ${sessionsResponse.status} ${sessionsResponse.statusText}. Response: ${errorText}`);
+        }
+        const sessionsData = await sessionsResponse.json();
+        console.log("Sessions data:", sessionsData);
+        setSessions(Array.isArray(sessionsData) ? sessionsData : []);
 
-    fetch("/api/questions/all")
-      .then((res) => {
-        if (!res.ok) throw new Error("Failed to fetch questions");
-        return res.json();
-      })
-      .then((data) => setQuestions(Array.isArray(data) ? data : []))
-      .catch(() => setError("Could not load questions."))
-      .finally(() => setLoading(false));
+        // Fetch questions
+        console.log("Fetching questions from:", `${BASE_URL}/api/questions/all`);
+        const questionsResponse = await fetch(`${BASE_URL}/api/questions/all`, { headers });
+        console.log("Questions response status:", questionsResponse.status);
+        
+        if (!questionsResponse.ok) {
+          const errorText = await questionsResponse.text();
+          throw new Error(`Failed to fetch questions: ${questionsResponse.status} ${questionsResponse.statusText}. Response: ${errorText}`);
+        }
+        const questionsData = await questionsResponse.json();
+        console.log("Questions data:", questionsData);
+        setQuestions(Array.isArray(questionsData) ? questionsData : []);
+
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        setError(`Error loading data: ${error.message}`);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
   }, []);
 
   const handleDeleteUser = async (userId) => {
@@ -51,11 +145,20 @@ const AdminDashboard = () => {
 
     try {
       console.log("Deleting user with ID:", userId);
-      const response = await fetch(`/api/auth/users/${userId}`, {
+      
+      // Get auth token from localStorage if available
+      const token = localStorage.getItem("token");
+      const headers = {
+        "Content-Type": "application/json",
+      };
+      
+      if (token) {
+        headers.Authorization = `Bearer ${token}`;
+      }
+      
+      const response = await fetch(`${BASE_URL}/api/auth/users/${userId}`, {
         method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers,
       });
 
       const data = await response.json();
@@ -193,6 +296,21 @@ const AdminDashboard = () => {
           fontWeight: "700",
           fontFamily: "'Montserrat', sans-serif"
         }}>Dashboard</h1>
+
+        {/* Connection Status Indicator */}
+        <div style={{ 
+          marginBottom: "1rem", 
+          padding: "0.5rem 1rem", 
+          borderRadius: "20px", 
+          display: "inline-block",
+          backgroundColor: connectionStatus === "connected" ? "#28a745" : connectionStatus === "failed" ? "#dc3545" : "#ffc107",
+          color: "white",
+          fontSize: "0.8rem",
+          fontWeight: "500"
+        }}>
+          Backend: {connectionStatus === "connected" ? "✓ Connected" : connectionStatus === "failed" ? "✗ Disconnected" : "⏳ Testing..."}
+          {connectionStatus === "connected" && ` (${BASE_URL})`}
+        </div>
       
       <div style={{ 
         marginBottom: "1.5rem", 
@@ -274,9 +392,74 @@ const AdminDashboard = () => {
       </div>
 
       {loading ? (
-        <p style={{ color: "white", fontFamily: "'Montserrat', sans-serif" }}>Loading...</p>
+        <div style={{ color: "white", fontFamily: "'Montserrat', sans-serif", textAlign: "center", padding: "2rem" }}>
+          <p style={{ fontSize: "1.2rem", marginBottom: "1rem" }}>Loading admin dashboard...</p>
+          <p style={{ fontSize: "0.9rem", color: "#ccc" }}>Fetching users, sessions, and questions...</p>
+        </div>
       ) : error ? (
-        <p style={{ color: "#ff6b6b", fontFamily: "'Montserrat', sans-serif" }}>{error}</p>
+        <div style={{ color: "#ff6b6b", fontFamily: "'Montserrat', sans-serif", textAlign: "center", padding: "2rem" }}>
+          <h3 style={{ marginBottom: "1rem" }}>Error Loading Dashboard</h3>
+          <div style={{ marginBottom: "1rem", backgroundColor: "#1a1a1a", padding: "1rem", borderRadius: "8px", border: "1px solid #333", textAlign: "left" }}>
+            <strong>Error Details:</strong>
+            <pre style={{ marginTop: "0.5rem", fontSize: "0.8rem", color: "#ccc", whiteSpace: "pre-wrap", wordBreak: "break-word" }}>{error}</pre>
+          </div>
+          <div style={{ marginBottom: "1rem", backgroundColor: "#1a1a1a", padding: "1rem", borderRadius: "8px", border: "1px solid #333", textAlign: "left" }}>
+            <strong>Backend URL:</strong> <code style={{ color: "#007bff" }}>{BASE_URL}</code><br/>
+            <strong>Expected Endpoints:</strong>
+            <ul style={{ marginTop: "0.5rem", fontSize: "0.8rem", color: "#ccc" }}>
+              <li><code>{BASE_URL}/api/auth/users</code></li>
+              <li><code>{BASE_URL}/api/sessions/all</code></li>
+              <li><code>{BASE_URL}/api/questions/all</code></li>
+            </ul>
+          </div>
+          <p style={{ fontSize: "0.9rem", color: "#ccc", marginBottom: "1rem" }}>
+            Please check the browser console (F12) for more details.
+          </p>
+          <div style={{ display: "flex", gap: "1rem", justifyContent: "center", flexWrap: "wrap" }}>
+            <button 
+              onClick={() => window.location.reload()} 
+              style={{
+                backgroundColor: "#007bff",
+                color: "white",
+                border: "none",
+                padding: "0.5rem 1rem",
+                borderRadius: "4px",
+                cursor: "pointer",
+                fontFamily: "'Montserrat', sans-serif"
+              }}
+            >
+              Retry
+            </button>
+            <button 
+              onClick={() => testConnection()} 
+              style={{
+                backgroundColor: "#28a745",
+                color: "white",
+                border: "none",
+                padding: "0.5rem 1rem",
+                borderRadius: "4px",
+                cursor: "pointer",
+                fontFamily: "'Montserrat', sans-serif"
+              }}
+            >
+              Test Connection
+            </button>
+            <button 
+              onClick={() => window.open(`${BASE_URL}/api/auth/users`, '_blank')} 
+              style={{
+                backgroundColor: "#6f42c1",
+                color: "white",
+                border: "none",
+                padding: "0.5rem 1rem",
+                borderRadius: "4px",
+                cursor: "pointer",
+                fontFamily: "'Montserrat', sans-serif"
+              }}
+            >
+              Open API Directly
+            </button>
+          </div>
+        </div>
       ) : (
         <>
           {activeTab === "users" && (
