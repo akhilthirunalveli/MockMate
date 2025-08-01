@@ -194,16 +194,13 @@ const LoginPage = ({ onLogin }) => {
       width: "100vw",
       display: "flex",
       flexDirection: "column",
-      justifyContent: "flex-start",
+      justifyContent: "center",
       alignItems: "center",
       backgroundColor: "#000000",
       backgroundImage: "radial-gradient(#222 1px, #000000 1px)",
       backgroundSize: "20px 20px",
       fontFamily: "'Montserrat', sans-serif",
-      position: "relative",
-      paddingTop: "clamp(10vh, 15vh, 20vh)",
-      paddingBottom: "2rem",
-      boxSizing: "border-box"
+      position: "relative"
     }}>
       {/* Background blur elements for glass effect */}
       <div style={{
