@@ -1059,10 +1059,10 @@ const AdminDashboard = () => {
                       fontWeight: "600"
                     }}>Latest Users</h4>
                     <div style={{ 
-                      maxHeight: "clamp(150px, 30vh, 200px)", 
+                      maxHeight: "clamp(200px, 40vh, 300px)", 
                       overflowY: "auto" 
                     }}>
-                      {users.slice(-5).reverse().map(user => (
+                      {users.slice(-10).reverse().map(user => (
                         <div key={user._id} style={{ 
                           padding: "clamp(0.4rem, 2vw, 0.5rem)", 
                           marginBottom: "0.5rem", 
@@ -1095,10 +1095,10 @@ const AdminDashboard = () => {
                       fontWeight: "600"
                     }}>Latest Sessions</h4>
                     <div style={{ 
-                      maxHeight: "clamp(150px, 30vh, 200px)", 
+                      maxHeight: "clamp(200px, 40vh, 300px)", 
                       overflowY: "auto" 
                     }}>
-                      {sessions.slice(-5).reverse().map(session => (
+                      {sessions.slice(-10).reverse().map(session => (
                         <div key={session._id} style={{ 
                           padding: "clamp(0.4rem, 2vw, 0.5rem)", 
                           marginBottom: "0.5rem", 
@@ -1136,10 +1136,10 @@ const AdminDashboard = () => {
                       fontWeight: "600"
                     }}>Latest Questions</h4>
                     <div style={{ 
-                      maxHeight: "clamp(150px, 30vh, 200px)", 
+                      maxHeight: "clamp(200px, 40vh, 300px)", 
                       overflowY: "auto" 
                     }}>
-                      {questions.slice(-5).reverse().map(question => (
+                      {questions.slice(-10).reverse().map(question => (
                         <div key={question._id} style={{ 
                           padding: "clamp(0.4rem, 2vw, 0.5rem)", 
                           marginBottom: "0.5rem", 
