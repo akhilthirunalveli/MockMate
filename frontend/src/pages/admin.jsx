@@ -1008,7 +1008,7 @@ const AdminDashboard = () => {
                               labelLine={false}
                               label={({ name, percentage }) => `${percentage}%`}
                               outerRadius="80%"
-                              fill="#8884d8"
+                              fill="#d7c246ff"
                               dataKey="value"
                             >
                               {chartData.map((entry, index) => (
@@ -1017,7 +1017,7 @@ const AdminDashboard = () => {
                             </Pie>
                             <Tooltip 
                               contentStyle={{
-                                backgroundColor: "#2a2a2a",
+                                backgroundColor: "#ffffffff",
                                 border: "1px solid #555",
                                 borderRadius: "8px",
                                 color: "white"
@@ -1078,7 +1078,7 @@ const AdminDashboard = () => {
                                 color: "white"
                               }}
                             />
-                            <Bar dataKey="value" fill="#007bff" />
+                            <Bar dataKey="value" fill="#002145ff" />
                           </BarChart>
                         </ResponsiveContainer>
                       </Suspense>
