@@ -1,6 +1,158 @@
-import React, { useEffect, useState } from "react";
-import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip, BarChart, Bar, XAxis, YAxis, CartesianGrid, LineChart, Line } from "recharts";
+import React, { useEffect, useState, lazy, Suspense } from "react";
 import { BASE_URL } from "../utils/apiPaths";
+
+// Lazy load chart components
+const PieChart = lazy(() => import("recharts").then(module => ({ default: module.PieChart })));
+const Pie = lazy(() => import("recharts").then(module => ({ default: module.Pie })));
+const Cell = lazy(() => import("recharts").then(module => ({ default: module.Cell })));
+const ResponsiveContainer = lazy(() => import("recharts").then(module => ({ default: module.ResponsiveContainer })));
+const Legend = lazy(() => import("recharts").then(module => ({ default: module.Legend })));
+const Tooltip = lazy(() => import("recharts").then(module => ({ default: module.Tooltip })));
+const BarChart = lazy(() => import("recharts").then(module => ({ default: module.BarChart })));
+const Bar = lazy(() => import("recharts").then(module => ({ default: module.Bar })));
+const XAxis = lazy(() => import("recharts").then(module => ({ default: module.XAxis })));
+const YAxis = lazy(() => import("recharts").then(module => ({ default: module.YAxis })));
+const CartesianGrid = lazy(() => import("recharts").then(module => ({ default: module.CartesianGrid })));
+const LineChart = lazy(() => import("recharts").then(module => ({ default: module.LineChart })));
+const Line = lazy(() => import("recharts").then(module => ({ default: module.Line })));
+
+// Loading skeleton component for charts
+const ChartSkeleton = ({ height = "300px" }) => (
+  <div style={{ 
+    width: "100%", 
+    height, 
+    backgroundColor: "#2a2a2a", 
+    borderRadius: "8px",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    animation: "pulse 1.5s ease-in-out infinite"
+  }}>
+    <div style={{ color: "#666", fontSize: "14px" }}>Loading chart...</div>
+    <style jsx>{`
+      @keyframes pulse {
+        0%, 100% { opacity: 0.6; }
+        50% { opacity: 0.9; }
+      }
+    `}</style>
+  </div>
+);
+
+// Card skeleton component
+const CardSkeleton = () => (
+  <div style={{
+    backgroundColor: "#1a1a1a",
+    border: "1px solid #333",
+    borderRadius: "8px",
+    padding: "1.5rem",
+    animation: "pulse 1.5s ease-in-out infinite"
+  }}>
+    <div style={{ 
+      height: "20px", 
+      backgroundColor: "#333", 
+      borderRadius: "4px", 
+      marginBottom: "0.5rem" 
+    }}></div>
+    <div style={{ 
+      height: "16px", 
+      backgroundColor: "#333", 
+      borderRadius: "4px", 
+      width: "70%",
+      marginBottom: "0.5rem" 
+    }}></div>
+    <div style={{ 
+      height: "14px", 
+      backgroundColor: "#333", 
+      borderRadius: "4px", 
+      width: "50%" 
+    }}></div>
+  </div>
+);
+
+// Lazy load tab components
+const UsersTab = lazy(() => Promise.resolve({ 
+  default: ({ users, handleDeleteUser }) => (
+    <div>
+      <h2 style={{ 
+        color: "white", 
+        marginBottom: "1rem",
+        fontFamily: "'Montserrat', sans-serif",
+        fontWeight: "600",
+        fontSize: "clamp(1.5rem, 4vw, 2rem)"
+      }}>All Registered Users</h2>
+      <div style={{ 
+        display: "grid", 
+        gap: "1rem", 
+        gridTemplateColumns: "repeat(auto-fill, minmax(min(350px, 100%), 1fr))",
+        width: "100%"
+      }}>
+        {users.map((user) => (
+          <div
+            key={user._id}
+            style={{
+              backgroundColor: "#1a1a1a",
+              border: "1px solid #333",
+              borderRadius: "8px",
+              padding: "1.5rem",
+              color: "white",
+            }}
+          >
+            <div style={{ 
+              display: "flex", 
+              justifyContent: "space-between", 
+              alignItems: "flex-start", 
+              marginBottom: "1rem",
+              flexWrap: "wrap",
+              gap: "1rem"
+            }}>
+              <div style={{ flex: "1", minWidth: "0" }}>
+                <h3 style={{ 
+                  margin: "0 0 0.5rem 0", 
+                  color: "#007bff",
+                  fontSize: "clamp(1rem, 3vw, 1.2rem)",
+                  fontFamily: "'Montserrat', sans-serif",
+                  fontWeight: "600",
+                  wordBreak: "break-word"
+                }}>{user.name}</h3>
+                <p style={{ 
+                  margin: "0 0 0.5rem 0", 
+                  color: "#ccc",
+                  fontSize: "clamp(0.8rem, 2.5vw, 0.9rem)",
+                  wordBreak: "break-word"
+                }}>{user.email}</p>
+              </div>
+              <button
+                onClick={() => handleDeleteUser(user._id)}
+                style={{
+                  backgroundColor: "#dc3545",
+                  color: "white",
+                  border: "none",
+                  padding: "clamp(6px, 2vw, 10px) clamp(12px, 3vw, 16px)",
+                  borderRadius: "20px",
+                  cursor: "pointer",
+                  fontSize: "clamp(0.75rem, 2vw, 0.9rem)",
+                  fontFamily: "'Montserrat', sans-serif",
+                  fontWeight: "500",
+                  minWidth: "fit-content",
+                  flexShrink: "0",
+                  transition: "all 0.2s ease"
+                }}
+                onMouseEnter={(e) => e.target.style.backgroundColor = "#c82333"}
+                onMouseLeave={(e) => e.target.style.backgroundColor = "#dc3545"}
+              >
+                Delete
+              </button>
+            </div>
+            <div style={{ fontSize: "14px", color: "#999" }}>
+              <p style={{ margin: "0.25rem 0" }}><strong>ID:</strong> {user._id}</p>
+              <p style={{ margin: "0.25rem 0" }}><strong>Registered:</strong> {new Date(user.createdAt).toLocaleDateString()}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}));
 
 if (!document.querySelector('link[href*="Montserrat"]')) {
   const link = document.createElement('link');
@@ -18,6 +170,7 @@ const AdminDashboard = () => {
   const [activeTab, setActiveTab] = useState("analytics");
   const [expandedUsers, setExpandedUsers] = useState(new Set());
   const [connectionStatus, setConnectionStatus] = useState("testing");
+  const [loadedTabs, setLoadedTabs] = useState(new Set(["analytics"])); // Track which tabs have been loaded
 
   // Test backend connectivity
   const testConnection = async () => {
@@ -321,7 +474,10 @@ const AdminDashboard = () => {
       }}>
 
         <button
-          onClick={() => setActiveTab("analytics")}
+          onClick={() => {
+            setActiveTab("analytics");
+            setLoadedTabs(prev => new Set([...prev, "analytics"]));
+          }}
           style={{
             padding: "8px 16px",
             backgroundColor: activeTab === "analytics" ? "#000000ff" : "#333",
@@ -338,7 +494,10 @@ const AdminDashboard = () => {
           Analytics
         </button>
         <button
-          onClick={() => setActiveTab("users")}
+          onClick={() => {
+            setActiveTab("users");
+            setLoadedTabs(prev => new Set([...prev, "users"]));
+          }}
           style={{
             padding: "8px 16px",
             backgroundColor: activeTab === "users" ? "#000000ff" : "#333",
@@ -355,7 +514,10 @@ const AdminDashboard = () => {
           Users ({users.length})
         </button>
         <button
-          onClick={() => setActiveTab("sessions")}
+          onClick={() => {
+            setActiveTab("sessions");
+            setLoadedTabs(prev => new Set([...prev, "sessions"]));
+          }}
           style={{
             padding: "8px 16px",
             backgroundColor: activeTab === "sessions" ? "#000000ff" : "#333",
@@ -372,7 +534,10 @@ const AdminDashboard = () => {
           Sessions ({sessions.length})
         </button>
         <button
-          onClick={() => setActiveTab("questions")}
+          onClick={() => {
+            setActiveTab("questions");
+            setLoadedTabs(prev => new Set([...prev, "questions"]));
+          }}
           style={{
             padding: "8px 16px",
             backgroundColor: activeTab === "questions" ? "#000000ff" : "#333",
@@ -392,9 +557,17 @@ const AdminDashboard = () => {
       </div>
 
       {loading ? (
-        <div style={{ color: "white", fontFamily: "'Montserrat', sans-serif", textAlign: "center", padding: "2rem" }}>
-          <p style={{ fontSize: "1.2rem", marginBottom: "1rem" }}>Loading admin dashboard...</p>
-          <p style={{ fontSize: "0.9rem", color: "#ccc" }}>Fetching users, sessions, and questions...</p>
+        <div style={{ color: "white", fontFamily: "'Montserrat', sans-serif", padding: "2rem" }}>
+          <div style={{ 
+            display: "grid", 
+            gap: "1rem", 
+            gridTemplateColumns: "repeat(auto-fill, minmax(min(350px, 100%), 1fr))",
+            marginBottom: "1.5rem"
+          }}>
+            {[...Array(6)].map((_, i) => (
+              <CardSkeleton key={i} />
+            ))}
+          </div>
         </div>
       ) : error ? (
         <div style={{ color: "#ff6b6b", fontFamily: "'Montserrat', sans-serif", textAlign: "center", padding: "2rem" }}>
@@ -462,88 +635,31 @@ const AdminDashboard = () => {
         </div>
       ) : (
         <>
-          {activeTab === "users" && (
-            <div>
-              <h2 style={{ 
-                color: "white", 
-                marginBottom: "1rem",
-                fontFamily: "'Montserrat', sans-serif",
-                fontWeight: "600",
-                fontSize: "clamp(1.5rem, 4vw, 2rem)"
-              }}>All Registered Users</h2>
+          {/* Show loading placeholder for tabs that haven't been loaded yet */}
+          {(activeTab !== "analytics" && !loadedTabs.has(activeTab)) && (
+            <div style={{ 
+              display: "grid", 
+              gap: "1rem", 
+              gridTemplateColumns: "repeat(auto-fill, minmax(min(300px, 100%), 1fr))"
+            }}>
+              {[...Array(8)].map((_, i) => <CardSkeleton key={i} />)}
+            </div>
+          )}
+
+          {activeTab === "users" && loadedTabs.has("users") && (
+            <Suspense fallback={
               <div style={{ 
                 display: "grid", 
                 gap: "1rem", 
-                gridTemplateColumns: "repeat(auto-fill, minmax(min(350px, 100%), 1fr))",
-                width: "100%"
+                gridTemplateColumns: "repeat(auto-fill, minmax(min(350px, 100%), 1fr))"
               }}>
-                {users.map((user) => (
-                  <div
-                    key={user._id}
-                    style={{
-                      backgroundColor: "#1a1a1a",
-                      border: "1px solid #333",
-                      borderRadius: "8px",
-                      padding: "1.5rem",
-                      color: "white",
-                    }}
-                  >
-                    <div style={{ 
-                      display: "flex", 
-                      justifyContent: "space-between", 
-                      alignItems: "flex-start", 
-                      marginBottom: "1rem",
-                      flexWrap: "wrap",
-                      gap: "1rem"
-                    }}>
-                      <div style={{ flex: "1", minWidth: "0" }}>
-                        <h3 style={{ 
-                          margin: "0 0 0.5rem 0", 
-                          color: "#007bff",
-                          fontSize: "clamp(1rem, 3vw, 1.2rem)",
-                          fontFamily: "'Montserrat', sans-serif",
-                          fontWeight: "600",
-                          wordBreak: "break-word"
-                        }}>{user.name}</h3>
-                        <p style={{ 
-                          margin: "0 0 0.5rem 0", 
-                          color: "#ccc",
-                          fontSize: "clamp(0.8rem, 2.5vw, 0.9rem)",
-                          wordBreak: "break-word"
-                        }}>{user.email}</p>
-                      </div>
-                      <button
-                        onClick={() => handleDeleteUser(user._id)}
-                        style={{
-                          backgroundColor: "#dc3545",
-                          color: "white",
-                          border: "none",
-                          padding: "clamp(6px, 2vw, 10px) clamp(12px, 3vw, 16px)",
-                          borderRadius: "20px",
-                          cursor: "pointer",
-                          fontSize: "clamp(0.75rem, 2vw, 0.9rem)",
-                          fontFamily: "'Montserrat', sans-serif",
-                          fontWeight: "500",
-                          minWidth: "fit-content",
-                          flexShrink: "0",
-                          transition: "all 0.2s ease"
-                        }}
-                        onMouseEnter={(e) => e.target.style.backgroundColor = "#c82333"}
-                        onMouseLeave={(e) => e.target.style.backgroundColor = "#dc3545"}
-                      >
-                        Delete
-                      </button>
-                    </div>
-                    <div style={{ fontSize: "14px", color: "#999" }}>
-                      <p style={{ margin: "0.25rem 0" }}><strong>ID:</strong> {user._id}</p>
-                      <p style={{ margin: "0.25rem 0" }}><strong>Registered:</strong> {new Date(user.createdAt).toLocaleDateString()}</p>
-                    </div>
-                  </div>
-                ))}
+                {[...Array(6)].map((_, i) => <CardSkeleton key={i} />)}
               </div>
-            </div>
+            }>
+              <UsersTab users={users} handleDeleteUser={handleDeleteUser} />
+            </Suspense>
           )}
-          {activeTab === "sessions" && (
+          {activeTab === "sessions" && loadedTabs.has("sessions") && (
             <div>
               <h2 style={{ 
                 color: "white", 
@@ -587,7 +703,7 @@ const AdminDashboard = () => {
               </div>
             </div>
           )}
-          {activeTab === "questions" && (
+          {activeTab === "questions" && loadedTabs.has("questions") && (
             <div>
               <h2 style={{ 
                 color: "white", 
@@ -732,7 +848,7 @@ const AdminDashboard = () => {
           )}
 
           {/* Analytics Dashboard */}
-          {activeTab === "analytics" && (
+          {activeTab === "analytics" && loadedTabs.has("analytics") && (
             <div>
               <h2 style={{ 
                 color: "white", 
@@ -882,36 +998,38 @@ const AdminDashboard = () => {
                   
                   {chartData.length > 0 ? (
                     <div style={{ width: "100%", height: "clamp(250px, 40vw, 300px)" }}>
-                      <ResponsiveContainer width="100%" height="100%">
-                        <PieChart>
-                          <Pie
-                            data={chartData}
-                            cx="50%"
-                            cy="50%"
-                            labelLine={false}
-                            label={({ name, percentage }) => `${percentage}%`}
-                            outerRadius="80%"
-                            fill="#8884d8"
-                            dataKey="value"
-                          >
-                            {chartData.map((entry, index) => (
-                              <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                            ))}
-                          </Pie>
-                          <Tooltip 
-                            contentStyle={{
-                              backgroundColor: "#2a2a2a",
-                              border: "1px solid #555",
-                              borderRadius: "8px",
-                              color: "white"
-                            }}
-                            formatter={(value) => [`${value} users`, "Count"]}
-                          />
-                          <Legend 
-                            wrapperStyle={{ color: "white", fontSize: "clamp(10px, 2vw, 12px)" }}
-                          />
-                        </PieChart>
-                      </ResponsiveContainer>
+                      <Suspense fallback={<ChartSkeleton height="clamp(250px, 40vw, 300px)" />}>
+                        <ResponsiveContainer width="100%" height="100%">
+                          <PieChart>
+                            <Pie
+                              data={chartData}
+                              cx="50%"
+                              cy="50%"
+                              labelLine={false}
+                              label={({ name, percentage }) => `${percentage}%`}
+                              outerRadius="80%"
+                              fill="#8884d8"
+                              dataKey="value"
+                            >
+                              {chartData.map((entry, index) => (
+                                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                              ))}
+                            </Pie>
+                            <Tooltip 
+                              contentStyle={{
+                                backgroundColor: "#2a2a2a",
+                                border: "1px solid #555",
+                                borderRadius: "8px",
+                                color: "white"
+                              }}
+                              formatter={(value) => [`${value} users`, "Count"]}
+                            />
+                            <Legend 
+                              wrapperStyle={{ color: "white", fontSize: "clamp(10px, 2vw, 12px)" }}
+                            />
+                          </PieChart>
+                        </ResponsiveContainer>
+                      </Suspense>
                     </div>
                   ) : (
                     <div style={{ height: "clamp(250px, 40vw, 300px)", display: "flex", alignItems: "center", justifyContent: "center" }}>
@@ -939,29 +1057,31 @@ const AdminDashboard = () => {
                   
                   {sessionData.length > 0 ? (
                     <div style={{ width: "100%", height: "clamp(250px, 40vw, 300px)" }}>
-                      <ResponsiveContainer width="100%" height="100%">
-                        <BarChart data={sessionData}>
-                          <CartesianGrid strokeDasharray="3 3" stroke="#333" />
-                          <XAxis 
-                            dataKey="name" 
-                            tick={{ fill: 'white', fontSize: 'clamp(8px, 1.5vw, 12px)' }}
-                            axisLine={{ stroke: '#555' }}
-                          />
-                          <YAxis 
-                            tick={{ fill: 'white', fontSize: 'clamp(8px, 1.5vw, 12px)' }}
-                            axisLine={{ stroke: '#555' }}
-                          />
-                          <Tooltip 
-                            contentStyle={{
-                              backgroundColor: "#2a2a2a",
-                              border: "1px solid #555",
-                              borderRadius: "8px",
-                              color: "white"
-                            }}
-                          />
-                          <Bar dataKey="value" fill="#007bff" />
-                        </BarChart>
-                      </ResponsiveContainer>
+                      <Suspense fallback={<ChartSkeleton height="clamp(250px, 40vw, 300px)" />}>
+                        <ResponsiveContainer width="100%" height="100%">
+                          <BarChart data={sessionData}>
+                            <CartesianGrid strokeDasharray="3 3" stroke="#333" />
+                            <XAxis 
+                              dataKey="name" 
+                              tick={{ fill: 'white', fontSize: 'clamp(8px, 1.5vw, 12px)' }}
+                              axisLine={{ stroke: '#555' }}
+                            />
+                            <YAxis 
+                              tick={{ fill: 'white', fontSize: 'clamp(8px, 1.5vw, 12px)' }}
+                              axisLine={{ stroke: '#555' }}
+                            />
+                            <Tooltip 
+                              contentStyle={{
+                                backgroundColor: "#2a2a2a",
+                                border: "1px solid #555",
+                                borderRadius: "8px",
+                                color: "white"
+                              }}
+                            />
+                            <Bar dataKey="value" fill="#007bff" />
+                          </BarChart>
+                        </ResponsiveContainer>
+                      </Suspense>
                     </div>
                   ) : (
                     <div style={{ height: "clamp(250px, 40vw, 300px)", display: "flex", alignItems: "center", justifyContent: "center" }}>
@@ -991,35 +1111,37 @@ const AdminDashboard = () => {
                 
                 {questionTimeData.length > 0 ? (
                   <div style={{ width: "100%", height: "350px" }}>
-                    <ResponsiveContainer width="100%" height="100%">
-                      <LineChart data={questionTimeData}>
-                        <CartesianGrid strokeDasharray="3 3" stroke="#333" />
-                        <XAxis 
-                          dataKey="name" 
-                          tick={{ fill: 'white', fontSize: 12 }}
-                          axisLine={{ stroke: '#555' }}
-                        />
-                        <YAxis 
-                          tick={{ fill: 'white', fontSize: 12 }}
-                          axisLine={{ stroke: '#555' }}
-                        />
-                        <Tooltip 
-                          contentStyle={{
-                            backgroundColor: "#2a2a2a",
-                            border: "1px solid #555",
-                            borderRadius: "8px",
-                            color: "white"
-                          }}
-                        />
-                        <Line 
-                          type="monotone" 
-                          dataKey="questions" 
-                          stroke="#28a745" 
-                          strokeWidth={3}
-                          dot={{ fill: "#28a745", strokeWidth: 2, r: 4 }}
-                        />
-                      </LineChart>
-                    </ResponsiveContainer>
+                    <Suspense fallback={<ChartSkeleton height="350px" />}>
+                      <ResponsiveContainer width="100%" height="100%">
+                        <LineChart data={questionTimeData}>
+                          <CartesianGrid strokeDasharray="3 3" stroke="#333" />
+                          <XAxis 
+                            dataKey="name" 
+                            tick={{ fill: 'white', fontSize: 12 }}
+                            axisLine={{ stroke: '#555' }}
+                          />
+                          <YAxis 
+                            tick={{ fill: 'white', fontSize: 12 }}
+                            axisLine={{ stroke: '#555' }}
+                          />
+                          <Tooltip 
+                            contentStyle={{
+                              backgroundColor: "#2a2a2a",
+                              border: "1px solid #555",
+                              borderRadius: "8px",
+                              color: "white"
+                            }}
+                          />
+                          <Line 
+                            type="monotone" 
+                            dataKey="questions" 
+                            stroke="#28a745" 
+                            strokeWidth={3}
+                            dot={{ fill: "#28a745", strokeWidth: 2, r: 4 }}
+                          />
+                        </LineChart>
+                      </ResponsiveContainer>
+                    </Suspense>
                   </div>
                 ) : (
                   <div style={{ height: "350px", display: "flex", alignItems: "center", justifyContent: "center" }}>
