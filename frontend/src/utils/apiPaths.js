@@ -1,4 +1,4 @@
-export const BASE_URL = "http://localhost:8000";
+export const BASE_URL = "https://mockmate-backend-r0jk.onrender.com";
 
 export const API_PATHS = {
   AUTH: {
