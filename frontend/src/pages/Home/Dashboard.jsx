@@ -93,7 +93,7 @@ const Dashboard = () => {
               onClick={() => setOpenCreateModal(true)}
             >
               <LuPlus className="text-lg sm:text-xl text-black" />
-              Add New
+              Add
             </button>
             <button
               className="h-10 sm:h-12 flex items-center justify-center gap-2 bg-white text-xs sm:text-sm font-semibold text-black px-4 sm:px-5 py-2 rounded-full transition-colors cursor-pointer"
