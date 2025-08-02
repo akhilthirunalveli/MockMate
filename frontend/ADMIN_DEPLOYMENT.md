@@ -2,19 +2,24 @@
 
 ## Option 1: Deploy to Vercel (Recommended)
 
-1. **Create separate Vercel project for admin**:
+1. **Build the admin app first**:
 ```bash
-cd dist-admin
-vercel --prod
+npm run admin:build
 ```
 
-2. **Configure vercel.json in dist-admin**:
+2. **Create vercel.json in dist-admin folder** (already created for you):
 ```json
 {
   "rewrites": [
     { "source": "/(.*)", "destination": "/admin.html" }
   ]
 }
+```
+
+3. **Deploy to Vercel**:
+   - Create new Vercel project
+   - Set root directory to `dist-admin`
+   - Deploy the project
 ```
 
 ## Option 2: Deploy to Netlify
