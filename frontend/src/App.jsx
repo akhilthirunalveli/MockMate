@@ -9,6 +9,7 @@ import InterviewPrep from "./pages/InterviewPrep/InterviewPrep";
 import UserProvider from "./context/userContext";
 import Record from "./pages/InterviewPrep/Record";
 import Admin from "./pages/admin";
+import PWAInstallPrompt from "./components/PWAInstallPrompt";
 
 
 
@@ -26,6 +27,8 @@ const App = () => {
             <Route path="/interview-prep/record" element={<Record />}/>
           </Routes>
         </Router>
+
+        <PWAInstallPrompt />
 
         <Toaster
           toastOptions={{
