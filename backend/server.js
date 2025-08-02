@@ -52,8 +52,8 @@ app.use("/api/auth", authRoutes);
 app.use('/api/sessions', sessionRoutes);
 app.use('/api/questions', questionRoutes);
 
-app.post("/api/ai/generate-questions", generateInterviewQuestions);
-app.post("/api/ai/generate-explanation", generateConceptExplanation);
+app.post("/api/ai/generate-questions", protect, generateInterviewQuestions);
+app.post("/api/ai/generate-explanation", protect, generateConceptExplanation);
 
 // Health check endpoint for debugging
 app.get("/health", (req, res) => {

@@ -4,8 +4,6 @@ const {
   questionAnswerPrompt,
 } = require("../utils/prompts");
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-
 // @desc    Generate interview questions and answers using Gemini
 // @route   POST /api/ai/generate-questions
 // @access  Private
@@ -28,12 +26,18 @@ const generateInterviewQuestions = async (req, res) => {
 
     console.log("About to call Gemini API with prompt:", prompt.substring(0, 100) + "...");
     
-    // Get the generative model
+    // Create a new instance for each request to avoid any caching issues
+    const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
     const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
-    // Generate content
+    // Generate content with error handling
     const result = await model.generateContent(prompt);
-    const response = await result.response;
+    
+    if (!result || !result.response) {
+      throw new Error("Invalid response from Gemini API");
+    }
+    
+    const response = result.response;
     let rawText = response.text();
 
     console.log("Gemini API response received, length:", rawText.length);
@@ -72,12 +76,13 @@ const generateConceptExplanation = async (req, res) => {
 
     const prompt = conceptExplainPrompt(question);
 
-    // Get the generative model
+    // Create a new instance for each request to avoid any caching issues
+    const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
     const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
     // Generate content
     const result = await model.generateContent(prompt);
-    const response = await result.response;
+    const response = result.response;
     let rawText = response.text();
 
     // Clean it: Remove ```json and ``` from beginning and end
