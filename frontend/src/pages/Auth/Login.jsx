@@ -6,21 +6,8 @@ import axiosInstance from "../../utils/axiosInstance";
 import { API_PATHS } from "../../utils/apiPaths";
 import { UserContext } from "../../context/userContext";
 // Add Firebase imports at the top
-import { initializeApp, getApps } from "firebase/app";
-import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
-
-// Initialize Firebase app if not already initialized
-if (!getApps().length) {
-  initializeApp({
-    apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-    authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
-    projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
-    storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
-    messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
-    appId: import.meta.env.VITE_FIREBASE_APP_ID,
-    measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID
-  });
-}
+import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import { auth } from "../../utils/firebase";
 
 const Login = ({ setCurrentPage }) => {
   const [email, setEmail] = useState("");
@@ -89,7 +76,6 @@ const Login = ({ setCurrentPage }) => {
   // Add Google login handler
   const handleGoogleLogin = async () => {
     setGoogleLoading(true);
-    const auth = getAuth();
     const provider = new GoogleAuthProvider();
     try {
       const result = await signInWithPopup(auth, provider);
@@ -98,7 +84,7 @@ const Login = ({ setCurrentPage }) => {
       const idToken = await user.getIdToken();
       // NOTE: This endpoint must be implemented in your backend!
       // It should accept { idToken } and return { token, ...userInfo }
-      const response = await axiosInstance.post("/api/auth/firebase-login", { idToken });
+      const response = await axiosInstance.post(API_PATHS.AUTH.FIREBASE_LOGIN, { idToken });
       const { token, ...userInfo } = response.data;
       if (token) {
         localStorage.setItem("token", token);
