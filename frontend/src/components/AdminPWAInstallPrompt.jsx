@@ -50,7 +50,7 @@ const AdminPWAInstallPrompt = () => {
       bottom: '20px',
       left: '50%',
       transform: 'translateX(-50%)',
-      backgroundColor: '#dc3545',
+      backgroundColor: '#000000ff',
       color: 'white',
       padding: '12px 24px',
       borderRadius: '25px',
@@ -68,15 +68,15 @@ const AdminPWAInstallPrompt = () => {
     }}
     onClick={handleInstallClick}
     onMouseEnter={(e) => {
-      e.target.style.backgroundColor = '#c82333';
+      e.target.style.backgroundColor = '#000000ff';
       e.target.style.transform = 'translateX(-50%) translateY(-2px)';
     }}
     onMouseLeave={(e) => {
-      e.target.style.backgroundColor = '#dc3545';
+      e.target.style.backgroundColor = '#000000ff';
       e.target.style.transform = 'translateX(-50%) translateY(0px)';
     }}
     >
-      🛡️ Install Admin App
+      Get Admin App
     </div>
   );
 };
