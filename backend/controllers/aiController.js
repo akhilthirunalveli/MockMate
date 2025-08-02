@@ -11,9 +11,11 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 // @access  Private
 const generateInterviewQuestions = async (req, res) => {
   try {
+    console.log("Generate questions request received:", req.body);
     const { role, experience, topicsToFocus, numberOfQuestions } = req.body;
 
     if (!role || !experience || !topicsToFocus || !numberOfQuestions) {
+      console.log("Missing required fields:", { role, experience, topicsToFocus, numberOfQuestions });
       return res.status(400).json({ message: "Missing required fields" });
     }
 
@@ -24,6 +26,8 @@ const generateInterviewQuestions = async (req, res) => {
       numberOfQuestions
     );
 
+    console.log("About to call Gemini API with prompt:", prompt.substring(0, 100) + "...");
+    
     // Get the generative model
     const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
@@ -31,6 +35,8 @@ const generateInterviewQuestions = async (req, res) => {
     const result = await model.generateContent(prompt);
     const response = await result.response;
     let rawText = response.text();
+
+    console.log("Gemini API response received, length:", rawText.length);
 
     // Clean it: Remove ```json and ``` from beginning and end
     const cleanedText = rawText
@@ -44,9 +50,11 @@ const generateInterviewQuestions = async (req, res) => {
     res.status(200).json(data);
   } catch (error) {
     console.error("Error generating questions:", error);
+    console.error("Error stack:", error.stack);
     res.status(500).json({
       message: "Failed to generate questions",
       error: error.message,
+      stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
     });
   }
 };
