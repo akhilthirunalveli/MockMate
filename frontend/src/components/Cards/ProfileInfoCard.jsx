@@ -61,7 +61,7 @@ const ProfileInfoCard = () => {
   return (
     user && (
       <div
-        className="relative mr-[9%] sm:mr-0"
+        className="relative"
         ref={cardRef}
         onMouseEnter={handleShowButtons}
         onMouseLeave={handleHideButtons}

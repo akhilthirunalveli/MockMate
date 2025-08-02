@@ -63,14 +63,14 @@ const RoleInfoHeader = ({
         </div>
       </div>
 
-      <div className="container mx-auto px-15 md:px-14 relative z-10">
-        <div className="h-[200px] flex flex-col justify-center relative z-10">
+      <div className="container mx-auto px-4 sm:px-6 md:px-10 lg:px-14 relative z-10">
+        <div className="h-[150px] sm:h-[180px] md:h-[200px] flex flex-col justify-center relative z-10 py-4 sm:py-0">
           <div className="flex items-start">
             <div className="flex-grow">
               <div className="flex justify-between items-start">
-                <div>
-                  <h2 className="text-4xl text-white font-medium">{role}</h2>
-                  <p className="text-sm text-medium text-white mt-4">
+                <div className="w-full text-center sm:text-left">
+                  <h2 className="text-2xl sm:text-3xl md:text-4xl text-white font-medium leading-tight">{role}</h2>
+                  <p className="text-xs sm:text-sm text-medium text-white mt-2 sm:mt-3 md:mt-4 leading-relaxed">
                     {topicsToFocus}
                   </p>
                 </div>
@@ -78,16 +78,16 @@ const RoleInfoHeader = ({
             </div>
           </div>
 
-          <div className="flex items-center gap-3 mt-5">
-            <div className="text-[12px] font-semibold text-black bg-white px-3 py-1 rounded-full">
+          <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2 sm:gap-3 mt-3 sm:mt-4 md:mt-5">
+            <div className="text-[10px] sm:text-[11px] md:text-[12px] font-semibold text-black bg-white px-2 sm:px-3 py-1 rounded-full whitespace-nowrap">
               Experience: {experience} {experience == 1 ? "Year" : "Years"}
             </div>
 
-            <div className="text-[12px] font-semibold text-black bg-white px-3 py-1 rounded-full">
+            <div className="text-[10px] sm:text-[11px] md:text-[12px] font-semibold text-black bg-white px-2 sm:px-3 py-1 rounded-full whitespace-nowrap">
               {questions} Q&A
             </div>
 
-            <div className="text-[12px] font-semibold text-black bg-white px-3 py-1 rounded-full">
+            <div className="text-[10px] sm:text-[11px] md:text-[12px] font-semibold text-black bg-white px-2 sm:px-3 py-1 rounded-full whitespace-nowrap">
               Last Updated: {lastUpdated}
             </div>
           </div>
