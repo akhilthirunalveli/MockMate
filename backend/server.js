@@ -55,6 +55,19 @@ app.use('/api/questions', questionRoutes);
 app.post("/api/ai/generate-questions", protect, generateInterviewQuestions);
 app.post("/api/ai/generate-explanation", protect, generateConceptExplanation);
 
+// Health check endpoint for debugging
+app.get("/health", (req, res) => {
+  res.json({
+    status: "OK",
+    timestamp: new Date().toISOString(),
+    environment: process.env.NODE_ENV || "development",
+    hasGeminiKey: !!process.env.GEMINI_API_KEY,
+    geminiKeyLength: process.env.GEMINI_API_KEY ? process.env.GEMINI_API_KEY.length : 0,
+    mongoUri: process.env.MONGO_URI ? "SET" : "MISSING",
+    port: process.env.PORT || 5000
+  });
+});
+
 
 // Start Server
 const PORT = process.env.PORT || 5000;
