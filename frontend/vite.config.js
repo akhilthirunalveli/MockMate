@@ -50,7 +50,7 @@ export default defineConfig({
   ],
   server: {
     proxy: {
-      '/api': 'http://localhost:8000', // or your backend port
+      '/api': 'https://mockmate-backend-r0jk.onrender.com', // or your backend port
     },
   },
 })
