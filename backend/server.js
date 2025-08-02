@@ -68,6 +68,28 @@ app.get("/health", (req, res) => {
   });
 });
 
+// Test endpoint for AI setup
+app.get("/test-ai", async (req, res) => {
+  try {
+    const { GoogleGenerativeAI } = require("@google/generative-ai");
+    const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    
+    res.json({
+      status: "AI Setup OK",
+      hasKey: !!process.env.GEMINI_API_KEY,
+      keyLength: process.env.GEMINI_API_KEY ? process.env.GEMINI_API_KEY.length : 0,
+      modelName: "gemini-1.5-flash"
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: "AI Setup Failed",
+      error: error.message,
+      stack: error.stack
+    });
+  }
+});
+
 
 // Start Server
 const PORT = process.env.PORT || 5000;
