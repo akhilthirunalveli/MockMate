@@ -1,0 +1,1 @@
+{"name":"MockMate Admin","short_name":"Admin","description":"MockMate Admin Dashboard","start_url":"/admin/","display":"standalone","background_color":"#000000","theme_color":"#dc3545","lang":"en","scope":"/admin/","orientation":"portrait","icons":[{"src":"M.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}]}

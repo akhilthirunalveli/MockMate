@@ -7,7 +7,10 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "admin:dev": "vite --config vite.admin.config.js",
+    "admin:build": "vite build --config vite.admin.config.js",
+    "admin:preview": "vite preview --config vite.admin.config.js --outDir dist-admin"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.5",
