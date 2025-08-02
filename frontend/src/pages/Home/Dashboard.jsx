@@ -30,13 +30,8 @@ const Dashboard = () => {
   });
 
   const handleResumeClick = () => {
-    if (user?.resumeLink) {
-      // If resume link exists, open it
-      window.open(user.resumeLink, "_blank");
-    } else {
-      // If no resume link, open modal to add one
-      setOpenResumeModal(true);
-    }
+    // Always open the modal first to show edit options
+    setOpenResumeModal(true);
   };
 
   const fetchAllSessions = async () => {
@@ -110,7 +105,7 @@ const Dashboard = () => {
             <button
               className="h-10 sm:h-12 flex items-center justify-center gap-2 bg-white text-xs sm:text-sm font-semibold text-black px-4 sm:px-5 py-2 rounded-full transition-colors cursor-pointer"
               onClick={handleResumeClick}
-              title={user?.resumeLink ? "Open Resume" : "Add Resume Link"}
+              title={user?.resumeLink ? "Manage Resume" : "Add Resume Link"}
             >
               <IoDocumentTextOutline className="text-lg sm:text-xl text-black" />
               {user?.resumeLink ? "Resume" : "Add Resume"}
