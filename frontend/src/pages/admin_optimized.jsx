@@ -52,18 +52,18 @@ const baseStyles = {
 };
 
 // Skeleton Components
-const SkeletonLoader = ({ height = "clamp(250px, 40vw, 300px)" }) => (
+const SkeletonLoader = ({ height = "300px" }) => (
   <div style={{ 
     width: "100%", 
     height, 
     backgroundColor: "#2a2a2a", 
-    borderRadius: "clamp(6px, 2vw, 8px)",
+    borderRadius: "8px",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
     animation: "pulse 1.5s ease-in-out infinite"
   }}>
-    <div style={{ color: "#666", fontSize: "clamp(12px, 3vw, 14px)" }}>Loading...</div>
+    <div style={{ color: "#666", fontSize: "14px" }}>Loading...</div>
   </div>
 );
 
@@ -71,24 +71,19 @@ const CardSkeleton = () => (
   <div style={{
     backgroundColor: "#1a1a1a",
     border: "1px solid #333",
-    borderRadius: "clamp(6px, 2vw, 8px)",
-    padding: "clamp(1.2rem, 4vw, 1.5rem)",
-    animation: "pulse 1.5s ease-in-out infinite",
-    minHeight: "clamp(120px, 20vw, 150px)"
+    borderRadius: "8px",
+    padding: "1.5rem",
+    animation: "pulse 1.5s ease-in-out infinite"
   }}>
-    {[
-      { height: "clamp(18px, 5vw, 24px)", width: "100%" },
-      { height: "clamp(14px, 4vw, 18px)", width: "70%" },
-      { height: "clamp(12px, 3.5vw, 16px)", width: "50%" }
-    ].map((style, index) => (
+    {[20, 16, 14].map((height, index) => (
       <div 
         key={index}
         style={{ 
-          height: style.height, 
+          height: `${height}px`, 
           backgroundColor: "#333", 
-          borderRadius: "clamp(3px, 1vw, 4px)", 
-          marginBottom: "clamp(0.4rem, 2vw, 0.6rem)",
-          width: style.width
+          borderRadius: "4px", 
+          marginBottom: "0.5rem",
+          width: index === 1 ? "70%" : index === 2 ? "50%" : "100%"
         }}
       />
     ))}
@@ -258,13 +253,10 @@ const TabNavigation = ({ activeTab, setActiveTab, setLoadedTabs, tabs }) => (
           setLoadedTabs(prev => new Set([...prev, key]));
         }}
         style={{
-          backgroundColor: activeTab === key ? "#000000ff" : "#000000ff",
-          border: activeTab === key ? "2px solid #ffffffff" : "1px solid #000000ff",
+          backgroundColor: activeTab === key ? "#000000ff" : "#333",
           minWidth: "fit-content",
           padding: "clamp(5px, 1.5vw, 7px) clamp(10px, 2.5vw, 14px)",
-          fontSize: "clamp(0.7rem, 1.8vw, 0.8rem)",
-          color: activeTab === key ? "#ffffff" : "#ccc",
-          fontWeight: activeTab === key ? "600" : "500"
+          fontSize: "clamp(0.7rem, 1.8vw, 0.8rem)"
         }}
       >
         {label}{count !== undefined ? ` (${count})` : ''}
@@ -311,7 +303,7 @@ const LoginPage = ({ onLogin }) => {
       backgroundSize: "20px 20px",
       fontFamily: baseStyles.fontFamily,
       position: "relative",
-      paddingTop: "clamp(30vh, 31vh, 32vh)",
+      paddingTop: "clamp(10vh, 15vh, 20vh)",
       paddingBottom: "2rem",
       boxSizing: "border-box"
     }}>
@@ -581,286 +573,6 @@ const UsersTab = lazy(() => Promise.resolve({
   )
 }));
 
-// Lazy load sessions tab
-const SessionsTab = lazy(() => Promise.resolve({ 
-  default: ({ sessions }) => (
-    <div>
-      <h2 style={{ 
-        color: "white", 
-        marginBottom: "1rem",
-        fontFamily: baseStyles.fontFamily,
-        fontWeight: "600",
-        fontSize: "clamp(1.5rem, 4vw, 2rem)"
-      }}>
-        All Interview Sessions
-      </h2>
-      <div style={{ 
-        display: "grid", 
-        gap: "1rem", 
-        gridTemplateColumns: "repeat(auto-fill, minmax(min(350px, 100%), 1fr))"
-      }}>
-        {sessions.map((session) => (
-          <Card key={session._id} style={{ backgroundColor: "#1a1a1a", color: "white" }}>
-            <div style={{ marginBottom: "1rem" }}>
-              <h3 style={{ 
-                margin: "0 0 0.5rem 0", 
-                color: "#28a745",
-                fontSize: "clamp(1rem, 3vw, 1.2rem)",
-                fontFamily: baseStyles.fontFamily,
-                fontWeight: "600"
-              }}>
-                {session.role || 'Unknown Role'}
-              </h3>
-              <div style={{ 
-                display: "flex", 
-                flexWrap: "wrap", 
-                gap: "0.5rem", 
-                marginBottom: "0.5rem" 
-              }}>
-                <span style={{ 
-                  backgroundColor: "#007bff", 
-                  padding: "0.25rem 0.5rem", 
-                  borderRadius: "12px", 
-                  fontSize: "clamp(0.7rem, 2vw, 0.8rem)",
-                  fontWeight: "500"
-                }}>
-                  {session.experience || 'Unknown'}
-                </span>
-                <span style={{ 
-                  backgroundColor: "#6f42c1", 
-                  padding: "0.25rem 0.5rem", 
-                  borderRadius: "12px", 
-                  fontSize: "clamp(0.7rem, 2vw, 0.8rem)",
-                  fontWeight: "500"
-                }}>
-                  {session.difficulty || 'Unknown'}
-                </span>
-              </div>
-              {session.user && (
-                <p style={{ 
-                  margin: "0.5rem 0", 
-                  color: "#ccc",
-                  fontSize: "clamp(0.8rem, 2.5vw, 0.9rem)"
-                }}>
-                  <strong>User:</strong> {session.user.name || 'Unknown'}
-                </p>
-              )}
-            </div>
-            <div style={{ fontSize: "14px", color: "#999" }}>
-              <p style={{ margin: "0.25rem 0" }}><strong>ID:</strong> {session._id}</p>
-              <p style={{ margin: "0.25rem 0" }}>
-                <strong>Created:</strong> {new Date(session.createdAt).toLocaleDateString()}
-              </p>
-              {session.endTime && (
-                <p style={{ margin: "0.25rem 0" }}>
-                  <strong>Completed:</strong> {new Date(session.endTime).toLocaleDateString()}
-                </p>
-              )}
-            </div>
-          </Card>
-        ))}
-      </div>
-    </div>
-  )
-}));
-
-// Lazy load questions tab
-const QuestionsTab = lazy(() => Promise.resolve({ 
-  default: ({ groupedQuestions, expandedGroups, toggleGroupExpansion }) => (
-    <div>
-      <h2 style={{ 
-        color: "white", 
-        marginBottom: "1rem",
-        fontFamily: baseStyles.fontFamily,
-        fontWeight: "600",
-        fontSize: "clamp(1.5rem, 4vw, 2rem)"
-      }}>
-        Questions by User
-      </h2>
-      <div style={{ 
-        display: "flex",
-        flexDirection: "column",
-        gap: "1rem"
-      }}>
-        {Object.entries(groupedQuestions).map(([userId, { user, questions }]) => {
-          const isExpanded = expandedGroups.has(userId);
-          const questionCount = questions.length;
-          
-          return (
-            <div key={userId} style={{ width: "100%" }}>
-              {/* User Header - Collapsible */}
-              <Card 
-                style={{ 
-                  backgroundColor: "#2a2a2a", 
-                  color: "white",
-                  cursor: "pointer",
-                  transition: "all 0.2s ease",
-                  marginBottom: isExpanded ? "0.5rem" : "0"
-                }}
-                onClick={() => toggleGroupExpansion(userId)}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = "#333";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = "#2a2a2a";
-                }}
-              >
-                <div style={{ 
-                  display: "flex", 
-                  justifyContent: "space-between", 
-                  alignItems: "center",
-                  flexWrap: "wrap",
-                  gap: "0.5rem"
-                }}>
-                  <div style={{ flex: "1", minWidth: "0" }}>
-                    <h3 style={{ 
-                      margin: "0 0 0.25rem 0", 
-                      color: "#007bff",
-                      fontSize: "clamp(1.1rem, 3.2vw, 1.3rem)",
-                      fontFamily: baseStyles.fontFamily,
-                      fontWeight: "600",
-                      wordBreak: "break-word"
-                    }}>
-                      {user.name}
-                    </h3>
-                    {user.email && (
-                      <p style={{ 
-                        margin: "0", 
-                        color: "#ccc",
-                        fontSize: "clamp(0.8rem, 2.5vw, 0.9rem)",
-                        wordBreak: "break-word"
-                      }}>
-                        {user.email}
-                      </p>
-                    )}
-                  </div>
-                  <div style={{ 
-                    display: "flex", 
-                    alignItems: "center", 
-                    gap: "0.5rem",
-                    flexShrink: "0"
-                  }}>
-                    <span style={{ 
-                      backgroundColor: "#28a745", 
-                      padding: "0.25rem 0.5rem", 
-                      borderRadius: "12px", 
-                      fontSize: "clamp(0.7rem, 2vw, 0.8rem)",
-                      fontWeight: "500",
-                      color: "white"
-                    }}>
-                      {questionCount} question{questionCount !== 1 ? 's' : ''}
-                    </span>
-                    <span style={{ 
-                      fontSize: "clamp(1.2rem, 3vw, 1.5rem)",
-                      color: "#ccc",
-                      transform: isExpanded ? "rotate(90deg)" : "rotate(0deg)",
-                      transition: "transform 0.2s ease"
-                    }}>
-                      ▶
-                    </span>
-                  </div>
-                </div>
-              </Card>
-
-              {/* Questions Grid - Collapsible Content */}
-              {isExpanded && (
-                <div style={{ 
-                  display: "grid", 
-                  gap: "1rem", 
-                  gridTemplateColumns: "repeat(auto-fill, minmax(min(400px, 100%), 1fr))",
-                  paddingLeft: "1rem",
-                  borderLeft: "3px solid #007bff",
-                  animation: "slideDown 0.3s ease-out"
-                }}>
-                  {questions.map((question) => (
-                    <Card key={question._id} style={{ backgroundColor: "#1a1a1a", color: "white" }}>
-                      <div style={{ marginBottom: "1rem" }}>
-                        <h4 style={{ 
-                          margin: "0 0 0.5rem 0", 
-                          color: "#ffc107",
-                          fontSize: "clamp(0.9rem, 2.8vw, 1rem)",
-                          fontFamily: baseStyles.fontFamily,
-                          fontWeight: "600",
-                          lineHeight: "1.4"
-                        }}>
-                          {question.question || 'No question text'}
-                        </h4>
-                        {question.followUpQuestions && question.followUpQuestions.length > 0 && (
-                          <div style={{ marginTop: "0.5rem" }}>
-                            <p style={{ 
-                              color: "#ccc", 
-                              fontSize: "clamp(0.75rem, 2.2vw, 0.85rem)",
-                              margin: "0 0 0.25rem 0",
-                              fontWeight: "500"
-                            }}>
-                              Follow-up Questions:
-                            </p>
-                            <ul style={{ 
-                              margin: "0", 
-                              paddingLeft: "1rem", 
-                              color: "#aaa",
-                              fontSize: "clamp(0.7rem, 1.8vw, 0.8rem)"
-                            }}>
-                              {question.followUpQuestions.slice(0, 3).map((followUp, index) => (
-                                <li key={index} style={{ marginBottom: "0.25rem" }}>
-                                  {followUp}
-                                </li>
-                              ))}
-                              {question.followUpQuestions.length > 3 && (
-                                <li style={{ color: "#666", fontStyle: "italic" }}>
-                                  +{question.followUpQuestions.length - 3} more...
-                                </li>
-                              )}
-                            </ul>
-                          </div>
-                        )}
-                        {question.session && (
-                          <div style={{ 
-                            marginTop: "0.5rem",
-                            padding: "0.5rem",
-                            backgroundColor: "#2a2a2a",
-                            borderRadius: "6px"
-                          }}>
-                            <p style={{ 
-                              margin: "0", 
-                              color: "#ccc",
-                              fontSize: "clamp(0.7rem, 1.8vw, 0.8rem)"
-                            }}>
-                              <strong>Session:</strong> {question.session.role || 'Unknown Role'}
-                            </p>
-                          </div>
-                        )}
-                      </div>
-                      <div style={{ fontSize: "clamp(0.7rem, 1.8vw, 0.8rem)", color: "#999" }}>
-                        <p style={{ margin: "0.25rem 0" }}>
-                          <strong>Generated:</strong> {new Date(question.createdAt).toLocaleDateString()}
-                        </p>
-                      </div>
-                    </Card>
-                  ))}
-                </div>
-              )}
-            </div>
-          );
-        })}
-      </div>
-      
-      <style>{`
-        @keyframes slideDown {
-          from {
-            opacity: 0;
-            transform: translateY(-10px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-      `}</style>
-    </div>
-  )
-}));
-
 // Main Dashboard Component
 const AdminDashboard = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -871,7 +583,6 @@ const AdminDashboard = () => {
   const [error, setError] = useState("");
   const [activeTab, setActiveTab] = useState("analytics");
   const [expandedUsers, setExpandedUsers] = useState(new Set());
-  const [expandedQuestionGroups, setExpandedQuestionGroups] = useState(new Set());
   const [connectionStatus, setConnectionStatus] = useState("testing");
   const [loadedTabs, setLoadedTabs] = useState(new Set(["analytics"]));
 
@@ -994,16 +705,6 @@ const AdminDashboard = () => {
       newExpandedUsers.add(userId);
     }
     setExpandedUsers(newExpandedUsers);
-  };
-
-  const toggleQuestionGroupExpansion = (userId) => {
-    const newExpandedGroups = new Set(expandedQuestionGroups);
-    if (newExpandedGroups.has(userId)) {
-      newExpandedGroups.delete(userId);
-    } else {
-      newExpandedGroups.add(userId);
-    }
-    setExpandedQuestionGroups(newExpandedGroups);
   };
 
   // Data processing functions
@@ -1215,9 +916,9 @@ const AdminDashboard = () => {
                   gridTemplateColumns: "repeat(auto-fit, minmax(min(350px, 100%), 1fr))",
                   marginBottom: "1.5rem"
                 }}>
-                  <ChartCard title="User Registrations by Month" height="clamp(300px, 50vw, 400px)">
+                  <ChartCard title="User Registrations by Month">
                     {chartData.length > 0 ? (
-                      <ResponsiveContainer width="100%" height="100%" minHeight={300}>
+                      <ResponsiveContainer width="100%" height="100%" minHeight={250}>
                         <PieChart>
                           <Pie
                             data={chartData}
@@ -1234,7 +935,7 @@ const AdminDashboard = () => {
                           </Pie>
                           <Tooltip 
                             contentStyle={{
-                              backgroundColor: "#ffffffff",
+                              backgroundColor: "#2a2a2a",
                               border: "1px solid #555",
                               borderRadius: "8px",
                               color: "white"
@@ -1254,12 +955,12 @@ const AdminDashboard = () => {
                     {sessionData.length > 0 ? (
                       <ResponsiveContainer width="100%" height="100%" minHeight={250}>
                         <BarChart data={sessionData}>
-                          <CartesianGrid/>
-                          <XAxis dataKey="name" tick={{}} />
-                          <YAxis tick={{}} />
+                          <CartesianGrid strokeDasharray="3 3" stroke="#333" />
+                          <XAxis dataKey="name" tick={{ fill: 'white' }} />
+                          <YAxis tick={{ fill: 'white' }} />
                           <Tooltip 
                             contentStyle={{
-                              backgroundColor: "#000000ff",
+                              backgroundColor: "#2a2a2a",
                               border: "1px solid #555",
                               borderRadius: "8px",
                               color: "white"
@@ -1324,39 +1025,7 @@ const AdminDashboard = () => {
               </Suspense>
             )}
 
-            {activeTab === "sessions" && loadedTabs.has("sessions") && (
-              <Suspense fallback={
-                <div style={{ 
-                  display: "grid", 
-                  gap: "1rem", 
-                  gridTemplateColumns: "repeat(auto-fill, minmax(min(350px, 100%), 1fr))"
-                }}>
-                  {[...Array(6)].map((_, i) => <CardSkeleton key={i} />)}
-                </div>
-              }>
-                <SessionsTab sessions={sessions} />
-              </Suspense>
-            )}
-
-            {activeTab === "questions" && loadedTabs.has("questions") && (
-              <Suspense fallback={
-                <div style={{ 
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "1rem"
-                }}>
-                  {[...Array(4)].map((_, i) => <CardSkeleton key={i} />)}
-                </div>
-              }>
-                <QuestionsTab 
-                  groupedQuestions={groupedQuestions} 
-                  expandedGroups={expandedQuestionGroups}
-                  toggleGroupExpansion={toggleQuestionGroupExpansion}
-                />
-              </Suspense>
-            )}
-
-            {/* Other tabs can be added here */}
+            {/* Other tabs would go here - sessions, questions etc. */}
           </>
         )}
       </div>
