@@ -6,6 +6,7 @@ const UserSchema = new mongoose.Schema(
     email: { type: String, required: true, unique: true, index: true },
     password: { type: String, required: false }, // Not required for OAuth
     profileImageUrl: { type: String, default: null },
+    resumeLink: { type: String, default: null },
   },
   { timestamps: true }
 );

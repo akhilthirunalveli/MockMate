@@ -7,6 +7,7 @@ const {
   firebaseLogin,
   getAllUsers,
   deleteUser, // Added this function
+  updateResumeLink,
 } = require("../controllers/authController");
 const { protect } = require("../middlewares/authMiddleware");
 
@@ -16,6 +17,7 @@ const router = express.Router();
 router.post("/register", registerUser); // Register User
 router.post("/login", loginUser); // Login User
 router.get("/profile", protect, getUserProfile); // Get User Profile
+router.put("/resume-link", protect, updateResumeLink); // Update Resume Link
 router.get("/users", getAllUsers); // Get all users
 router.delete("/users/:id", deleteUser); // Delete User// Firebase OAuth login
 router.post("/firebase-login", firebaseLogin);

@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { LuPlus } from "react-icons/lu";
 import { BsRecordCircle } from "react-icons/bs";
+import { IoDocumentTextOutline } from "react-icons/io5";
 import { CARD_BG } from "../../utils/data";
 import toast from "react-hot-toast";
 import DashboardLayout from "../../components/layouts/DashboardLayout";
@@ -12,17 +13,31 @@ import moment from "moment";
 import Modal from "../../components/Modal";
 import CreateSessionForm from "./CreateSessionForm";
 import DeleteAlertContent from "../../components/DeleteAlertContent";
+import ResumeLinkModal from "../../components/ResumeLinkModal";
+import { UserContext } from "../../context/userContext";
 
 const Dashboard = () => {
   const navigate = useNavigate();
+  const { user } = useContext(UserContext);
 
   const [openCreateModal, setOpenCreateModal] = useState(false);
+  const [openResumeModal, setOpenResumeModal] = useState(false);
   const [sessions, setSessions] = useState([]);
 
   const [openDeleteAlert, setOpenDeleteAlert] = useState({
     open: false,
     data: null,
   });
+
+  const handleResumeClick = () => {
+    if (user?.resumeLink) {
+      // If resume link exists, open it
+      window.open(user.resumeLink, "_blank");
+    } else {
+      // If no resume link, open modal to add one
+      setOpenResumeModal(true);
+    }
+  };
 
   const fetchAllSessions = async () => {
     try {
@@ -92,6 +107,14 @@ const Dashboard = () => {
               <BsRecordCircle className="text-lg sm:text-xl text-black" />
               Record
             </button>
+            <button
+              className="h-10 sm:h-12 flex items-center justify-center gap-2 bg-white text-xs sm:text-sm font-semibold text-black px-4 sm:px-5 py-2 rounded-full transition-colors cursor-pointer"
+              onClick={handleResumeClick}
+              title={user?.resumeLink ? "Open Resume" : "Add Resume Link"}
+            >
+              <IoDocumentTextOutline className="text-lg sm:text-xl text-black" />
+              {user?.resumeLink ? "Resume" : "Add Resume"}
+            </button>
           </div>
         </div>
       </div>
@@ -106,6 +129,22 @@ const Dashboard = () => {
         <div>
           <CreateSessionForm />
         </div>
+      </Modal>
+
+      <Modal
+        isOpen={openResumeModal}
+        onClose={() => {
+          setOpenResumeModal(false);
+        }}
+        hideHeader
+        isDark={true}
+      >
+        <ResumeLinkModal
+          onClose={() => setOpenResumeModal(false)}
+          onSave={() => {
+            // Resume link saved, modal will close automatically
+          }}
+        />
       </Modal>
 
       <Modal

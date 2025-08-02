@@ -1,14 +1,15 @@
 import React from "react";
 
-const Modal = ({ children, isOpen, onClose, title, hideHeader }) => {
+const Modal = ({ children, isOpen, onClose, title, hideHeader, isDark }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex justify-center items-center w-full h-full bg-black/40">
+    <div className={`fixed inset-0 z-50 flex justify-center items-center w-full h-full ${isDark ? 'bg-black/60' : 'bg-black/40'}`}>
       {/* Modal Content */}
       <div
-        className={`relative flex flex-col bg-white shadow-lg rounded-lg overflow-hidden 
-        `}
+        className={`relative flex flex-col shadow-lg rounded-lg overflow-hidden ${
+          isDark ? 'bg-transparent' : 'bg-white'
+        }`}
       >
         {/* Modal Header */}
         {!hideHeader && (
@@ -19,7 +20,7 @@ const Modal = ({ children, isOpen, onClose, title, hideHeader }) => {
 
         <button
           type="button"
-          className="text-gray-400 bg-transparent hover:bg-grey-100 hover:text-gray-900 rounded-lg text-sm w-8 h-8 flex justify-center items-center absolute top-3.5 right-3.5 cursor-pointer"
+          className={`${isDark ? 'text-gray-300 hover:bg-white/10 hover:text-white' : 'text-gray-400 hover:bg-grey-100 hover:text-gray-900'} bg-transparent rounded-lg text-sm w-8 h-8 flex justify-center items-center absolute top-3.5 right-3.5 cursor-pointer transition-all duration-200`}
           onClick={onClose}
         >
           <svg

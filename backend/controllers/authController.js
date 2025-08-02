@@ -201,4 +201,39 @@ const deleteUser = async (req, res) => {
   }
 };
 
-module.exports = { registerUser, loginUser, getUserProfile, firebaseLogin, getAllUsers, deleteUser };
+// @desc    Update user resume link
+// @route   PUT /api/auth/resume-link
+// @access  Private
+const updateResumeLink = async (req, res) => {
+  try {
+    const { resumeLink } = req.body;
+    const userId = req.user.id;
+
+    // Update user's resume link
+    const user = await User.findByIdAndUpdate(
+      userId,
+      { resumeLink },
+      { new: true }
+    ).select("-password");
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.status(200).json({
+      message: "Resume link updated successfully",
+      user: {
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        profileImageUrl: user.profileImageUrl,
+        resumeLink: user.resumeLink,
+      },
+    });
+  } catch (error) {
+    console.error("Error updating resume link:", error);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
+module.exports = { registerUser, loginUser, getUserProfile, firebaseLogin, getAllUsers, deleteUser, updateResumeLink };

@@ -1,10 +1,11 @@
-export const BASE_URL = "https://mockmate-backend-r0jk.onrender.com";
+export const BASE_URL = "http://localhost:8000";
 
 export const API_PATHS = {
   AUTH: {
     REGISTER: "/api/auth/register", // Signup
     LOGIN: "/api/auth/login", // Authenticate user & return JWT token
     GET_PROFILE: "/api/auth/profile", // Get logged-in user details
+    UPDATE_RESUME_LINK: "/api/auth/resume-link", // Update resume link
   },
 
   IMAGE: {
