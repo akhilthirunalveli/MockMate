@@ -6,12 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "build:all": "npm run build && npm run admin:build",
     "lint": "eslint .",
-    "preview": "vite preview",
-    "admin:dev": "vite --config vite.admin.config.js",
-    "admin:build": "vite build --config vite.admin.config.js",
-    "admin:preview": "vite preview --config vite.admin.config.js --outDir dist-admin"
+    "preview": "vite preview"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.5",
