@@ -75,18 +75,24 @@ const Navbar = () => {
                   onClick={handleProfileClick}
                   className="flex items-center focus:outline-none"
                 >
-                  {user?.profileImageUrl || user?.photoURL ? (
-                    <img
-                      src={user.profileImageUrl || user.photoURL}
-                      alt={user?.name || 'Profile'}
-                      className="w-8 h-8 bg-gray-900 rounded-full object-cover border-2 border-transparent hover:border-white/30 transition-all"
-                      referrerPolicy="no-referrer"
-                    />
-                  ) : (
-                    <div className="w-8 h-8 bg-gray-900 rounded-full flex items-center justify-center text-white font-bold text-sm border-2 border-transparent hover:border-white/30 transition-all">
-                      {user?.name ? user.name[0] : "U"}
-                    </div>
-                  )}
+                  <div 
+                    className="w-8 h-8 rounded-full flex items-center justify-center text-white font-bold text-sm border-2 border-transparent hover:border-white/30 transition-all"
+                    style={{ 
+                      backgroundColor: user?.name ? 
+                        ['#EF4444', '#F97316', '#F59E0B', '#84CC16', '#22C55E', '#10B981', '#06B6D4', '#3B82F6', '#8B5CF6', '#EC4899'][
+                          Math.abs(user.name.split('').reduce((a, b) => a + b.charCodeAt(0), 0)) % 10
+                        ] : '#6B7280'
+                    }}
+                  >
+                    {user?.name ? 
+                      (() => {
+                        const words = user.name.trim().split(' ').filter(word => word.length > 0);
+                        if (words.length === 0) return 'U';
+                        if (words.length === 1) return words[0][0].toUpperCase();
+                        return (words[0][0] + words[words.length - 1][0]).toUpperCase();
+                      })() : 'U'
+                    }
+                  </div>
                 </button>
               </div>
             </div>

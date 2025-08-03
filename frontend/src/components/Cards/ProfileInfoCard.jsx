@@ -7,6 +7,7 @@ const ProfileInfoCard = () => {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const [isButtonsVisible, setIsButtonsVisible] = useState(false);
+  const [imageError, setImageError] = useState(false);
 
   // Add ref for click-away detection
   const cardRef = React.useRef(null);
@@ -71,16 +72,32 @@ const ProfileInfoCard = () => {
         {/* Profile Info (hidden when buttons are visible on large screens) */}
         {!(isButtonsVisible && window.innerWidth >= 640) && !isOpen && (
           <div className="flex items-center cursor-pointer transition-all duration-200">
-            {user.profileImageUrl || user.photoURL ? (
+            {(user.profileImageUrl || user.photoURL) && !imageError ? (
               <img
                 src={user.profileImageUrl || user.photoURL}
                 alt={user.name}
-                className="w-10 h-10 bg-gray-900 rounded-full mr-3 object-cover"
+                className="w-10 h-10 rounded-full mr-3 object-cover"
                 referrerPolicy="no-referrer"
+                onError={() => setImageError(true)}
               />
             ) : (
-              <div className="w-10 h-10 bg-gray-900 rounded-full mr-3 flex items-center justify-center text-white font-bold text-lg">
-                {user.name ? user.name[0] : "U"}
+              <div 
+                className="w-10 h-10 rounded-full mr-3 flex items-center justify-center text-white font-bold text-lg"
+                style={{ 
+                  backgroundColor: user?.name ? 
+                    ['#EF4444', '#F97316', '#F59E0B', '#84CC16', '#22C55E', '#10B981', '#06B6D4', '#3B82F6', '#8B5CF6', '#EC4899'][
+                      Math.abs(user.name.split('').reduce((a, b) => a + b.charCodeAt(0), 0)) % 10
+                    ] : '#6B7280'
+                }}
+              >
+                {user?.name ? 
+                  (() => {
+                    const words = user.name.trim().split(' ').filter(word => word.length > 0);
+                    if (words.length === 0) return 'U';
+                    if (words.length === 1) return words[0][0].toUpperCase();
+                    return (words[0][0] + words[words.length - 1][0]).toUpperCase();
+                  })() : 'U'
+                }
               </div>
             )}
             <div className="hidden sm:block">
@@ -119,16 +136,32 @@ const ProfileInfoCard = () => {
             />
             <div className="fixed top-20 right-6 h-full w-72 min-h-[300px] max-h-[350px] z-50 shadow-2xl backdrop-blur-5xl border border-gray-100/30 rounded-2xl transition-all bg-gradient-to-br from-gray-900 via-black to-gray-900">
               <div className="flex flex-col items-center py-8 px-6">
-                {user.profileImageUrl || user.photoURL ? (
+                {(user.profileImageUrl || user.photoURL) && !imageError ? (
                   <img
                     src={user.profileImageUrl || user.photoURL}
                     alt={user.name}
-                    className="w-16 h-16 bg-gray-900 rounded-full object-cover mb-4"
+                    className="w-16 h-16 rounded-full object-cover mb-4"
                     referrerPolicy="no-referrer"
+                    onError={() => setImageError(true)}
                   />
                 ) : (
-                  <div className="w-16 h-16 bg-gray-900 rounded-full flex items-center justify-center text-white font-bold text-2xl mb-4">
-                    {user.name ? user.name[0] : "U"}
+                  <div 
+                    className="w-16 h-16 rounded-full flex items-center justify-center text-white font-bold text-2xl mb-4"
+                    style={{ 
+                      backgroundColor: user?.name ? 
+                        ['#EF4444', '#F97316', '#F59E0B', '#84CC16', '#22C55E', '#10B981', '#06B6D4', '#3B82F6', '#8B5CF6', '#EC4899'][
+                          Math.abs(user.name.split('').reduce((a, b) => a + b.charCodeAt(0), 0)) % 10
+                        ] : '#6B7280'
+                    }}
+                  >
+                    {user?.name ? 
+                      (() => {
+                        const words = user.name.trim().split(' ').filter(word => word.length > 0);
+                        if (words.length === 0) return 'U';
+                        if (words.length === 1) return words[0][0].toUpperCase();
+                        return (words[0][0] + words[words.length - 1][0]).toUpperCase();
+                      })() : 'U'
+                    }
                   </div>
                 )}
                 <div className="text-lg text-white font-bold mb-1">

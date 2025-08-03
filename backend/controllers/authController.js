@@ -54,14 +54,20 @@ const registerUser = async (req, res) => {
 const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
-    console.log("Login request:", { email, password }); // Add this line
 
-    const user = await User.findOne({ email }).select("+password name email profileImageUrl").lean();
+    const user = await User.findOne({ email }).select('+password').lean();
+    
     if (!user) {
       return res.status(401).json({ message: "Invalid email or password" });
     }
 
+    // Check if user has a password (not OAuth user)
+    if (!user.password) {
+      return res.status(401).json({ message: "Please use Google login for this account" });
+    }
+
     const isMatch = await bcrypt.compare(password, user.password);
+    
     if (!isMatch) {
       return res.status(401).json({ message: "Invalid email or password" });
     }

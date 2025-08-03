@@ -265,24 +265,48 @@ function LandingPage() {
                   }}
                   onClick={() => navigate("/dashboard")}
                 >
-                  <img
-                    src={
-                      user.profileImageUrl ||
-                      user.photoURL ||
-                      "https://ui-avatars.com/api/?name=" +
-                        encodeURIComponent(user.name || user.email || "U")
-                    }
-                    alt="profile"
-                    style={{
-                      width: "2.5em",
-                      height: "2.5em",
-                      borderRadius: "90%",
-                      objectFit: "cover",
-                      marginRight: "0.9em",
-                      background: "#222"
-                    }}
-                    referrerPolicy="no-referrer"
-                  />
+                  {user.profileImageUrl || user.photoURL ? (
+                    <img
+                      src={user.profileImageUrl || user.photoURL}
+                      alt="profile"
+                      style={{
+                        width: "2.5em",
+                        height: "2.5em",
+                        borderRadius: "90%",
+                        objectFit: "cover",
+                        marginRight: "0.9em"
+                      }}
+                      referrerPolicy="no-referrer"
+                    />
+                  ) : (
+                    <div
+                      style={{
+                        width: "2.5em",
+                        height: "2.5em",
+                        borderRadius: "90%",
+                        marginRight: "0.9em",
+                        backgroundColor: user?.name ? 
+                          ['#EF4444', '#F97316', '#F59E0B', '#84CC16', '#22C55E', '#10B981', '#06B6D4', '#3B82F6', '#8B5CF6', '#EC4899'][
+                            Math.abs(user.name.split('').reduce((a, b) => a + b.charCodeAt(0), 0)) % 10
+                          ] : '#6B7280',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        color: 'white',
+                        fontWeight: 'bold',
+                        fontSize: '1.2em'
+                      }}
+                    >
+                      {user?.name ? 
+                        (() => {
+                          const words = user.name.trim().split(' ').filter(word => word.length > 0);
+                          if (words.length === 0) return 'U';
+                          if (words.length === 1) return words[0][0].toUpperCase();
+                          return (words[0][0] + words[words.length - 1][0]).toUpperCase();
+                        })() : 'U'
+                      }
+                    </div>
+                  )}
                   <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start" }}>
                     <span style={{ fontWeight: 700, fontSize: "1.08em", color: "#fff" }}>
                       {user.name || user.email}

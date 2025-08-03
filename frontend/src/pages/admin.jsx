@@ -371,41 +371,72 @@ const LoginPage = ({ onLogin }) => {
         </p>
 
         <form onSubmit={handleSubmit}>
-          <input
-            type="tel"
-            inputMode="numeric"
-            pattern="[0-9]*"
-            value={code}
-            onChange={handleCodeChange}
-            placeholder="••••"
-            style={{
-              width: "100%",
-              padding: "1rem",
-              fontSize: "clamp(1.2rem, 3vw, 1.5rem)",
-              textAlign: "center",
-              background: "rgba(255, 255, 255, 0.08)",
-              backdropFilter: "blur(10px)",
-              WebkitBackdropFilter: "blur(10px)",
-              border: "1px solid rgba(255, 255, 255, 0.15)",
-              borderRadius: "12px",
-              color: "white",
-              marginBottom: "1rem",
-              fontFamily: baseStyles.fontFamily,
-              letterSpacing: "0.5rem",
-              outline: "none",
-              transition: "all 0.3s ease"
-            }}
-            onFocus={(e) => {
-              e.target.style.borderColor = "rgba(0, 123, 255, 0.5)";
-              e.target.style.boxShadow = "0 0 20px rgba(0, 123, 255, 0.2)";
-            }}
-            onBlur={(e) => {
-              e.target.style.borderColor = "rgba(255, 255, 255, 0.15)";
-              e.target.style.boxShadow = "none";
-            }}
-            maxLength="4"
-            autoFocus
-          />
+          <div style={{
+            display: "flex",
+            justifyContent: "center",
+            gap: "0.75rem",
+            marginBottom: "2rem"
+          }}>
+            {[0, 1, 2, 3].map((index) => (
+              <input
+                key={index}
+                type="tel"
+                inputMode="numeric"
+                pattern="[0-9]*"
+                value={code[index] || ""}
+                onChange={(e) => {
+                  const value = e.target.value.replace(/\D/g, "");
+                  if (value.length <= 1) {
+                    const newCode = code.split("");
+                    newCode[index] = value;
+                    const updatedCode = newCode.join("").slice(0, 4);
+                    setCode(updatedCode);
+                    if (error) setError("");
+                    
+                    // Auto-focus next input
+                    if (value && index < 3) {
+                      const nextInput = e.target.parentElement.children[index + 1];
+                      if (nextInput) nextInput.focus();
+                    }
+                  }
+                }}
+                onKeyDown={(e) => {
+                  // Handle backspace to move to previous input
+                  if (e.key === "Backspace" && !code[index] && index > 0) {
+                    const prevInput = e.target.parentElement.children[index - 1];
+                    if (prevInput) prevInput.focus();
+                  }
+                }}
+                placeholder="•"
+                style={{
+                  width: "3rem",
+                  height: "3rem",
+                  padding: "0",
+                  fontSize: "clamp(1.2rem, 3vw, 1.5rem)",
+                  textAlign: "center",
+                  background: "#000000",
+                  backdropFilter: "blur(10px)",
+                  WebkitBackdropFilter: "blur(10px)",
+                  border: "2px solid #353535ff",
+                  borderRadius: "12px",
+                  color: "white",
+                  fontFamily: baseStyles.fontFamily,
+                  outline: "none",
+                  transition: "all 0.3s ease"
+                }}
+                onFocus={(e) => {
+                  e.target.style.borderColor = "rgba(255, 255, 255, 1)";
+                  e.target.style.boxShadow = "0 0 20px rgba(43, 43, 43, 0.5)";
+                }}
+                onBlur={(e) => {
+                  e.target.style.borderColor = "#ffffff";
+                  e.target.style.boxShadow = "none";
+                }}
+                maxLength="1"
+                autoFocus={index === 0}
+              />
+            ))}
+          </div>
 
           {error && (
             <div style={{
