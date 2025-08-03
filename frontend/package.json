@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "build:all": "npm run build && npm run admin:build",
     "lint": "eslint .",
     "preview": "vite preview",
     "admin:dev": "vite --config vite.admin.config.js",
