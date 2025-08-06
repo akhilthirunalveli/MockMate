@@ -13,6 +13,10 @@ const { generateInterviewQuestions, generateConceptExplanation } = require("./co
 
 const app = express();
 
+
+
+
+
 // Construct service account object from environment variables
 const serviceAccount = {
   type: process.env.FIREBASE_TYPE,
@@ -28,10 +32,18 @@ const serviceAccount = {
   universe_domain: process.env.FIREBASE_UNIVERSE_DOMAIN,
 };
 
+
+
+
+
 // Initialize Firebase Admin SDK
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
 });
+
+
+
+
 
 // Middleware to handle CORS
 app.use(
@@ -55,8 +67,15 @@ app.use(
 
 connectDB()
 
+
+
+
+
 // Middleware
 app.use(express.json()); // <-- This must be before your routes
+
+
+
 
 // Routes
 app.use("/api/auth", authRoutes);
@@ -65,6 +84,11 @@ app.use('/api/questions', questionRoutes);
 
 app.post("/api/ai/generate-questions", protect, generateInterviewQuestions);
 app.post("/api/ai/generate-explanation", protect, generateConceptExplanation);
+
+
+
+
+
 
 // Health check endpoint for debugging
 app.get("/health", (req, res) => {
@@ -79,12 +103,20 @@ app.get("/health", (req, res) => {
   });
 });
 
+
+
+
+
+
+
 // Test endpoint for AI setup
 app.get("/test-ai", async (req, res) => {
   try {
     const { GoogleGenerativeAI } = require("@google/generative-ai");
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const model = genAI.getGenerativeModel({ 
+      model: "gemini-1.5-flash" 
+    });
     
     res.json({
       status: "AI Setup OK",
@@ -100,6 +132,9 @@ app.get("/test-ai", async (req, res) => {
     });
   }
 });
+
+
+
 
 
 // Start Server

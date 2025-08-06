@@ -8,8 +8,9 @@ const DeleteAlertContent = ({content, onDelete}) => {
       <div className="flex justify-end mt-6">
         <button
           type="button"
-          className="btn-small"
+          className="btn-small cursor-pointer"
           onClick={onDelete}
+
         >
           Delete
         </button>
