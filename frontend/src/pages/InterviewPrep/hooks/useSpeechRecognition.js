@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 
 export const useSpeechRecognition = (micOn) => {
   const [transcript, setTranscript] = useState("");
@@ -7,80 +7,106 @@ export const useSpeechRecognition = (micOn) => {
   const [speechSupported, setSpeechSupported] = useState(false);
   const [accuracy, setAccuracy] = useState(0);
   const [language, setLanguage] = useState('en-US');
+  const [error, setError] = useState(null);
   const recognitionRef = useRef(null);
   const restartTimeoutRef = useRef(null);
-  const confidenceThreshold = 0.7; // Minimum confidence for accepting results
+  const isInitializedRef = useRef(false);
+  const confidenceThreshold = 0.6; // Lowered for better acceptance
 
+  // Enhanced browser support detection
   useEffect(() => {
-    // Check speech recognition support with detailed browser detection
     const checkSpeechSupport = () => {
-      const hasWebKit = 'webkitSpeechRecognition' in window;
-      const hasNative = 'SpeechRecognition' in window;
-      const isSupported = hasWebKit || hasNative;
-      
-      setSpeechSupported(isSupported);
-      
-      if (!isSupported) {
-        console.warn('Speech recognition not supported in this browser');
-        console.warn('Supported browsers: Chrome, Edge, Safari (latest versions)');
-      } else {
-        console.log('Speech recognition available:', hasWebKit ? 'WebKit' : 'Native');
+      try {
+        const hasWebKit = 'webkitSpeechRecognition' in window;
+        const hasNative = 'SpeechRecognition' in window;
+        const isSupported = hasWebKit || hasNative;
+        
+        setSpeechSupported(isSupported);
+        setError(null);
+        
+        if (!isSupported) {
+          setError('Speech recognition not supported in this browser. Please use Chrome, Edge, or Safari.');
+          console.warn('Speech recognition not supported. Supported browsers: Chrome, Edge, Safari (latest versions)');
+        } else {
+          console.log('Speech recognition available:', hasWebKit ? 'WebKit' : 'Native');
+        }
+        
+        isInitializedRef.current = true;
+      } catch (err) {
+        console.error('Error checking speech support:', err);
+        setSpeechSupported(false);
+        setError('Error initializing speech recognition');
       }
     };
     
     checkSpeechSupport();
     
     return () => {
-      stopSpeechRecognition();
-      if (restartTimeoutRef.current) {
-        clearTimeout(restartTimeoutRef.current);
-      }
+      cleanup();
     };
   }, []);
 
-  // Start/stop speech recognition based on mic state
-  useEffect(() => {
-    if (micOn && speechSupported) {
-      startSpeechRecognition();
-    } else {
-      stopSpeechRecognition();
-    }
-  }, [micOn, speechSupported, language]);
-
-  const startSpeechRecognition = () => {
-    if (!speechSupported) {
-      console.warn('Speech recognition not supported');
-      return;
-    }
-
-    // Clear any pending restart
+  // Cleanup function
+  const cleanup = useCallback(() => {
     if (restartTimeoutRef.current) {
       clearTimeout(restartTimeoutRef.current);
       restartTimeoutRef.current = null;
     }
+    
+    if (recognitionRef.current) {
+      try {
+        recognitionRef.current.abort();
+        recognitionRef.current = null;
+      } catch (err) {
+        console.warn('Error cleaning up recognition:', err);
+      }
+    }
+    
+    setIsListening(false);
+    setInterimTranscript('');
+  }, []);
 
-    // Stop existing recognition if any
-    stopSpeechRecognition();
+  // Start/stop speech recognition based on mic state
+  useEffect(() => {
+    if (!isInitializedRef.current) return;
+    
+    if (micOn && speechSupported) {
+      startSpeechRecognition();
+    } else {
+      cleanup();
+    }
+  }, [micOn, speechSupported, language]);
+
+  const startSpeechRecognition = useCallback(() => {
+    if (!speechSupported) {
+      setError('Speech recognition not supported');
+      console.warn('Speech recognition not supported');
+      return;
+    }
+
+    // Cleanup any existing recognition
+    cleanup();
+    setError(null);
 
     try {
       const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      
+      if (!SpeechRecognition) {
+        throw new Error('SpeechRecognition API not available');
+      }
+      
       const recognition = new SpeechRecognition();
       
-      // Enhanced configuration for better accuracy
+      // Optimized configuration
       recognition.continuous = true;
       recognition.interimResults = true;
       recognition.lang = language;
-      recognition.maxAlternatives = 3; // Get multiple alternatives for better accuracy
-      
-      // Additional settings for better performance
-      if ('serviceURI' in recognition) {
-        // Use Google's speech service if available
-        recognition.serviceURI = 'wss://www.google.com/speech-api/v2/recognize';
-      }
+      recognition.maxAlternatives = 1; // Simplified for better performance
       
       recognition.onstart = () => {
         setIsListening(true);
-        console.log('Speech recognition started with enhanced settings');
+        setError(null);
+        console.log('Speech recognition started successfully');
       };
       
       recognition.onresult = (event) => {
@@ -91,36 +117,21 @@ export const useSpeechRecognition = (micOn) => {
         
         for (let i = event.resultIndex; i < event.results.length; i++) {
           const result = event.results[i];
+          const transcriptText = result[0].transcript;
+          const confidence = result[0].confidence || 0.8; // Default confidence
           
-          // Get the best alternative based on confidence
-          let bestAlternative = result[0];
-          let bestConfidence = result[0].confidence || 0;
-          
-          // Check all alternatives if available
-          for (let j = 1; j < result.length; j++) {
-            const alternative = result[j];
-            const confidence = alternative.confidence || 0;
-            if (confidence > bestConfidence) {
-              bestAlternative = alternative;
-              bestConfidence = confidence;
-            }
-          }
-          
-          const transcriptText = bestAlternative.transcript;
-          const confidence = bestConfidence;
-          
-          // Only use results above confidence threshold
           if (result.isFinal) {
-            if (confidence >= confidenceThreshold || confidence === undefined) {
+            // Accept results above threshold or if confidence is undefined
+            if (confidence >= confidenceThreshold || result[0].confidence === undefined) {
               finalTranscript += transcriptText + ' ';
-              totalConfidence += confidence || 0.8; // Default confidence if not provided
+              totalConfidence += confidence;
               validResults++;
             } else {
               console.log('Rejected low confidence result:', transcriptText, 'confidence:', confidence);
             }
           } else {
             // For interim results, use lower threshold
-            if (confidence >= (confidenceThreshold - 0.2) || confidence === undefined) {
+            if (confidence >= (confidenceThreshold - 0.2) || result[0].confidence === undefined) {
               interimText += transcriptText;
             }
           }
@@ -132,11 +143,14 @@ export const useSpeechRecognition = (micOn) => {
           setAccuracy(Math.round(avgConfidence * 100));
         }
         
-        if (finalTranscript) {
-          setTranscript(prev => prev + finalTranscript);
+        if (finalTranscript.trim()) {
+          setTranscript(prev => {
+            const newTranscript = prev + finalTranscript;
+            console.log('Added final transcript:', finalTranscript, 'accuracy:', Math.round((totalConfidence / validResults) * 100) + '%');
+            return newTranscript;
+          });
           setInterimTranscript(''); // Clear interim when we get final
-          console.log('Added final transcript:', finalTranscript, 'accuracy:', Math.round((totalConfidence / validResults) * 100) + '%');
-        } else {
+        } else if (interimText.trim()) {
           setInterimTranscript(interimText);
         }
       };
@@ -145,29 +159,30 @@ export const useSpeechRecognition = (micOn) => {
         console.error('Speech recognition error:', event.error);
         setIsListening(false);
         
-        // Enhanced error handling
         switch (event.error) {
           case 'no-speech':
-            console.log('No speech detected, restarting...');
-            scheduleRestart(2000);
-            break;
-          case 'audio-capture':
-            console.log('Audio capture failed, restarting...');
+            console.log('No speech detected');
             scheduleRestart(1000);
             break;
+          case 'audio-capture':
+            setError('Microphone access failed. Please check permissions.');
+            break;
           case 'not-allowed':
-            console.error('Microphone permission denied');
+            setError('Microphone permission denied. Please allow microphone access.');
             break;
           case 'network':
-            console.log('Network error, retrying...');
+            setError('Network error. Please check your internet connection.');
             scheduleRestart(3000);
             break;
           case 'service-not-allowed':
-            console.error('Speech recognition service not allowed');
+            setError('Speech recognition service not allowed.');
+            break;
+          case 'aborted':
+            // Intentional abort, don't restart
             break;
           default:
-            console.log('Unknown error, restarting...', event.error);
-            scheduleRestart(2000);
+            console.log('Speech recognition error:', event.error);
+            scheduleRestart(1500);
         }
       };
       
@@ -176,9 +191,9 @@ export const useSpeechRecognition = (micOn) => {
         setInterimTranscript('');
         console.log('Speech recognition ended');
         
-        // Auto-restart if mic is still on and no error occurred
-        if (micOn && speechSupported && !restartTimeoutRef.current) {
-          scheduleRestart(500);
+        // Auto-restart if mic is still on, no error, and we haven't manually stopped
+        if (micOn && speechSupported && !error && !restartTimeoutRef.current) {
+          scheduleRestart(300);
         }
       };
       
@@ -187,73 +202,74 @@ export const useSpeechRecognition = (micOn) => {
       
     } catch (error) {
       console.error('Failed to start speech recognition:', error);
+      setError('Failed to initialize speech recognition: ' + error.message);
       setIsListening(false);
     }
-  };
+  }, [speechSupported, language, micOn, error, cleanup]);
 
-  const scheduleRestart = (delay) => {
+  const scheduleRestart = useCallback((delay) => {
     if (restartTimeoutRef.current) {
       clearTimeout(restartTimeoutRef.current);
     }
     
     restartTimeoutRef.current = setTimeout(() => {
       restartTimeoutRef.current = null;
-      if (micOn && speechSupported) {
+      if (micOn && speechSupported && !error) {
         console.log('Restarting speech recognition...');
         startSpeechRecognition();
       }
     }, delay);
-  };
+  }, [micOn, speechSupported, error, startSpeechRecognition]);
 
-  const stopSpeechRecognition = () => {
-    if (restartTimeoutRef.current) {
-      clearTimeout(restartTimeoutRef.current);
-      restartTimeoutRef.current = null;
-    }
-    
-    if (recognitionRef.current) {
-      recognitionRef.current.stop();
-      recognitionRef.current = null;
-    }
-    setIsListening(false);
-    setInterimTranscript('');
-  };
+  const stopSpeechRecognition = useCallback(() => {
+    cleanup();
+  }, [cleanup]);
 
-  const clearTranscript = () => {
+  const clearTranscript = useCallback(() => {
     setTranscript("");
     setInterimTranscript("");
     setAccuracy(0);
-  };
+    setError(null);
+  }, []);
 
-  const downloadTranscript = (currentQuestion) => {
-    const fullTranscript = `Interview Question: ${currentQuestion}\n\nTranscript:\n${transcript}\n\nAccuracy: ${accuracy}%\nLanguage: ${language}`;
-    const blob = new Blob([fullTranscript], { type: 'text/plain' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `interview-transcript-${new Date().toISOString().split('T')[0]}.txt`;
-    a.click();
-    URL.revokeObjectURL(url);
-  };
+  const downloadTranscript = useCallback((currentQuestion) => {
+    try {
+      const fullTranscript = `Interview Question: ${currentQuestion}\n\nTranscript:\n${transcript}\n\nAccuracy: ${accuracy}%\nLanguage: ${language}\nGenerated: ${new Date().toLocaleString()}`;
+      const blob = new Blob([fullTranscript], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `interview-transcript-${new Date().toISOString().split('T')[0]}.txt`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error('Error downloading transcript:', err);
+      setError('Failed to download transcript');
+    }
+  }, [transcript, accuracy, language]);
 
   // Manual transcript correction function
-  const correctTranscript = (correctedText) => {
+  const correctTranscript = useCallback((correctedText) => {
     setTranscript(correctedText);
-  };
+    setError(null);
+  }, []);
 
   // Language switching function
-  const changeLanguage = (newLanguage) => {
+  const changeLanguage = useCallback((newLanguage) => {
     setLanguage(newLanguage);
+    setError(null);
     if (isListening) {
       // Restart with new language
-      stopSpeechRecognition();
+      cleanup();
       setTimeout(() => {
-        if (micOn) {
+        if (micOn && speechSupported) {
           startSpeechRecognition();
         }
-      }, 100);
+      }, 200);
     }
-  };
+  }, [isListening, micOn, speechSupported, cleanup, startSpeechRecognition]);
 
   return {
     transcript,
@@ -262,6 +278,7 @@ export const useSpeechRecognition = (micOn) => {
     speechSupported,
     accuracy,
     language,
+    error,
     startSpeechRecognition,
     stopSpeechRecognition,
     clearTranscript,

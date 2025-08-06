@@ -229,13 +229,13 @@ const InterviewDashboard = ({ analysis, currentQuestion, transcript }) => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         
         {/* Refined Answer */}
-        <div className="bg-gradient-to-br from-indigo-900/30 via-purple-900/20 to-indigo-900/30 border border-indigo-400/20 rounded-2xl p-7 backdrop-blur-sm shadow-xl">
-          <h4 className="text-indigo-300 font-semibold mb-5 flex items-center gap-3">
-            <div className="w-2 h-6 bg-gradient-to-b from-indigo-400 to-purple-500 rounded-full"></div>
+        <div className="bg-black border border-gray-700 rounded-2xl p-7 shadow-xl">
+          <h4 className="text-white font-semibold mb-5 flex items-center gap-3">
+            <div className="w-2 h-6 bg-white rounded-full"></div>
             Enhanced Response
           </h4>
-          <div className="bg-slate-800/50 p-6 rounded-xl border-l-4 border-indigo-400 backdrop-blur-sm">
-            <p className="text-slate-200 leading-relaxed text-sm font-light">{analysis.refinedAnswer}</p>
+          <div className="bg-gray-900 p-6 rounded-xl border-l-4 border-white">
+            <p className="text-gray-200 leading-relaxed text-sm font-light">{analysis.refinedAnswer}</p>
           </div>
         </div>
 
@@ -243,16 +243,16 @@ const InterviewDashboard = ({ analysis, currentQuestion, transcript }) => {
         <div className="space-y-6">
           {/* Strengths */}
           {analysis.strengths && analysis.strengths.length > 0 && (
-            <div className="bg-gradient-to-br from-emerald-900/30 via-teal-900/20 to-emerald-900/30 border border-emerald-400/20 rounded-2xl p-7 backdrop-blur-sm shadow-xl">
-              <h4 className="text-emerald-300 font-semibold mb-5 flex items-center gap-3">
-                <div className="w-2 h-6 bg-gradient-to-b from-emerald-400 to-teal-500 rounded-full"></div>
+            <div className="bg-black border border-gray-700 rounded-2xl p-7 shadow-xl">
+              <h4 className="text-white font-semibold mb-5 flex items-center gap-3">
+                <div className="w-2 h-6 bg-green-400 rounded-full"></div>
                 What You Nailed
               </h4>
               <div className="space-y-3">
                 {analysis.strengths.map((strength, index) => (
                   <div key={index} className="flex items-start gap-4">
-                    <div className="w-2 h-2 bg-emerald-400 rounded-full mt-2 flex-shrink-0"></div>
-                    <span className="text-emerald-200 text-sm leading-relaxed">{strength}</span>
+                    <div className="w-2 h-2 bg-green-400 rounded-full mt-2 flex-shrink-0"></div>
+                    <span className="text-green-300 text-sm leading-relaxed">{strength}</span>
                   </div>
                 ))}
               </div>
@@ -261,16 +261,16 @@ const InterviewDashboard = ({ analysis, currentQuestion, transcript }) => {
 
           {/* Improvements */}
           {analysis.improvements && analysis.improvements.length > 0 && (
-            <div className="bg-gradient-to-br from-amber-900/30 via-orange-900/20 to-amber-900/30 border border-amber-400/20 rounded-2xl p-7 backdrop-blur-sm shadow-xl">
-              <h4 className="text-amber-300 font-semibold mb-5 flex items-center gap-3">
-                <div className="w-2 h-6 bg-gradient-to-b from-amber-400 to-orange-500 rounded-full"></div>
+            <div className="bg-black border border-gray-700 rounded-2xl p-7 shadow-xl">
+              <h4 className="text-white font-semibold mb-5 flex items-center gap-3">
+                <div className="w-2 h-6 bg-yellow-400 rounded-full"></div>
                 Growth Opportunities
               </h4>
               <div className="space-y-3">
                 {analysis.improvements.map((improvement, index) => (
                   <div key={index} className="flex items-start gap-4">
-                    <div className="w-2 h-2 bg-amber-400 rounded-full mt-2 flex-shrink-0"></div>
-                    <span className="text-amber-200 text-sm leading-relaxed">{improvement}</span>
+                    <div className="w-2 h-2 bg-yellow-400 rounded-full mt-2 flex-shrink-0"></div>
+                    <span className="text-yellow-300 text-sm leading-relaxed">{improvement}</span>
                   </div>
                 ))}
               </div>
@@ -281,19 +281,19 @@ const InterviewDashboard = ({ analysis, currentQuestion, transcript }) => {
 
       {/* Key Takeaways */}
       {analysis.keyTakeaways && analysis.keyTakeaways.length > 0 && (
-        <div className="bg-gradient-to-br from-violet-900/30 via-purple-900/20 to-violet-900/30 border border-violet-400/20 rounded-2xl p-8 backdrop-blur-sm shadow-xl">
-          <h4 className="text-violet-300 font-semibold mb-6 flex items-center gap-3">
-            <div className="w-2 h-6 bg-gradient-to-b from-violet-400 to-purple-500 rounded-full"></div>
+        <div className="bg-black border border-gray-700 rounded-2xl p-8 shadow-xl">
+          <h4 className="text-white font-semibold mb-6 flex items-center gap-3">
+            <div className="w-2 h-6 bg-white rounded-full"></div>
             Key Insights & Takeaways
           </h4>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {analysis.keyTakeaways.map((takeaway, index) => (
-              <div key={index} className="bg-slate-800/50 p-6 rounded-xl border border-violet-400/10 backdrop-blur-sm hover:border-violet-400/20 transition-colors duration-300">
+              <div key={index} className="bg-gray-900 p-6 rounded-xl border border-gray-600 hover:border-gray-400 transition-colors duration-300">
                 <div className="flex items-start gap-4">
-                  <div className="w-8 h-8 bg-gradient-to-br from-violet-500 to-purple-600 rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg">
-                    <span className="text-white text-sm font-bold">{index + 1}</span>
+                  <div className="w-8 h-8 bg-white rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg">
+                    <span className="text-black text-sm font-bold">{index + 1}</span>
                   </div>
-                  <span className="text-violet-200 text-sm leading-relaxed font-light">{takeaway}</span>
+                  <span className="text-white text-sm leading-relaxed font-light">{takeaway}</span>
                 </div>
               </div>
             ))}
@@ -303,13 +303,13 @@ const InterviewDashboard = ({ analysis, currentQuestion, transcript }) => {
 
       {/* Overall Feedback */}
       {analysis.overallFeedback && (
-        <div className="bg-gradient-to-br from-slate-800/60 to-slate-700/40 border border-slate-600/30 rounded-2xl p-8 backdrop-blur-sm shadow-xl">
-          <h4 className="text-slate-300 font-semibold mb-6 flex items-center gap-3">
-            <div className="w-2 h-6 bg-gradient-to-b from-slate-400 to-slate-600 rounded-full"></div>
+        <div className="bg-black border border-gray-700 rounded-2xl p-8 shadow-xl">
+          <h4 className="text-white font-semibold mb-6 flex items-center gap-3">
+            <div className="w-2 h-6 bg-white rounded-full"></div>
             Coach's Summary
           </h4>
-          <div className="bg-slate-800/50 p-6 rounded-xl border-l-4 border-slate-400 backdrop-blur-sm">
-            <p className="text-slate-200 text-sm leading-relaxed italic font-light">"{analysis.overallFeedback}"</p>
+          <div className="bg-gray-900 p-6 rounded-xl border-l-4 border-white">
+            <p className="text-gray-200 text-sm leading-relaxed italic font-light">"{analysis.overallFeedback}"</p>
           </div>
         </div>
       )}
