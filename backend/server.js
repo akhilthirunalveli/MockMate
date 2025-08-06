@@ -9,7 +9,7 @@ const authRoutes = require('./routes/auth');
 const sessionRoutes = require('./routes/sessionRoutes')
 const questionRoutes = require('./routes/questionRoutes');
 const { protect } = require("./middlewares/authMiddleware");
-const { generateInterviewQuestions, generateConceptExplanation } = require("./controllers/aiController");
+const { generateInterviewQuestions, generateConceptExplanation, analyzeTranscript, cleanupTranscript, generatePDFData } = require("./controllers/aiController");
 
 const app = express();
 
@@ -84,6 +84,9 @@ app.use('/api/questions', questionRoutes);
 
 app.post("/api/ai/generate-questions", protect, generateInterviewQuestions);
 app.post("/api/ai/generate-explanation", protect, generateConceptExplanation);
+app.post("/api/ai/analyze-transcript", protect, analyzeTranscript);
+app.post("/api/ai/cleanup-transcript", protect, cleanupTranscript);
+app.post("/api/ai/generate-pdf-data", protect, generatePDFData);
 
 
 

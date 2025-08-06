@@ -16,6 +16,9 @@ export const API_PATHS = {
   AI: {
     GENERATE_QUESTIONS: "/api/ai/generate-questions", // Generate interview questions and answers using Gemini
     GENERATE_EXPLANATION: "/api/ai/generate-explanation", // Generate concept explanation using Gemini
+    ANALYZE_TRANSCRIPT: "/api/ai/analyze-transcript", // Analyze and refine interview transcript using Gemini
+    CLEANUP_TRANSCRIPT: "/api/ai/cleanup-transcript", // Clean and improve transcript using Gemini
+    GENERATE_PDF_DATA: "/api/ai/generate-pdf-data", // Generate structured data for PDF report
   },
 
   SESSION: {
