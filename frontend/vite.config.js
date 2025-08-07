@@ -5,9 +5,21 @@ import { VitePWA } from 'vite-plugin-pwa'
 
 // https://vite.dev/config/
 export default defineConfig({
+  define: {
+    __DEV__: false,
+  },
+  resolve: {
+    alias: {
+      'react': 'react',
+      'react-dom': 'react-dom'
+    }
+  },
+  optimizeDeps: {
+    include: ['react', 'react-dom', 'react/jsx-runtime']
+  },
   plugins: [
     react({
-      jsxRuntime: 'classic',
+      jsxRuntime: 'automatic',
       jsxImportSource: 'react'
     }), 
     tailwindcss(),
@@ -67,12 +79,13 @@ export default defineConfig({
   ],
   build: {
     rollupOptions: {
+      external: [],
       output: {
         manualChunks: (id) => {
           // Vendor libraries
           if (id.includes('node_modules')) {
-            // React ecosystem
-            if (id.includes('react') || id.includes('react-dom')) {
+            // React ecosystem - keep together for better compatibility
+            if (id.includes('react') || id.includes('react-dom') || id.includes('scheduler')) {
               return 'react';
             }
             // Router
