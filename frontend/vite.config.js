@@ -7,20 +7,28 @@ import { VitePWA } from 'vite-plugin-pwa'
 export default defineConfig({
   define: {
     __DEV__: false,
+    'process.env.NODE_ENV': JSON.stringify('production')
   },
   resolve: {
     alias: {
       'react': 'react',
-      'react-dom': 'react-dom'
-    }
+      'react-dom': 'react-dom',
+      'react/jsx-runtime': 'react/jsx-runtime'
+    },
+    dedupe: ['react', 'react-dom']
   },
   optimizeDeps: {
-    include: ['react', 'react-dom', 'react/jsx-runtime']
+    include: ['react', 'react-dom', 'react/jsx-runtime'],
+    force: true
   },
   plugins: [
     react({
-      jsxRuntime: 'automatic',
-      jsxImportSource: 'react'
+      jsxRuntime: 'classic',
+      jsxImportSource: 'react',
+      babel: {
+        presets: [],
+        plugins: []
+      }
     }), 
     tailwindcss(),
     VitePWA({
@@ -85,7 +93,7 @@ export default defineConfig({
           // Vendor libraries
           if (id.includes('node_modules')) {
             // React ecosystem - keep together for better compatibility
-            if (id.includes('react') || id.includes('react-dom') || id.includes('scheduler')) {
+            if (id.includes('react') || id.includes('react-dom') || id.includes('scheduler') || id.includes('react/jsx-runtime')) {
               return 'react';
             }
             // Router

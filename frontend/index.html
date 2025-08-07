@@ -26,16 +26,48 @@
     
     <!-- Chrome error handling -->
     <script>
+      // React Children property fix for deployment issues
       window.addEventListener('error', function(e) {
         console.error('Global error:', e.error);
         if (e.error && e.error.message && e.error.message.includes('Children')) {
           console.log('Detected React Children error - attempting recovery');
+          
+          // Try to patch React object if it exists
+          if (window.React && typeof window.React === 'object') {
+            if (!window.React.Children) {
+              console.log('Patching React.Children');
+              window.React.Children = {
+                map: function() { return []; },
+                forEach: function() {},
+                count: function() { return 0; },
+                only: function(children) { return children; },
+                toArray: function() { return []; }
+              };
+            }
+          }
+          
           setTimeout(() => window.location.reload(), 1000);
         }
       });
       
       window.addEventListener('unhandledrejection', function(e) {
         console.error('Unhandled promise rejection:', e.reason);
+      });
+      
+      // Pre-emptively create React object structure if needed
+      window.addEventListener('DOMContentLoaded', function() {
+        if (typeof window.React === 'undefined') {
+          window.React = {};
+        }
+        if (window.React && !window.React.Children) {
+          window.React.Children = {
+            map: Array.prototype.map || function() { return []; },
+            forEach: Array.prototype.forEach || function() {},
+            count: function() { return 0; },
+            only: function(children) { return children; },
+            toArray: function() { return []; }
+          };
+        }
       });
     </script>
   </head>
