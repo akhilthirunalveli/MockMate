@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react'
-import ProfileInfoCard from "../Cards/ProfileInfoCard";
+import ProfileInfoCard from "./Cards/ProfileInfoCard";
 import { Link, useNavigate } from "react-router-dom";
-import { UserContext } from "../../context/userContext";
+import { UserContext } from "../context/userContext";
 
 const Navbar = () => {
   const { user, clearUser } = useContext(UserContext);

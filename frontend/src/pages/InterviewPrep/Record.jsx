@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { MdHome } from "react-icons/md";
-import Navbar from "../../components/layouts/Navbar";
+import Navbar from "../../components/Navbar";
 import { useMediaStream } from "./hooks/useMediaStream";
 import { useSpeechRecognition } from "./hooks/useSpeechRecognition";
 import { useMediaRecorder } from "./hooks/useMediaRecorder";
