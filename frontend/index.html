@@ -24,61 +24,83 @@
     
     <title>Mockmate | Your Interview Prep</title>
     
-    <!-- Chrome error handling -->
+    <!-- React Children property fix - Pre-bundle patch -->
     <script>
-      // React Children property fix for deployment issues
-      let reactErrorCount = 0;
-      const MAX_REACT_ERRORS = 2;
-      
-      window.addEventListener('error', function(e) {
-        console.error('Global error:', e.error);
-        if (e.error && e.error.message && e.error.message.includes('Children')) {
-          reactErrorCount++;
-          console.log(`Detected React Children error (${reactErrorCount}/${MAX_REACT_ERRORS})`);
-          
-          // Try to patch React object if it exists
-          if (window.React && typeof window.React === 'object') {
-            if (!window.React.Children) {
-              console.log('Patching React.Children');
-              window.React.Children = {
-                map: function() { return []; },
-                forEach: function() {},
-                count: function() { return 0; },
-                only: function(children) { return children; },
-                toArray: function() { return []; }
-              };
-            }
-          }
-          
-          // Only reload if we haven't exceeded max attempts
-          if (reactErrorCount <= MAX_REACT_ERRORS) {
-            console.log('Attempting recovery without reload');
-            // Don't reload automatically - let the app try to recover
-          } else {
-            console.log('Too many React errors - stopping auto-recovery to prevent loop');
-          }
-        }
-      });
-      
-      window.addEventListener('unhandledrejection', function(e) {
-        console.error('Unhandled promise rejection:', e.reason);
-      });
-      
-      // Pre-emptively create React object structure if needed
-      window.addEventListener('DOMContentLoaded', function() {
+      // Pre-emptively fix React Children property before any React code loads
+      (function() {
+        // Counter to prevent infinite loops
+        let reactErrorCount = 0;
+        const MAX_REACT_ERRORS = 2;
+        
+        // Create a global React object structure before React loads
         if (typeof window.React === 'undefined') {
           window.React = {};
         }
-        if (window.React && !window.React.Children) {
+        
+        // Ensure React.Children exists with proper structure
+        if (!window.React.Children) {
           window.React.Children = {
-            map: Array.prototype.map || function() { return []; },
-            forEach: Array.prototype.forEach || function() {},
-            count: function() { return 0; },
-            only: function(children) { return children; },
-            toArray: function() { return []; }
+            map: function(children, fn) { 
+              if (!children) return [];
+              return Array.isArray(children) ? children.map(fn) : [fn(children, 0)];
+            },
+            forEach: function(children, fn) {
+              if (!children) return;
+              if (Array.isArray(children)) {
+                children.forEach(fn);
+              } else {
+                fn(children, 0);
+              }
+            },
+            count: function(children) { 
+              if (!children) return 0;
+              return Array.isArray(children) ? children.length : 1;
+            },
+            only: function(children) { 
+              if (Array.isArray(children) && children.length === 1) {
+                return children[0];
+              }
+              return children;
+            },
+            toArray: function(children) { 
+              if (!children) return [];
+              return Array.isArray(children) ? children : [children];
+            }
           };
         }
-      });
+        
+        // Error handler with limited retries
+        window.addEventListener('error', function(e) {
+          if (e.error && e.error.message && e.error.message.includes('Children')) {
+            reactErrorCount++;
+            console.log(`Detected React Children error (${reactErrorCount}/${MAX_REACT_ERRORS})`);
+            
+            // Try to patch React object if it exists
+            if (window.React && typeof window.React === 'object') {
+              if (!window.React.Children) {
+                console.log('Patching React.Children');
+                window.React.Children = {
+                  map: function() { return []; },
+                  forEach: function() {},
+                  count: function() { return 0; },
+                  only: function(children) { return children; },
+                  toArray: function() { return []; }
+                };
+              }
+            }
+            
+            if (reactErrorCount <= MAX_REACT_ERRORS) {
+              console.log('Attempting recovery without reload');
+            } else {
+              console.log('Too many React errors - stopping auto-recovery to prevent loop');
+            }
+          }
+        });
+        
+        window.addEventListener('unhandledrejection', function(e) {
+          console.error('Unhandled promise rejection:', e.reason);
+        });
+      })();
     </script>
   </head>
   <body>

@@ -6,8 +6,5 @@ import App from './App.jsx'
 const container = document.getElementById('root');
 const root = createRoot(container);
 
-root.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
-);
+// Try without StrictMode to see if that's causing the Children property issue
+root.render(<App />);
