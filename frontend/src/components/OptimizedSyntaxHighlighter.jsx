@@ -34,7 +34,14 @@ const OptimizedSyntaxHighlighter = ({ language, children, customStyle }) => {
       
       <Suspense 
         fallback={
-          <pre className="bg-gray-100 p-4 rounded text-sm overflow-x-auto">
+          <pre 
+            className="bg-transparent p-4 rounded text-sm overflow-x-auto" 
+            style={{ 
+              background: 'transparent',
+              border: 'none',
+              color: 'rgba(107, 114, 128, 0.5)'
+            }}
+          >
             <code>{children}</code>
           </pre>
         }

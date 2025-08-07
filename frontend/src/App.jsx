@@ -19,7 +19,7 @@ const App = () => {
     <UserProvider>
       <div>
         <Router>
-          <Suspense fallback={<SpinnerLoader />}>
+          <Suspense fallback={<SpinnerLoader transparent />}>
             <Routes>
               <Route path="/" element={<LandingPage />} />
               <Route path="/dashboard" element={<Dashboard />} />

@@ -1,11 +1,34 @@
 import React from 'react'
 
-const SpinnerLoader = () => {
+const SpinnerLoader = ({ transparent = false }) => {
+  if (transparent) {
+    return (
+      <div 
+        style={{ 
+          background: 'transparent',
+          minHeight: '100px',
+          width: '100%',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center'
+        }}
+      >
+        <div 
+          className="animate-spin rounded-full h-8 w-8 border-2 border-transparent"
+          style={{
+            borderTopColor: 'rgba(59, 130, 246, 0.2)',
+            borderRightColor: 'rgba(59, 130, 246, 0.1)',
+          }}
+        ></div>
+      </div>
+    );
+  }
+
   return (
     <div role="status">
       <svg
         aria-hidden="true"
-        class="inline w-5 h-5 text-white animate-spin dark:text-gray-600 fill-cyan-900"
+        className="inline w-5 h-5 text-white animate-spin dark:text-gray-600 fill-cyan-900"
         viewBox="0 0 100 101"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
@@ -19,7 +42,7 @@ const SpinnerLoader = () => {
           fill="currentFill"
         />
       </svg>
-      <span class="sr-only">Loading...</span>
+      <span className="sr-only">Loading...</span>
     </div>
   )
 }

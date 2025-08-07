@@ -24,6 +24,7 @@ function LandingPage() {
   const [showAll, setShowAll] = useState(false);
   const [openAuthModal, setOpenAuthModal] = useState(false);
   const [currentPage, setCurrentPage] = useState("login");
+  const [isLoading, setIsLoading] = useState(false);
   const { user } = useContext(UserContext);
   const navigate = useNavigate();
 
@@ -69,6 +70,7 @@ function LandingPage() {
   // Replace handleCTA with modal logic
   function handleCTA() {
     if (!user) {
+      setIsLoading(true);
       setOpenAuthModal(true);
     } else {
       navigate("/dashboard");
@@ -455,28 +457,31 @@ function LandingPage() {
         onClose={() => {
           setOpenAuthModal(false);
           setCurrentPage("login");
+          setIsLoading(false);
         }}
         hideHeader
         isDark
+        isLoading={isLoading}
       >
         <div>
           <Suspense fallback={
-            <div className="flex justify-center items-center p-8" style={{ 
+            <div className="flex justify-center items-center" style={{ 
               background: 'transparent',
-              minHeight: '200px'
+              minHeight: '200px',
+              width: '100%'
             }}>
               <div 
                 className="animate-spin rounded-full h-8 w-8 border-2 border-transparent"
                 style={{
-                  borderTopColor: '#3b82f6',
-                  borderRightColor: 'rgba(59, 130, 246, 0.3)',
+                  borderTopColor: 'rgba(59, 130, 246, 0.3)',
+                  borderRightColor: 'rgba(59, 130, 246, 0.1)',
                 }}
               ></div>
             </div>
           }>
-            {currentPage === "login" && <Login setCurrentPage={setCurrentPage} />}
+            {currentPage === "login" && <Login setCurrentPage={setCurrentPage} onLoadingComplete={() => setIsLoading(false)} />}
             {currentPage === "signup" && (
-              <SignUp setCurrentPage={setCurrentPage} />
+              <SignUp setCurrentPage={setCurrentPage} onLoadingComplete={() => setIsLoading(false)} />
             )}
           </Suspense>
         </div>

@@ -19,8 +19,23 @@ const DeleteAlertContent = lazy(() => import("../../components/DeleteAlertConten
 const ResumeLinkModal = lazy(() => import("../../components/ResumeLinkModal"));
 
 const LoadingSpinner = () => (
-  <div className="flex justify-center items-center p-8">
-    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+  <div 
+    style={{ 
+      background: 'transparent',
+      minHeight: '100px',
+      width: '100%',
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center'
+    }}
+  >
+    <div 
+      className="animate-spin rounded-full h-8 w-8 border-2 border-transparent"
+      style={{
+        borderTopColor: 'rgba(59, 130, 246, 0.2)',
+        borderRightColor: 'rgba(59, 130, 246, 0.1)',
+      }}
+    ></div>
   </div>
 );
 
