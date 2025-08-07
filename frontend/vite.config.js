@@ -5,31 +5,8 @@ import { VitePWA } from 'vite-plugin-pwa'
 
 // https://vite.dev/config/
 export default defineConfig({
-  define: {
-    __DEV__: false,
-    'process.env.NODE_ENV': JSON.stringify('production')
-  },
-  resolve: {
-    alias: {
-      'react': 'react',
-      'react-dom': 'react-dom',
-      'react/jsx-runtime': 'react/jsx-runtime'
-    },
-    dedupe: ['react', 'react-dom']
-  },
-  optimizeDeps: {
-    include: ['react', 'react-dom', 'react/jsx-runtime'],
-    force: true
-  },
   plugins: [
-    react({
-      jsxRuntime: 'classic',
-      jsxImportSource: 'react',
-      babel: {
-        presets: [],
-        plugins: []
-      }
-    }), 
+    react(), 
     tailwindcss(),
     VitePWA({
       registerType: 'autoUpdate',

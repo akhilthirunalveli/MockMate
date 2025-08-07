@@ -27,10 +27,14 @@
     <!-- Chrome error handling -->
     <script>
       // React Children property fix for deployment issues
+      let reactErrorCount = 0;
+      const MAX_REACT_ERRORS = 2;
+      
       window.addEventListener('error', function(e) {
         console.error('Global error:', e.error);
         if (e.error && e.error.message && e.error.message.includes('Children')) {
-          console.log('Detected React Children error - attempting recovery');
+          reactErrorCount++;
+          console.log(`Detected React Children error (${reactErrorCount}/${MAX_REACT_ERRORS})`);
           
           // Try to patch React object if it exists
           if (window.React && typeof window.React === 'object') {
@@ -46,7 +50,13 @@
             }
           }
           
-          setTimeout(() => window.location.reload(), 1000);
+          // Only reload if we haven't exceeded max attempts
+          if (reactErrorCount <= MAX_REACT_ERRORS) {
+            console.log('Attempting recovery without reload');
+            // Don't reload automatically - let the app try to recover
+          } else {
+            console.log('Too many React errors - stopping auto-recovery to prevent loop');
+          }
         }
       });
       
