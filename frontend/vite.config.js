@@ -185,5 +185,12 @@ export default defineConfig({
     proxy: {
       '/api': 'https://mockmate-backend-r0jk.onrender.com', // or your backend port
     },
+    headers: {
+      'Cross-Origin-Embedder-Policy': 'cross-origin',
+      'Cross-Origin-Opener-Policy': 'same-origin',
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+    }
   },
 })

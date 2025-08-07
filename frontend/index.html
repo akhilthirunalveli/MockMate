@@ -10,7 +10,34 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="apple-mobile-web-app-title" content="MockMate" />
     <link rel="apple-touch-icon" href="/M.svg" />
+    
+    <!-- Chrome-specific optimizations -->
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    
+    <!-- Prevent Chrome caching issues -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    
     <title>Mockmate | Your Interview Prep</title>
+    
+    <!-- Chrome error handling -->
+    <script>
+      window.addEventListener('error', function(e) {
+        console.error('Global error:', e.error);
+        if (e.error && e.error.message && e.error.message.includes('Children')) {
+          console.log('Detected React Children error - attempting recovery');
+          setTimeout(() => window.location.reload(), 1000);
+        }
+      });
+      
+      window.addEventListener('unhandledrejection', function(e) {
+        console.error('Unhandled promise rejection:', e.reason);
+      });
+    </script>
   </head>
   <body>
     <div id="root"></div>
