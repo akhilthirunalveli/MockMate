@@ -44,34 +44,44 @@ const Avatar = ({
     `.replace(/\s+/g, ' ').trim();
 
     if (profileImage) {
-      return React.createElement('img', {
-        src: profileImage,
-        alt: userName || 'Profile',
-        className: `${baseClasses} object-cover`,
-        referrerPolicy: 'no-referrer',
-        onClick: onClick,
-        onError: (e) => {
-          console.warn('Avatar image failed to load:', profileImage);
-          e.target.style.display = 'none';
-        }
-      });
+      return (
+        <img
+          src={profileImage}
+          alt={userName || 'Profile'}
+          className={`${baseClasses} object-cover`}
+          referrerPolicy="no-referrer"
+          onClick={onClick}
+          onError={(e) => {
+            console.warn('Avatar image failed to load:', profileImage);
+            e.target.style.display = 'none';
+          }}
+        />
+      );
     }
 
-    return React.createElement('div', {
-      className: baseClasses,
-      style: { backgroundColor: avatarColor },
-      onClick: onClick
-    }, initials);
+    return (
+      <div
+        className={baseClasses}
+        style={{ backgroundColor: avatarColor }}
+        onClick={onClick}
+      >
+        {initials}
+      </div>
+    );
 
   } catch (error) {
     console.error('Avatar component error:', error);
     // Fallback avatar
     const fallbackClasses = `${sizeClasses[validSize]} rounded-full flex items-center justify-center font-bold text-white bg-gray-500 ${className}`.replace(/\s+/g, ' ').trim();
     
-    return React.createElement('div', {
-      className: fallbackClasses,
-      onClick: onClick
-    }, user?.name?.[0]?.toUpperCase() || 'U');
+    return (
+      <div
+        className={fallbackClasses}
+        onClick={onClick}
+      >
+        {user?.name?.[0]?.toUpperCase() || 'U'}
+      </div>
+    );
   }
 };
 
