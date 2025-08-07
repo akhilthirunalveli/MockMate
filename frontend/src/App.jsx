@@ -8,10 +8,84 @@ import UserProvider from "./context/userContext";
 import PWAInstallPrompt from "./components/PWAInstallPrompt";
 import SpinnerLoader from "./components/Loader/SpinnerLoader";
 
-// Lazy load heavy components with proper error boundaries
-const Dashboard = React.lazy(() => import("./pages/Home/Dashboard"));
-const InterviewPrep = React.lazy(() => import("./pages/InterviewPrep/InterviewPrep"));
-const Record = React.lazy(() => import("./pages/InterviewPrep/Record"));
+// Error Boundary Component
+class ErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
+
+  static getDerivedStateFromError(error) {
+    return { hasError: true, error };
+  }
+
+  componentDidCatch(error, errorInfo) {
+    console.error('ErrorBoundary caught an error:', error, errorInfo);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div style={{
+          minHeight: "100vh",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          backgroundColor: "#000",
+          color: "white",
+          fontFamily: "system-ui",
+          padding: "20px"
+        }}>
+          <div style={{ textAlign: "center", maxWidth: "500px" }}>
+            <h2>Something went wrong</h2>
+            <p style={{ marginBottom: "20px" }}>
+              There was an error loading this page. Please try refreshing.
+            </p>
+            <button 
+              onClick={() => window.location.reload()}
+              style={{
+                padding: "12px 24px",
+                backgroundColor: "#007bff",
+                color: "white",
+                border: "none",
+                borderRadius: "6px",
+                cursor: "pointer",
+                fontSize: "16px"
+              }}
+            >
+              Refresh Page
+            </button>
+          </div>
+        </div>
+      );
+    }
+
+    return this.props.children;
+  }
+}
+
+// Lazy load heavy components with better error handling
+const Dashboard = React.lazy(() => 
+  import("./pages/Home/Dashboard").catch(error => {
+    console.error('Failed to load Dashboard:', error);
+    return { default: () => <div>Error loading Dashboard</div> };
+  })
+);
+
+const InterviewPrep = React.lazy(() => 
+  import("./pages/InterviewPrep/InterviewPrep").catch(error => {
+    console.error('Failed to load InterviewPrep:', error);
+    return { default: () => <div>Error loading Interview Prep</div> };
+  })
+);
+
+const Record = React.lazy(() => 
+  import("./pages/InterviewPrep/Record").catch(error => {
+    console.error('Failed to load Record:', error);
+    return { default: () => <div>Error loading Record</div> };
+  })
+);
+
 const Admin = React.lazy(() => 
   import("./pages/admin").catch(error => {
     console.error('Failed to load Admin component:', error);
@@ -52,34 +126,37 @@ const Admin = React.lazy(() =>
 
 const App = () => {
   return (
-    <UserProvider>
-      <div>
-        <Router>
-          <Suspense fallback={<SpinnerLoader transparent />}>
-            <Routes>
-              <Route path="/" element={<LandingPage />} />
-              <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/admin" element={<Admin />} />
-              <Route path="/interview-prep/:sessionId" element={<InterviewPrep />}/>
-              <Route path="/interview-prep/record" element={<Record />}/>
-            </Routes>
-          </Suspense>
-        </Router>
+    <ErrorBoundary>
+      <UserProvider>
+        <div>
+          <Router>
+            <ErrorBoundary>
+              <Suspense fallback={<SpinnerLoader transparent />}>
+                <Routes>
+                  <Route path="/" element={<LandingPage />} />
+                  <Route path="/dashboard" element={<Dashboard />} />
+                  <Route path="/admin" element={<Admin />} />
+                  <Route path="/interview-prep/:sessionId" element={<InterviewPrep />}/>
+                  <Route path="/interview-prep/record" element={<Record />}/>
+                </Routes>
+              </Suspense>
+            </ErrorBoundary>
+          </Router>
 
-        <PWAInstallPrompt />
+          <PWAInstallPrompt />
 
-        <Toaster
-          toastOptions={{
-            className: "",
-            style: {
-              fontSize: "13px",
-            },
-          }}
-        />
-      </div>
-      <Analytics/>
-    </UserProvider>
-    
+          <Toaster
+            toastOptions={{
+              className: "",
+              style: {
+                fontSize: "13px",
+              },
+            }}
+          />
+        </div>
+        <Analytics/>
+      </UserProvider>
+    </ErrorBoundary>
   );
 };
 
