@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState, useContext, lazy, Suspense } from "react";
 import { LuPlus } from "react-icons/lu";
 import { BsRecordCircle } from "react-icons/bs";
 import { IoDocumentTextOutline } from "react-icons/io5";
@@ -11,10 +11,18 @@ import { API_PATHS } from "../../utils/apiPaths";
 import SummaryCard from "../../components/Cards/SummaryCard";
 import moment from "moment";
 import Modal from "../../components/Modal";
-import CreateSessionForm from "./CreateSessionForm";
-import DeleteAlertContent from "../../components/DeleteAlertContent";
-import ResumeLinkModal from "../../components/ResumeLinkModal";
 import { UserContext } from "../../context/userContext";
+
+// Lazy load modal components
+const CreateSessionForm = lazy(() => import("./CreateSessionForm"));
+const DeleteAlertContent = lazy(() => import("../../components/DeleteAlertContent"));
+const ResumeLinkModal = lazy(() => import("../../components/ResumeLinkModal"));
+
+const LoadingSpinner = () => (
+  <div className="flex justify-center items-center p-8">
+    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+  </div>
+);
 
 const Dashboard = () => {
   const navigate = useNavigate();

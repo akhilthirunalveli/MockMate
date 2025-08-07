@@ -1,11 +1,13 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, lazy, Suspense } from "react";
 import { useNavigate } from "react-router-dom";
 import Modal from "../components/Modal";
-import Login from "./Auth/Login";
-import SignUp from "./Auth/SignUp";
 import { UserContext } from "../context/userContext";
 import GeminiLogo from "../assets/gemini-color.svg"; // add this line
 import GithubLogo from "../assets/github.png"; // add GitHub logo import
+
+// Lazy load auth components
+const Login = lazy(() => import("./Auth/Login"));
+const SignUp = lazy(() => import("./Auth/SignUp"));
 
 const TYPEWRITER_TEXT = "MockMate";
 const TYPING_SPEED = 100; // smoother, slightly faster
@@ -457,10 +459,12 @@ function LandingPage() {
         hideHeader
       >
         <div>
-          {currentPage === "login" && <Login setCurrentPage={setCurrentPage} />}
-          {currentPage === "signup" && (
-            <SignUp setCurrentPage={setCurrentPage} />
-          )}
+          <Suspense fallback={<div className="flex justify-center items-center p-8"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div></div>}>
+            {currentPage === "login" && <Login setCurrentPage={setCurrentPage} />}
+            {currentPage === "signup" && (
+              <SignUp setCurrentPage={setCurrentPage} />
+            )}
+          </Suspense>
         </div>
       </Modal>
     </div>

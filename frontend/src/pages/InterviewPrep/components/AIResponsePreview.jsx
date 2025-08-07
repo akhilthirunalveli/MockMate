@@ -1,9 +1,8 @@
-import React, { useState } from 'react'
+import React, { useState, Suspense } from 'react'
 import { LuCopy, LuCheck, LuCode } from "react-icons/lu";
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { oneLight } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import OptimizedSyntaxHighlighter from '../../../components/OptimizedSyntaxHighlighter';
 
 const AIResponsePreview = ({content}) => {
     if(!content) return null
@@ -140,13 +139,9 @@ function CodeBlock({ code, language }) {
         </button>
       </div>
 
-      <SyntaxHighlighter 
-        language={language} 
-        style={oneLight} 
-        customStyle={{ fontSize:12.5, margin: 0, padding: '1rem', background: 'transparent' }}
-      >
+      <OptimizedSyntaxHighlighter language={language}>
         {code}
-      </SyntaxHighlighter>
+      </OptimizedSyntaxHighlighter>
     </div>
 }
 

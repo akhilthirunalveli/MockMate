@@ -1,0 +1,72 @@
+import React, { useState, lazy, Suspense } from 'react';
+import { LuCopy, LuCheck } from "react-icons/lu";
+
+// Dynamically import only common languages
+const loadLanguage = (language) => {
+  const commonLanguages = ['javascript', 'typescript', 'python', 'java', 'cpp', 'c', 'html', 'css', 'json', 'bash', 'sql'];
+  
+  if (commonLanguages.includes(language)) {
+    return import('react-syntax-highlighter').then(module => ({
+      default: module.Prism
+    }));
+  }
+  
+  // For less common languages, use a lighter highlighter
+  return import('react-syntax-highlighter').then(module => ({
+    default: module.Light
+  }));
+};
+
+// Lazy load the syntax highlighter
+const SyntaxHighlighter = lazy(() => loadLanguage('javascript'));
+
+// Import style once
+import { oneLight } from 'react-syntax-highlighter/dist/esm/styles/prism';
+
+const OptimizedSyntaxHighlighter = ({ language, children, customStyle }) => {
+  const [copied, setCopied] = useState(false);
+
+  const copyCode = () => {
+    navigator.clipboard.writeText(children);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  return (
+    <div className="relative">
+      <div className="absolute top-2 right-2 z-10">
+        <button
+          onClick={copyCode}
+          className="p-1 rounded bg-gray-700 text-white hover:bg-gray-600 transition-colors"
+          aria-label="Copy code"
+        >
+          {copied ? <LuCheck size={16} /> : <LuCopy size={16} />}
+        </button>
+      </div>
+      
+      <Suspense 
+        fallback={
+          <pre className="bg-gray-100 p-4 rounded text-sm overflow-x-auto">
+            <code>{children}</code>
+          </pre>
+        }
+      >
+        <SyntaxHighlighter 
+          language={language} 
+          style={oneLight} 
+          customStyle={{
+            fontSize: 12.5,
+            margin: 0,
+            padding: '1rem',
+            background: 'transparent',
+            ...customStyle
+          }}
+        >
+          {children}
+        </SyntaxHighlighter>
+      </Suspense>
+    </div>
+  );
+};
+
+export default OptimizedSyntaxHighlighter;
