@@ -4,7 +4,7 @@ const Modal = ({ children, isOpen, onClose, title, hideHeader, isDark }) => {
   if (!isOpen) return null;
 
   return (
-    <div className={`fixed inset-0 z-50 flex justify-center items-center w-full h-full ${isDark ? 'bg-black/60' : 'bg-black/40'}`}>
+    <div className={`fixed inset-0 z-50 flex justify-center items-center w-full h-full ${isDark ? 'bg-black/20' : 'bg-black/10'}`}>
       {/* Modal Content */}
       <div
         className={`relative flex flex-col shadow-lg rounded-lg overflow-hidden ${

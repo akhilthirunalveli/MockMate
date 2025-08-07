@@ -1,27 +1,15 @@
-import React, { useState, lazy, Suspense } from 'react';
+import React, { useState, Suspense, lazy } from 'react';
 import { LuCopy, LuCheck } from "react-icons/lu";
-
-// Dynamically import only common languages
-const loadLanguage = (language) => {
-  const commonLanguages = ['javascript', 'typescript', 'python', 'java', 'cpp', 'c', 'html', 'css', 'json', 'bash', 'sql'];
-  
-  if (commonLanguages.includes(language)) {
-    return import('react-syntax-highlighter').then(module => ({
-      default: module.Prism
-    }));
-  }
-  
-  // For less common languages, use a lighter highlighter
-  return import('react-syntax-highlighter').then(module => ({
-    default: module.Light
-  }));
-};
-
-// Lazy load the syntax highlighter
-const SyntaxHighlighter = lazy(() => loadLanguage('javascript'));
 
 // Import style once
 import { oneLight } from 'react-syntax-highlighter/dist/esm/styles/prism';
+
+// Create stable lazy components
+const PrismHighlighter = lazy(() => 
+  import('react-syntax-highlighter').then(module => ({
+    default: module.Prism
+  }))
+);
 
 const OptimizedSyntaxHighlighter = ({ language, children, customStyle }) => {
   const [copied, setCopied] = useState(false);
@@ -51,7 +39,7 @@ const OptimizedSyntaxHighlighter = ({ language, children, customStyle }) => {
           </pre>
         }
       >
-        <SyntaxHighlighter 
+        <PrismHighlighter 
           language={language} 
           style={oneLight} 
           customStyle={{
@@ -63,7 +51,7 @@ const OptimizedSyntaxHighlighter = ({ language, children, customStyle }) => {
           }}
         >
           {children}
-        </SyntaxHighlighter>
+        </PrismHighlighter>
       </Suspense>
     </div>
   );

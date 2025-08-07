@@ -130,7 +130,9 @@ const Dashboard = () => {
         hideHeader
       >
         <div>
-          <CreateSessionForm />
+          <Suspense fallback={<LoadingSpinner />}>
+            <CreateSessionForm />
+          </Suspense>
         </div>
       </Modal>
 
@@ -142,12 +144,14 @@ const Dashboard = () => {
         hideHeader
         isDark={true}
       >
-        <ResumeLinkModal
-          onClose={() => setOpenResumeModal(false)}
-          onSave={() => {
-            // Resume link saved, modal will close automatically
-          }}
-        />
+        <Suspense fallback={<LoadingSpinner />}>
+          <ResumeLinkModal
+            onClose={() => setOpenResumeModal(false)}
+            onSave={() => {
+              // Resume link saved, modal will close automatically
+            }}
+          />
+        </Suspense>
       </Modal>
 
       <Modal
@@ -158,10 +162,12 @@ const Dashboard = () => {
         title="Delete Alert"
       >
         <div className="w-[30vw]">
-          <DeleteAlertContent
-            content="Are you sure you want to delete this session detail?"
-            onDelete={() => deleteSession(openDeleteAlert.data)}
-          />
+          <Suspense fallback={<LoadingSpinner />}>
+            <DeleteAlertContent
+              content="Are you sure you want to delete this session detail?"
+              onDelete={() => deleteSession(openDeleteAlert.data)}
+            />
+          </Suspense>
         </div>
       </Modal>
     </DashboardLayout>

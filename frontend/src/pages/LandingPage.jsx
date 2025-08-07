@@ -457,9 +457,23 @@ function LandingPage() {
           setCurrentPage("login");
         }}
         hideHeader
+        isDark
       >
         <div>
-          <Suspense fallback={<div className="flex justify-center items-center p-8"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div></div>}>
+          <Suspense fallback={
+            <div className="flex justify-center items-center p-8" style={{ 
+              background: 'transparent',
+              minHeight: '200px'
+            }}>
+              <div 
+                className="animate-spin rounded-full h-8 w-8 border-2 border-transparent"
+                style={{
+                  borderTopColor: '#3b82f6',
+                  borderRightColor: 'rgba(59, 130, 246, 0.3)',
+                }}
+              ></div>
+            </div>
+          }>
             {currentPage === "login" && <Login setCurrentPage={setCurrentPage} />}
             {currentPage === "signup" && (
               <SignUp setCurrentPage={setCurrentPage} />
