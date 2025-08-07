@@ -5,6 +5,7 @@ import { VitePWA } from 'vite-plugin-pwa'
 
 // https://vite.dev/config/
 export default defineConfig({
+  base: "/",
   plugins: [
     react(), 
     tailwindcss(),
@@ -158,13 +159,8 @@ export default defineConfig({
     },
     chunkSizeWarningLimit: 2000, // Increase warning limit to 2MB
     sourcemap: false, // Disable sourcemaps to reduce bundle size
-    minify: 'terser',
-    terserOptions: {
-      compress: {
-        drop_console: true, // Remove console.log in production
-        drop_debugger: true
-      }
-    }
+    minify: 'esbuild',
+    target: 'es2015'
   },
   server: {
     proxy: {
