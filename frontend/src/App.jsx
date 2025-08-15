@@ -5,7 +5,6 @@ import { Toaster } from "react-hot-toast";
 
 import LandingPage from "./pages/LandingPage";
 import UserProvider from "./context/userContext";
-import PWAInstallPrompt from "./components/PWAInstallPrompt";
 import SpinnerLoader from "./components/Loader/SpinnerLoader";
 
 // Error Boundary Component
@@ -105,8 +104,6 @@ const App = () => {
               </Routes>
             </Suspense>
           </ErrorBoundary>
-
-          <PWAInstallPrompt />
 
           <Toaster
             toastOptions={{

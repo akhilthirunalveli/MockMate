@@ -1,7 +1,6 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
-import { VitePWA } from 'vite-plugin-pwa'
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -14,94 +13,154 @@ export default defineConfig({
         plugins: []
       }
     }), 
-    tailwindcss(),
-    VitePWA({
-      registerType: 'autoUpdate',
-      includeAssets: ['M.svg', 'vite.svg'],
-      manifest: {
-        name: 'MockMate - Interview Prep',
-        short_name: 'MockMate',
-        description: 'AI-powered interview preparation app',
-        theme_color: '#000000',
-        background_color: '#000000',
-        display: 'standalone',
-        orientation: 'portrait',
-        scope: '/',
-        start_url: '/',
-        icons: [
-          {
-            src: 'M.svg',
-            sizes: 'any',
-            type: 'image/svg+xml',
-            purpose: 'any maskable'
-          }
-        ]
-      },
-      workbox: {
-        globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2}'],
-        // Increase the maximum file size limit for precaching
-        maximumFileSizeToCacheInBytes: 5 * 1024 * 1024, // 5MB
-        runtimeCaching: [
-          {
-            urlPattern: /^https:\/\/api\./,
-            handler: 'NetworkFirst',
-            options: {
-              cacheName: 'api-cache',
-              expiration: {
-                maxEntries: 100,
-                maxAgeSeconds: 60 * 60 * 24 // 24 hours
-              }
-            }
-          },
-          // Cache large JS chunks with network-first strategy
-          {
-            urlPattern: /\.(?:js|css)$/,
-            handler: 'NetworkFirst',
-            options: {
-              cacheName: 'assets-cache',
-              expiration: {
-                maxEntries: 50,
-                maxAgeSeconds: 60 * 60 * 24 * 7 // 7 days
-              }
-            }
-          }
-        ]
-      }
-    })
+    tailwindcss()
   ],
   build: {
     rollupOptions: {
       external: [],
+      treeshake: {
+        moduleSideEffects: false
+      },
       output: {
         manualChunks: (id) => {
           // Keep React ecosystem together for better compatibility
           if (id.includes('node_modules')) {
-            if (id.includes('react') || id.includes('react-dom') || id.includes('scheduler')) {
-              return 'react-vendor';
+            // Core React libraries - keep minimal and together
+            if (id.includes('react/') || id.includes('react-dom/') || id.includes('scheduler/')) {
+              return 'react-core';
             }
-            if (id.includes('react-router')) {
-              return 'router';
+            
+            // React Router
+            if (id.includes('react-router') || id.includes('@remix-run/router')) {
+              return 'react-router';
             }
-            // Keep UI libraries together
-            if (id.includes('framer-motion') || id.includes('react-hot-toast') || id.includes('react-icons')) {
-              return 'ui-vendor';
+            
+            // Animation libraries (can be large)
+            if (id.includes('framer-motion')) {
+              return 'framer-motion';
             }
-            // Utility libraries
-            if (id.includes('moment') || id.includes('axios')) {
-              return 'utils-vendor';
+            
+            // Chart libraries (heavy)
+            if (id.includes('recharts') || id.includes('d3-') || id.includes('victory')) {
+              return 'charts';
             }
-            // All other vendor libraries
-            return 'vendor';
+            
+            // PDF generation (heavy)
+            if (id.includes('jspdf') || id.includes('html2canvas')) {
+              return 'pdf-utils';
+            }
+            
+            // Syntax highlighting - split by functionality
+            if (id.includes('react-syntax-highlighter')) {
+              if (id.includes('/languages/') || id.includes('/async-languages/')) {
+                return 'syntax-languages';
+              }
+              if (id.includes('/styles/')) {
+                return 'syntax-styles';
+              }
+              return 'syntax-core';
+            }
+            
+            // Highlight.js - separate core from languages and split languages further
+            if (id.includes('highlight.js')) {
+              if (id.includes('/lib/languages/') || id.includes('/es/languages/')) {
+                // Split language files by common groups
+                if (id.includes('javascript') || id.includes('typescript') || id.includes('jsx') || id.includes('tsx')) {
+                  return 'highlight-js-langs';
+                }
+                if (id.includes('python') || id.includes('java') || id.includes('cpp') || id.includes('c.js')) {
+                  return 'highlight-popular-langs';
+                }
+                return 'highlight-other-langs';
+              }
+              return 'highlight-core';
+            }
+            
+            // Markdown processing (can be heavy)
+            if (id.includes('react-markdown') || id.includes('remark-') || id.includes('rehype-') || 
+                id.includes('mdast-') || id.includes('hast-') || id.includes('micromark') || 
+                id.includes('unist-') || id.includes('vfile')) {
+              return 'markdown';
+            }
+            
+            // UI libraries
+            if (id.includes('react-hot-toast') || id.includes('react-icons')) {
+              return 'ui-libs';
+            }
+            
+            // Heroicons - separate from other icons
+            if (id.includes('@heroicons/react')) {
+              return 'heroicons';
+            }
+            
+            // Utilities
+            if (id.includes('axios')) {
+              return 'http-client';
+            }
+            
+            if (id.includes('moment')) {
+              return 'date-utils';
+            }
+            
+            // Firebase (if any remains)
+            if (id.includes('firebase')) {
+              return 'firebase';
+            }
+            
+            // Vercel analytics
+            if (id.includes('@vercel/')) {
+              return 'vercel-utils';
+            }
+            
+            // Tailwind CSS
+            if (id.includes('tailwindcss') || id.includes('@tailwindcss/')) {
+              return 'tailwind';
+            }
+            
+            // Split large utility libraries
+            if (id.includes('lodash') || id.includes('ramda') || id.includes('underscore')) {
+              return 'utility-libs';
+            }
+            
+            // Split CSS-in-JS and styling libraries
+            if (id.includes('styled-components') || id.includes('emotion') || id.includes('@stitches') || id.includes('linaria')) {
+              return 'styling-libs';
+            }
+            
+            // Split validation libraries
+            if (id.includes('yup') || id.includes('joi') || id.includes('zod') || id.includes('validator')) {
+              return 'validation-libs';
+            }
+            
+            // All other smaller vendor libraries
+            return 'vendor-misc';
+          }
+          
+          // Application code chunking
+          if (id.includes('/pages/InterviewPrep/')) {
+            return 'interview-prep';
+          }
+          if (id.includes('/pages/Home/') || id.includes('/pages/admin')) {
+            return 'dashboard';
+          }
+          if (id.includes('/pages/Auth/')) {
+            return 'auth-pages';
+          }
+          if (id.includes('/components/')) {
+            return 'components';
+          }
+          if (id.includes('/utils/') || id.includes('/context/')) {
+            return 'app-utils';
           }
         }
       }
     },
-    chunkSizeWarningLimit: 1000,
+    chunkSizeWarningLimit: 800, // Lower warning limit to catch issues earlier
     sourcemap: false,
     minify: 'esbuild',
     target: ['es2020', 'chrome80', 'safari13'],
     cssCodeSplit: true,
-    assetsInlineLimit: 4096
+    assetsInlineLimit: 2048 // Reduce inline limit to decrease bundle size
   },
   server: {
     proxy: {

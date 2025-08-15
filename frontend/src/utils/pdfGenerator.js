@@ -1,4 +1,8 @@
-import jsPDF from 'jspdf';
+// Dynamically import jsPDF only when needed
+const loadJsPDF = async () => {
+  const jsPDF = await import('jspdf');
+  return jsPDF.default;
+};
 
 export const generateInterviewReportPDF = async (analysisData, options = {}) => {
   try {
@@ -7,6 +11,9 @@ export const generateInterviewReportPDF = async (analysisData, options = {}) => 
       quality = 1.0,
       scale = 2
     } = options;
+
+    // Dynamically load jsPDF
+    const jsPDF = await loadJsPDF();
 
     // Create PDF document
     const pdf = new jsPDF('p', 'mm', 'a4');
