@@ -25,8 +25,14 @@ function LandingPage() {
   const [openAuthModal, setOpenAuthModal] = useState(false);
   const [currentPage, setCurrentPage] = useState("login");
   const [isLoading, setIsLoading] = useState(false);
+  const [isClient, setIsClient] = useState(false);
   const { user } = useContext(UserContext);
   const navigate = useNavigate();
+
+  // Ensure we're on the client side before proceeding with dynamic content
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   const bgColor = "#000000";
   const textColor = "#fff";
@@ -37,6 +43,8 @@ function LandingPage() {
   const buttonText = "#fff";
 
   useEffect(() => {
+    if (!isClient) return; // Don't run animations on server side
+    
     let isMounted = true;
 
     function typeWriter(index = 0) {
@@ -65,7 +73,7 @@ function LandingPage() {
     typeWriter();
 
     return () => { isMounted = false; };
-  }, []);
+  }, [isClient]);
 
   // Replace handleCTA with modal logic
   function handleCTA() {

@@ -8,7 +8,11 @@ export default defineConfig({
   base: "/",
   plugins: [
     react({
-      jsxRuntime: 'classic'
+      jsxRuntime: 'automatic',
+      jsxImportSource: 'react',
+      babel: {
+        plugins: []
+      }
     }), 
     tailwindcss(),
     VitePWA({
@@ -70,95 +74,34 @@ export default defineConfig({
       external: [],
       output: {
         manualChunks: (id) => {
-          // Vendor libraries
+          // Keep React ecosystem together for better compatibility
           if (id.includes('node_modules')) {
-            // React ecosystem - keep together for better compatibility
-            if (id.includes('react') || id.includes('react-dom') || id.includes('scheduler') || id.includes('react/jsx-runtime')) {
-              return 'react';
+            if (id.includes('react') || id.includes('react-dom') || id.includes('scheduler')) {
+              return 'react-vendor';
             }
-            // Router
             if (id.includes('react-router')) {
               return 'router';
             }
-            // UI & Animation libraries
-            if (id.includes('framer-motion') || id.includes('motion-')) {
-              return 'animation';
+            // Keep UI libraries together
+            if (id.includes('framer-motion') || id.includes('react-hot-toast') || id.includes('react-icons')) {
+              return 'ui-vendor';
             }
-            if (id.includes('react-hot-toast') || id.includes('react-icons')) {
-              return 'ui-libs';
-            }
-            // Charts
-            if (id.includes('recharts') || id.includes('victory') || id.includes('d3-')) {
-              return 'charts';
-            }
-            // PDF generation
-            if (id.includes('jspdf') || id.includes('html2canvas')) {
-              return 'pdf';
-            }
-            // Syntax highlighting - split into smaller chunks
-            if (id.includes('react-syntax-highlighter')) {
-              if (id.includes('/dist/esm/languages/') || id.includes('/dist/esm/async-languages/')) {
-                return 'syntax-languages';
-              }
-              if (id.includes('/dist/esm/styles/')) {
-                return 'syntax-styles';
-              }
-              return 'syntax-core';
-            }
-            if (id.includes('highlight.js')) {
-              if (id.includes('/lib/languages/')) {
-                return 'highlight-languages';
-              }
-              return 'highlight-core';
-            }
-            if (id.includes('refractor')) {
-              if (id.includes('/lang/')) {
-                return 'refractor-languages';
-              }
-              return 'refractor-core';
-            }
-            // Markdown
-            if (id.includes('react-markdown') || id.includes('remark') || id.includes('rehype') || 
-                id.includes('mdast') || id.includes('hast') || id.includes('micromark') || 
-                id.includes('unist') || id.includes('vfile')) {
-              return 'markdown-core';
-            }
-            // Utilities
+            // Utility libraries
             if (id.includes('moment') || id.includes('axios')) {
-              return 'utils';
-            }
-            // DOMPurify
-            if (id.includes('dompurify')) {
-              return 'security';
-            }
-            // Core utilities (lodash-like)
-            if (id.includes('es-toolkit') || id.includes('core-js')) {
-              return 'polyfills';
+              return 'utils-vendor';
             }
             // All other vendor libraries
             return 'vendor';
           }
-          
-          // Application code chunking
-          if (id.includes('/pages/InterviewPrep/')) {
-            return 'interview-prep';
-          }
-          if (id.includes('/pages/Home/') || id.includes('/pages/admin')) {
-            return 'dashboard';
-          }
-          if (id.includes('/components/')) {
-            return 'components';
-          }
-          if (id.includes('/utils/')) {
-            return 'app-utils';
-          }
         }
       }
     },
-    chunkSizeWarningLimit: 2000, // Increase warning limit to 2MB
-    sourcemap: false, // Disable sourcemaps to reduce bundle size
+    chunkSizeWarningLimit: 1000,
+    sourcemap: false,
     minify: 'esbuild',
-    target: 'es2015'
+    target: ['es2020', 'chrome80', 'safari13'],
+    cssCodeSplit: true,
+    assetsInlineLimit: 4096
   },
   server: {
     proxy: {

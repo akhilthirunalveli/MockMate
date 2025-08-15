@@ -17,95 +17,10 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <meta name="referrer" content="strict-origin-when-cross-origin" />
     
-    <!-- Prevent Chrome caching issues -->
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-    <meta http-equiv="Pragma" content="no-cache" />
-    <meta http-equiv="Expires" content="0" />
-    
     <title>Mockmate | Your Interview Prep</title>
-    
-    <!-- React Children property fix - Pre-bundle patch -->
-    <script>
-      // Pre-emptively fix React Children property before any React code loads
-      (function() {
-        // Counter to prevent infinite loops
-        let reactErrorCount = 0;
-        const MAX_REACT_ERRORS = 2;
-        
-        // Create a global React object structure before React loads
-        if (typeof window.React === 'undefined') {
-          window.React = {};
-        }
-        
-        // Ensure React.Children exists with proper structure
-        if (!window.React.Children) {
-          window.React.Children = {
-            map: function(children, fn) { 
-              if (!children) return [];
-              return Array.isArray(children) ? children.map(fn) : [fn(children, 0)];
-            },
-            forEach: function(children, fn) {
-              if (!children) return;
-              if (Array.isArray(children)) {
-                children.forEach(fn);
-              } else {
-                fn(children, 0);
-              }
-            },
-            count: function(children) { 
-              if (!children) return 0;
-              return Array.isArray(children) ? children.length : 1;
-            },
-            only: function(children) { 
-              if (Array.isArray(children) && children.length === 1) {
-                return children[0];
-              }
-              return children;
-            },
-            toArray: function(children) { 
-              if (!children) return [];
-              return Array.isArray(children) ? children : [children];
-            }
-          };
-        }
-        
-        // Error handler with limited retries
-        window.addEventListener('error', function(e) {
-          if (e.error && e.error.message && e.error.message.includes('Children')) {
-            reactErrorCount++;
-            console.log(`Detected React Children error (${reactErrorCount}/${MAX_REACT_ERRORS})`);
-            
-            // Try to patch React object if it exists
-            if (window.React && typeof window.React === 'object') {
-              if (!window.React.Children) {
-                console.log('Patching React.Children');
-                window.React.Children = {
-                  map: function() { return []; },
-                  forEach: function() {},
-                  count: function() { return 0; },
-                  only: function(children) { return children; },
-                  toArray: function() { return []; }
-                };
-              }
-            }
-            
-            if (reactErrorCount <= MAX_REACT_ERRORS) {
-              console.log('Attempting recovery without reload');
-            } else {
-              console.log('Too many React errors - stopping auto-recovery to prevent loop');
-            }
-          }
-        });
-        
-        window.addEventListener('unhandledrejection', function(e) {
-          console.error('Unhandled promise rejection:', e.reason);
-        });
-      })();
-    </script>
   </head>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
-  
 </html>
