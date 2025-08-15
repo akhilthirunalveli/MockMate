@@ -269,7 +269,7 @@ function LandingPage() {
                   }}
                   onClick={() => navigate("/dashboard")}
                 >
-                  {user.profileImageUrl || user.photoURL ? (
+                  {(user.profileImageUrl && user.profileImageUrl.startsWith('http')) || user.photoURL ? (
                     <img
                       src={user.profileImageUrl || user.photoURL}
                       alt="profile"
@@ -301,13 +301,15 @@ function LandingPage() {
                         fontSize: '1.2em'
                       }}
                     >
-                      {user?.name ? 
-                        (() => {
-                          const words = user.name.trim().split(' ').filter(word => word.length > 0);
-                          if (words.length === 0) return 'U';
-                          if (words.length === 1) return words[0][0].toUpperCase();
-                          return (words[0][0] + words[words.length - 1][0]).toUpperCase();
-                        })() : 'U'
+                      {user?.profileImageUrl && !user.profileImageUrl.startsWith('http') 
+                        ? user.profileImageUrl 
+                        : user?.name ? 
+                          (() => {
+                            const words = user.name.trim().split(' ').filter(word => word.length > 0);
+                            if (words.length === 0) return 'U';
+                            if (words.length === 1) return words[0][0].toUpperCase();
+                            return (words[0][0] + words[words.length - 1][0]).toUpperCase();
+                          })() : 'U'
                       }
                     </div>
                   )}

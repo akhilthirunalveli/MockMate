@@ -4,7 +4,6 @@ export const API_PATHS = {
   AUTH: {
     REGISTER: "/api/auth/register", // Signup
     LOGIN: "/api/auth/login", // Authenticate user & return JWT token
-    FIREBASE_LOGIN: "/api/auth/firebase-login", // Firebase OAuth login
     GET_PROFILE: "/api/auth/profile", // Get logged-in user details
     UPDATE_RESUME_LINK: "/api/auth/resume-link", // Update resume link
   },

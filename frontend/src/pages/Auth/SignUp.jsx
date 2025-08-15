@@ -15,12 +15,23 @@ const SignUp = ({ setCurrentPage }) => {
   const { updateUser } = useContext(UserContext);
   const navigate = useNavigate();
 
-  // Handle SignUp Form Submit
+  // Helper function to generate initials from full name
+  const generateInitials = (name) => {
+    if (!name) return "U"; // Default fallback
+    
+    const words = name.trim().split(" ");
+    if (words.length === 1) {
+      return words[0].charAt(0).toUpperCase();
+    }
+    
+    // Take first letter of first name and first letter of last name
+    return (words[0].charAt(0) + words[words.length - 1].charAt(0)).toUpperCase();
+  };
+
+  // Handle regular signup
   const handleSignUp = async (e) => {
     e.preventDefault();
-
-    // Always use "Hi" as the default profileImageUrl for normal sign up
-    let profileImageUrl = "Hi";
+    setError("");
 
     if (!fullName) {
       setError("Please enter full name.");
@@ -37,26 +48,24 @@ const SignUp = ({ setCurrentPage }) => {
       return;
     }
 
-    setError("");
-
-    //SignUp API Call
     try {
+      const profileImageUrl = generateInitials(fullName);
+      
       const response = await axiosInstance.post(API_PATHS.AUTH.REGISTER, {
         name: fullName,
         email,
         password,
-        profileImageUrl,
+        profileImageUrl, // Generated initials
       });
 
       const { token } = response.data;
-
       if (token) {
         localStorage.setItem("token", token);
         updateUser(response.data);
         navigate("/dashboard");
       }
     } catch (error) {
-      if (error.response && error.response.data.message) {
+      if (error.response?.data?.message) {
         setError(error.response.data.message);
       } else {
         setError("Something went wrong. Please try again.");
@@ -64,7 +73,35 @@ const SignUp = ({ setCurrentPage }) => {
     }
   };
 
-  return <div className="w-[90vw] md:w-[33vw] p-7 flex flex-col justify-center">
+  return <div className="w-[90vw] md:w-[33vw] p-7 flex flex-col justify-center rounded-lg shadow"
+    style={{
+      background: "linear-gradient(120deg, #ff6a00, #ee0979, #00c3ff, rgb(0,74,25), rgb(0,98,80), #ff6a00)",
+      backgroundSize: "300% 100%",
+      animation: "gradientBG 8s ease-in-out infinite",
+      boxShadow: "0 4px 32px 0 rgba(0,0,0,0.13)",
+      position: "relative",
+      overflow: "hidden",
+    }}
+  >
+
+    <style>
+      {`
+        @keyframes gradientBG {
+          0% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
+          100% { background-position: 0% 50%; }
+        }
+      `}
+    </style>
+    <div style={{
+      background: "rgba(255,255,255,0.90)",
+      borderRadius: "inherit",
+      position: "absolute",
+      inset: 0,
+      zIndex: 0,
+      pointerEvents: "none"
+    }} />
+    <div style={{ position: "relative", zIndex: 1 }}>
       <h3 className="text-lg font-semibold text-black">Create an Account</h3>
       <p className="text-xs text-slate-700 mt-[5px] mb-6">
         Join us today by entering your details below.
@@ -116,6 +153,7 @@ const SignUp = ({ setCurrentPage }) => {
         </p>
       </form>
     </div>
+  </div>
 };
 
 export default SignUp;

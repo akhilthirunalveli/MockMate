@@ -3,11 +3,23 @@ const Session = require("../models/Session");
 const Question = require("../models/Question");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const admin = require("firebase-admin");
 
 // Generate JWT Token
 const generateToken = (userId) => {
   return jwt.sign({ id: userId }, process.env.JWT_SECRET, { expiresIn: "7d" });
+};
+
+// Helper function to generate initials from full name
+const generateInitials = (name) => {
+  if (!name) return "U"; // Default fallback
+  
+  const words = name.trim().split(" ");
+  if (words.length === 1) {
+    return words[0].charAt(0).toUpperCase();
+  }
+  
+  // Take first letter of first name and first letter of last name
+  return (words[0].charAt(0) + words[words.length - 1].charAt(0)).toUpperCase();
 };
 
 // @desc    Register a new user
@@ -74,6 +86,14 @@ const loginUser = async (req, res) => {
 
     delete user.password;
 
+    // Check if user has invalid profileImageUrl and generate proper initials
+    if (!user.profileImageUrl || user.profileImageUrl === "Hi" || user.profileImageUrl.length < 1 || user.profileImageUrl.length > 3) {
+      const newInitials = generateInitials(user.name);
+      // Update the user in database with proper initials
+      await User.findByIdAndUpdate(user._id, { profileImageUrl: newInitials });
+      user.profileImageUrl = newInitials;
+    }
+
     res.json({
       ...user,
       token: generateToken(user._id),
@@ -93,59 +113,18 @@ const getUserProfile = async (req, res) => {
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
+
+    // Check if user has invalid profileImageUrl and generate proper initials
+    if (!user.profileImageUrl || user.profileImageUrl === "Hi" || user.profileImageUrl.length < 1 || user.profileImageUrl.length > 3) {
+      const newInitials = generateInitials(user.name);
+      // Update the user in database with proper initials
+      await User.findByIdAndUpdate(user._id, { profileImageUrl: newInitials });
+      user.profileImageUrl = newInitials;
+    }
+
     res.json(user);
   } catch (error) {
     res.status(500).json({ message: "Server error", error: error.message });
-  }
-};
-
-// @desc    Login/Register user with Firebase OAuth
-// @route   POST /api/auth/firebase-login
-// @access  Public
-const firebaseLogin = async (req, res) => {
-  try {
-    const { idToken } = req.body;
-    if (!idToken) {
-      return res.status(400).json({ message: "No Firebase ID token provided" });
-    }
-
-    // Verify Firebase token
-    const decodedToken = await admin.auth().verifyIdToken(idToken);
-    const { email, name, picture, uid } = decodedToken;
-
-    if (!email) {
-      return res.status(400).json({ message: "No email found in Firebase token" });
-    }
-
-    // Try to find user in DB
-    let user = await User.findOne({ email });
-
-    // If user doesn't exist, create one
-    if (!user) {
-      user = await User.create({
-        name: name || "Firebase User",
-        email,
-        password: uid, // Store UID as password hash placeholder (not used)
-        profileImageUrl: picture || null,
-      });
-    } else {
-      // Always update profileImageUrl if changed (for returning users)
-      if (picture && user.profileImageUrl !== picture) {
-        user.profileImageUrl = picture;
-        await user.save();
-      }
-    }
-
-    // Return user data with JWT
-    res.json({
-      _id: user._id,
-      name: user.name,
-      email: user.email,
-      profileImageUrl: user.profileImageUrl,
-      token: generateToken(user._id),
-    });
-  } catch (error) {
-    res.status(401).json({ message: "Firebase authentication failed", error: error.message });
   }
 };
 
@@ -242,4 +221,4 @@ const updateResumeLink = async (req, res) => {
   }
 };
 
-module.exports = { registerUser, loginUser, getUserProfile, firebaseLogin, getAllUsers, deleteUser, updateResumeLink };
+module.exports = { registerUser, loginUser, getUserProfile, getAllUsers, deleteUser, updateResumeLink };

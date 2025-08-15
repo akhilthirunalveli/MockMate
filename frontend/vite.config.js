@@ -95,10 +95,6 @@ export default defineConfig({
             if (id.includes('jspdf') || id.includes('html2canvas')) {
               return 'pdf';
             }
-            // Firebase
-            if (id.includes('firebase') || id.includes('@firebase')) {
-              return 'firebase';
-            }
             // Syntax highlighting - split into smaller chunks
             if (id.includes('react-syntax-highlighter')) {
               if (id.includes('/dist/esm/languages/') || id.includes('/dist/esm/async-languages/')) {
