@@ -19,10 +19,12 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': '/src'
-    }
+    },
+    dedupe: ['react', 'react-dom']
   },
   optimizeDeps: {
-    include: ['react', 'react-dom']
+    include: ['react', 'react-dom', 'react/jsx-runtime'],
+    force: true
   },
   build: {
     rollupOptions: {
@@ -35,9 +37,9 @@ export default defineConfig({
         manualChunks: (id) => {
           // Keep React ecosystem together for better compatibility
           if (id.includes('node_modules')) {
-            // Core React libraries - keep together and prioritize
+            // Core React libraries - keep together in vendor chunk (don't separate)
             if (id.includes('react/') || id.includes('react-dom/') || id.includes('scheduler/')) {
-              return 'react-vendor';
+              return 'vendor';
             }
             
             // React Router
