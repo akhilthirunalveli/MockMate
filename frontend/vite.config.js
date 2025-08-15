@@ -34,95 +34,20 @@ export default defineConfig({
         entryFileNames: 'assets/[name]-[hash].js',
         chunkFileNames: 'assets/[name]-[hash].js',
         assetFileNames: 'assets/[name]-[hash].[ext]',
-        manualChunks: (id) => {
-          // Keep React ecosystem together for better compatibility
-          if (id.includes('node_modules')) {
-            // Core React libraries - keep together in vendor chunk (don't separate)
-            if (id.includes('react/') || id.includes('react-dom/') || id.includes('scheduler/')) {
-              return 'vendor';
-            }
-            
-            // React Router
-            if (id.includes('react-router') || id.includes('@remix-run/router')) {
-              return 'react-router';
-            }
-            
-            // Animation libraries (can be large)
-            if (id.includes('framer-motion')) {
-              return 'framer-motion';
-            }
-            
-            // Chart libraries (heavy)
-            if (id.includes('recharts') || id.includes('d3-') || id.includes('victory')) {
-              return 'charts';
-            }
-            
-            // PDF generation (heavy)
-            if (id.includes('jspdf') || id.includes('html2canvas')) {
-              return 'pdf-utils';
-            }
-            
-            // Syntax highlighting
-            if (id.includes('react-syntax-highlighter') || id.includes('highlight.js')) {
-              return 'syntax-highlighting';
-            }
-            
-            // Markdown processing
-            if (id.includes('react-markdown') || id.includes('remark-') || id.includes('rehype-') || 
-                id.includes('mdast-') || id.includes('hast-') || id.includes('micromark') || 
-                id.includes('unist-') || id.includes('vfile')) {
-              return 'markdown';
-            }
-            
-            // UI libraries
-            if (id.includes('react-hot-toast') || id.includes('react-icons') || id.includes('@heroicons/react')) {
-              return 'ui-libs';
-            }
-            
-            // Utilities
-            if (id.includes('axios')) {
-              return 'http-client';
-            }
-            
-            if (id.includes('moment')) {
-              return 'date-utils';
-            }
-            
-            // Firebase
-            if (id.includes('firebase')) {
-              return 'firebase';
-            }
-            
-            // Vercel analytics
-            if (id.includes('@vercel/')) {
-              return 'vercel-utils';
-            }
-            
-            // Tailwind CSS
-            if (id.includes('tailwindcss') || id.includes('@tailwindcss/')) {
-              return 'tailwind';
-            }
-            
-            // All other vendor libraries
-            return 'vendor';
-          }
-          
-          // Application code chunking
-          if (id.includes('/pages/InterviewPrep/')) {
-            return 'interview-prep';
-          }
-          if (id.includes('/pages/Home/') || id.includes('/pages/admin')) {
-            return 'dashboard';
-          }
-          if (id.includes('/pages/Auth/')) {
-            return 'auth-pages';
-          }
-          if (id.includes('/components/')) {
-            return 'components';
-          }
-          if (id.includes('/utils/') || id.includes('/context/')) {
-            return 'app-utils';
-          }
+        manualChunks: {
+          // Keep React as a single chunk to prevent loading issues
+          'react-vendor': ['react', 'react-dom', 'react/jsx-runtime'],
+          // Router
+          'react-router': ['react-router-dom'],
+          // Large libraries
+          'framer-motion': ['framer-motion'],
+          'charts': ['recharts'],
+          'pdf-utils': ['jspdf', 'html2canvas'],
+          'syntax-highlighting': ['react-syntax-highlighter'],
+          'markdown': ['react-markdown', 'remark-gfm'],
+          'ui-libs': ['react-hot-toast', 'react-icons', '@heroicons/react'],
+          'firebase': ['firebase'],
+          'vercel-utils': ['@vercel/analytics', '@vercel/speed-insights'],
         }
       }
     },
