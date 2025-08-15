@@ -20,7 +20,8 @@ export default defineConfig({
     alias: {
       '@': '/src'
     },
-    dedupe: ['react', 'react-dom']
+    dedupe: ['react', 'react-dom'],
+    conditions: ['import', 'module', 'browser', 'default']
   },
   optimizeDeps: {
     include: ['react', 'react-dom', 'react/jsx-runtime'],
@@ -34,20 +35,41 @@ export default defineConfig({
         entryFileNames: 'assets/[name]-[hash].js',
         chunkFileNames: 'assets/[name]-[hash].js',
         assetFileNames: 'assets/[name]-[hash].[ext]',
-        manualChunks: {
-          // Keep React as a single chunk to prevent loading issues
-          'react-vendor': ['react', 'react-dom', 'react/jsx-runtime'],
-          // Router
-          'react-router': ['react-router-dom'],
-          // Large libraries
-          'framer-motion': ['framer-motion'],
-          'charts': ['recharts'],
-          'pdf-utils': ['jspdf', 'html2canvas'],
-          'syntax-highlighting': ['react-syntax-highlighter'],
-          'markdown': ['react-markdown', 'remark-gfm'],
-          'ui-libs': ['react-hot-toast', 'react-icons', '@heroicons/react'],
-          'firebase': ['firebase'],
-          'vercel-utils': ['@vercel/analytics', '@vercel/speed-insights'],
+        manualChunks: (id) => {
+          if (id.includes('node_modules')) {
+            // Keep React as a single chunk to prevent loading issues
+            if (id.includes('react') || id.includes('react-dom')) {
+              return 'react-vendor';
+            }
+            // Router
+            if (id.includes('react-router-dom')) {
+              return 'react-router';
+            }
+            // Large libraries
+            if (id.includes('framer-motion')) {
+              return 'framer-motion';
+            }
+            if (id.includes('recharts')) {
+              return 'charts';
+            }
+            if (id.includes('jspdf') || id.includes('html2canvas')) {
+              return 'pdf-utils';
+            }
+            if (id.includes('react-syntax-highlighter')) {
+              return 'syntax-highlighting';
+            }
+            if (id.includes('react-markdown') || id.includes('remark-gfm')) {
+              return 'markdown';
+            }
+            if (id.includes('react-hot-toast') || id.includes('react-icons') || id.includes('@heroicons/react')) {
+              return 'ui-libs';
+            }
+            if (id.includes('@vercel/')) {
+              return 'vercel-utils';
+            }
+            // Default vendor chunk
+            return 'vendor';
+          }
         }
       }
     },
