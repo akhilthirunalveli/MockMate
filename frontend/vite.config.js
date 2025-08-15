@@ -15,19 +15,29 @@ export default defineConfig({
     }), 
     tailwindcss()
   ],
+  resolve: {
+    dedupe: ['react', 'react-dom'],
+    alias: {
+      '@': '/src',
+      'react': 'react',
+      'react-dom': 'react-dom'
+    }
+  },
+  optimizeDeps: {
+    include: ['react', 'react-dom', 'react/jsx-runtime', 'react-dom/client'],
+    exclude: ['@vite/client', '@vite/env'],
+    force: true
+  },
   build: {
     rollupOptions: {
       external: [],
-      treeshake: {
-        moduleSideEffects: false
-      },
       output: {
         manualChunks: (id) => {
           // Keep React ecosystem together for better compatibility
           if (id.includes('node_modules')) {
-            // Core React libraries - keep minimal and together
+            // Core React libraries - keep together and prioritize
             if (id.includes('react/') || id.includes('react-dom/') || id.includes('scheduler/')) {
-              return 'react-core';
+              return 'react-vendor';
             }
             
             // React Router
@@ -50,33 +60,12 @@ export default defineConfig({
               return 'pdf-utils';
             }
             
-            // Syntax highlighting - split by functionality
-            if (id.includes('react-syntax-highlighter')) {
-              if (id.includes('/languages/') || id.includes('/async-languages/')) {
-                return 'syntax-languages';
-              }
-              if (id.includes('/styles/')) {
-                return 'syntax-styles';
-              }
-              return 'syntax-core';
+            // Syntax highlighting
+            if (id.includes('react-syntax-highlighter') || id.includes('highlight.js')) {
+              return 'syntax-highlighting';
             }
             
-            // Highlight.js - separate core from languages and split languages further
-            if (id.includes('highlight.js')) {
-              if (id.includes('/lib/languages/') || id.includes('/es/languages/')) {
-                // Split language files by common groups
-                if (id.includes('javascript') || id.includes('typescript') || id.includes('jsx') || id.includes('tsx')) {
-                  return 'highlight-js-langs';
-                }
-                if (id.includes('python') || id.includes('java') || id.includes('cpp') || id.includes('c.js')) {
-                  return 'highlight-popular-langs';
-                }
-                return 'highlight-other-langs';
-              }
-              return 'highlight-core';
-            }
-            
-            // Markdown processing (can be heavy)
+            // Markdown processing
             if (id.includes('react-markdown') || id.includes('remark-') || id.includes('rehype-') || 
                 id.includes('mdast-') || id.includes('hast-') || id.includes('micromark') || 
                 id.includes('unist-') || id.includes('vfile')) {
@@ -84,13 +73,8 @@ export default defineConfig({
             }
             
             // UI libraries
-            if (id.includes('react-hot-toast') || id.includes('react-icons')) {
+            if (id.includes('react-hot-toast') || id.includes('react-icons') || id.includes('@heroicons/react')) {
               return 'ui-libs';
-            }
-            
-            // Heroicons - separate from other icons
-            if (id.includes('@heroicons/react')) {
-              return 'heroicons';
             }
             
             // Utilities
@@ -102,7 +86,7 @@ export default defineConfig({
               return 'date-utils';
             }
             
-            // Firebase (if any remains)
+            // Firebase
             if (id.includes('firebase')) {
               return 'firebase';
             }
@@ -117,23 +101,8 @@ export default defineConfig({
               return 'tailwind';
             }
             
-            // Split large utility libraries
-            if (id.includes('lodash') || id.includes('ramda') || id.includes('underscore')) {
-              return 'utility-libs';
-            }
-            
-            // Split CSS-in-JS and styling libraries
-            if (id.includes('styled-components') || id.includes('emotion') || id.includes('@stitches') || id.includes('linaria')) {
-              return 'styling-libs';
-            }
-            
-            // Split validation libraries
-            if (id.includes('yup') || id.includes('joi') || id.includes('zod') || id.includes('validator')) {
-              return 'validation-libs';
-            }
-            
-            // All other smaller vendor libraries
-            return 'vendor-misc';
+            // All other vendor libraries
+            return 'vendor';
           }
           
           // Application code chunking
