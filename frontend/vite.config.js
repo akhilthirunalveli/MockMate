@@ -134,7 +134,7 @@ export default defineConfig({
   server: {
     port: 5174,
     proxy: {
-      '/api': 'http://localhost:8000', // Local backend on port 8000
+      '/api': 'https://mockmate-backend-r0jk.onrender.com', // Local backend on port 8000
     },
     headers: {
       'Cross-Origin-Embedder-Policy': 'cross-origin',
