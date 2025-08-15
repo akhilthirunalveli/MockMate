@@ -23,6 +23,8 @@ const Record = () => {
     micOn,
     cameraOn,
     permissionGranted,
+    errorMessage,
+    audioOnly,
     handleMicToggle,
     handleCameraToggle,
     stopAllMediaTracks
@@ -94,7 +96,11 @@ const Record = () => {
         <Navbar />
         
         {/* Permission Request Modal */}
-        <PermissionModal permissionGranted={permissionGranted} />
+        <PermissionModal 
+          permissionGranted={permissionGranted} 
+          errorMessage={errorMessage}
+          audioOnly={audioOnly}
+        />
 
         <div className="max-w-[90rem] mt-24 mx-auto flex flex-col gap-6 pb-8">
           {/* Header with Exit Button */}

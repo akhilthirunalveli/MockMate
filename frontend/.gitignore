@@ -26,7 +26,3 @@ dist-ssr
 backend/.env
 backend/firebaseServiceAccountKey.json
 *.env
-backend/firebaseServiceAccountKey.json
-*.env
-=======
->>>>>>> bc91f3f70afa1c8cfc35d35e2d2e8e691a6d1f28

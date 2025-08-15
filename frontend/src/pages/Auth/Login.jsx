@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Input from "../../components/Inputs/Input";
 import { validateEmail } from "../../utils/helper";
@@ -6,7 +6,7 @@ import axiosInstance from "../../utils/axiosInstance";
 import { API_PATHS } from "../../utils/apiPaths";
 import { UserContext } from "../../context/userContext";
 // Add Firebase imports at the top
-import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import { signInWithPopup, signInWithRedirect, getRedirectResult, onAuthStateChanged, GoogleAuthProvider } from "firebase/auth";
 import { auth } from "../../utils/firebase";
 
 const Login = ({ setCurrentPage }) => {
@@ -20,6 +20,82 @@ const Login = ({ setCurrentPage }) => {
   const { updateUser } = useContext(UserContext);
 
   const navigate = useNavigate();
+
+  // Handle redirect result from Google login (fallback method)
+  useEffect(() => {
+    const handleRedirectResult = async () => {
+      try {
+        console.log("🔄 Checking for redirect result...");
+        const result = await getRedirectResult(auth);
+        
+        if (result) {
+          console.log("✅ Redirect result found:", result.user.email);
+          setGoogleLoading(true);
+          
+          const user = result.user;
+          const idToken = await user.getIdToken();
+          console.log("🔑 Got ID token from redirect, sending to backend...");
+          
+          const response = await axiosInstance.post(API_PATHS.AUTH.FIREBASE_LOGIN, { idToken });
+          console.log("✅ Backend responded to redirect:", response.data);
+          
+          const { token, ...userInfo } = response.data;
+          if (token) {
+            localStorage.setItem("token", token);
+            updateUser(userInfo);
+            console.log("🎉 Redirect login successful! Navigating to dashboard...");
+            navigate("/dashboard");
+          }
+        }
+      } catch (error) {
+        console.error("❌ Redirect result error:", error);
+        setError(`Login failed: ${error.response?.data?.message || error.message}`);
+      } finally {
+        setGoogleLoading(false);
+      }
+    };
+
+    handleRedirectResult();
+  }, [navigate, updateUser]);
+
+  // Listen for auth state changes (catches both popup and redirect results)
+  useEffect(() => {
+    console.log("📡 Setting up auth state listener...");
+    
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      console.log("🔄 Auth state changed:", user ? `User: ${user.email}` : "No user");
+      
+      if (user && !localStorage.getItem("token") && googleLoading) {
+        console.log("✅ User authenticated! Processing...");
+        
+        try {
+          const idToken = await user.getIdToken();
+          console.log("🔑 Got ID token from auth state change, sending to backend...");
+          
+          const response = await axiosInstance.post(API_PATHS.AUTH.FIREBASE_LOGIN, { idToken });
+          console.log("✅ Backend responded to auth state change:", response.data);
+          
+          const { token, ...userInfo } = response.data;
+          if (token) {
+            localStorage.setItem("token", token);
+            updateUser(userInfo);
+            console.log("🎉 Auth state login successful! Navigating to dashboard...");
+            navigate("/dashboard");
+          }
+        } catch (error) {
+          console.error("❌ Auth state change error:", error);
+          setError(`Login failed: ${error.response?.data?.message || error.message}`);
+        } finally {
+          setGoogleLoading(false);
+        }
+      }
+    });
+
+    return () => {
+      console.log("🧹 Cleaning up auth state listener");
+      unsubscribe();
+    };
+  }, [navigate, updateUser, googleLoading]);
 
   // Handle Login Form Submit
   const handleLogin = async (e) => {
@@ -73,33 +149,87 @@ const Login = ({ setCurrentPage }) => {
     }
   };
 
-  // Add Google login handler
+  // Add Google login handler with fallback to redirect
   const handleGoogleLogin = async () => {
+    console.log("🔥 Starting Google login...");
     setGoogleLoading(true);
-    const provider = new GoogleAuthProvider();
+    setError("");
+    
     try {
-      const result = await signInWithPopup(auth, provider);
-      const user = result.user;
-      if (!user) throw new Error("No user found");
-      const idToken = await user.getIdToken();
-      // NOTE: This endpoint must be implemented in your backend!
-      // It should accept { idToken } and return { token, ...userInfo }
-      const response = await axiosInstance.post(API_PATHS.AUTH.FIREBASE_LOGIN, { idToken });
-      const { token, ...userInfo } = response.data;
-      if (token) {
-        localStorage.setItem("token", token);
-        updateUser(userInfo);
-        // Force reload to re-initialize context from localStorage if needed
-        window.location.href = "/dashboard";
+      const provider = new GoogleAuthProvider();
+      provider.addScope('email');
+      provider.addScope('profile');
+      
+      console.log("📱 Trying popup method first...");
+      
+      try {
+        // Try popup first
+        const result = await signInWithPopup(auth, provider);
+        
+        console.log("✅ Popup login successful!");
+        const user = result.user;
+        console.log("User:", user.displayName, user.email);
+        
+        const idToken = await user.getIdToken();
+        console.log("🔑 Got ID token, sending to backend...");
+        
+        const response = await axiosInstance.post(API_PATHS.AUTH.FIREBASE_LOGIN, { idToken });
+        console.log("✅ Backend responded:", response.data);
+        
+        const { token, ...userInfo } = response.data;
+        if (token) {
+          localStorage.setItem("token", token);
+          updateUser(userInfo);
+          console.log("🎉 Login successful! Navigating to dashboard...");
+          navigate("/dashboard");
+        } else {
+          throw new Error("No token received from backend");
+        }
+        
+      } catch (popupError) {
+        console.log("❌ Popup failed, trying redirect method:", popupError.code);
+        
+        // If popup fails, use redirect method
+        if (popupError.code === 'auth/popup-closed-by-user' || 
+            popupError.code === 'auth/popup-blocked' ||
+            popupError.code === 'auth/cancelled-popup-request') {
+          
+          console.log("🔄 Using redirect method...");
+          await signInWithRedirect(auth, provider);
+          // Don't set loading to false here - redirect will handle it
+          return;
+        } else {
+          // Re-throw other errors
+          throw popupError;
+        }
       }
+      
     } catch (error) {
-      // Show a more descriptive error if endpoint is missing
-      if (error.response && error.response.status === 404) {
+      console.error("❌ Google login failed:", error);
+      
+      // Handle specific errors
+      if (error.code === 'auth/popup-closed-by-user') {
+        setError("Google login was cancelled. Please try again.");
+      } else if (error.code === 'auth/popup-blocked') {
+        setError("Popup was blocked. Trying redirect method...");
+        // Try redirect as fallback
+        try {
+          const provider = new GoogleAuthProvider();
+          await signInWithRedirect(auth, provider);
+          return;
+        } catch (redirectError) {
+          setError("Login failed. Please enable popups or try again.");
+        }
+      } else if (error.response && error.response.status === 404) {
         setError("Google login is not available. Please ask the admin to enable /api/auth/firebase-login on the backend.");
+      } else if (error.response && error.response.data && error.response.data.message) {
+        setError(`Login error: ${error.response.data.message}`);
+      } else if (error.message) {
+        setError(`Login failed: ${error.message}`);
       } else {
         setError("Google login failed. Please try again.");
       }
-    } finally {
+      
       setGoogleLoading(false);
     }
   };
