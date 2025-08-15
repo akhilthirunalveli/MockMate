@@ -5,33 +5,33 @@ import tailwindcss from '@tailwindcss/vite'
 // https://vite.dev/config/
 export default defineConfig({
   base: "/",
+  define: {
+    global: 'globalThis',
+  },
   plugins: [
     react({
-      jsxRuntime: 'automatic',
-      jsxImportSource: 'react',
-      babel: {
-        plugins: []
-      }
+      include: "**/*.{jsx,tsx}",
+      exclude: /node_modules/,
+      jsxRuntime: 'automatic'
     }), 
     tailwindcss()
   ],
   resolve: {
-    dedupe: ['react', 'react-dom'],
     alias: {
-      '@': '/src',
-      'react': 'react',
-      'react-dom': 'react-dom'
+      '@': '/src'
     }
   },
   optimizeDeps: {
-    include: ['react', 'react-dom', 'react/jsx-runtime', 'react-dom/client'],
-    exclude: ['@vite/client', '@vite/env'],
-    force: true
+    include: ['react', 'react-dom']
   },
   build: {
     rollupOptions: {
       external: [],
       output: {
+        format: 'es',
+        entryFileNames: 'assets/[name]-[hash].js',
+        chunkFileNames: 'assets/[name]-[hash].js',
+        assetFileNames: 'assets/[name]-[hash].[ext]',
         manualChunks: (id) => {
           // Keep React ecosystem together for better compatibility
           if (id.includes('node_modules')) {
@@ -132,8 +132,9 @@ export default defineConfig({
     assetsInlineLimit: 2048 // Reduce inline limit to decrease bundle size
   },
   server: {
+    port: 5174,
     proxy: {
-      '/api': 'https://mockmate-backend-r0jk.onrender.com', // or your backend port
+      '/api': 'http://localhost:8000', // Local backend on port 8000
     },
     headers: {
       'Cross-Origin-Embedder-Policy': 'cross-origin',

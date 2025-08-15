@@ -8,9 +8,36 @@
     <meta name="description" content="AI-powered interview preparation app" />
     
     <title>Mockmate | Your Interview Prep</title>
+    
+    <!-- Preload critical resources -->
+    <link rel="modulepreload" href="/src/main.jsx" />
+    
+    <script>
+      // Early error detection for React loading issues
+      window.addEventListener('error', function(e) {
+        if (e.message && e.message.includes('forwardRef')) {
+          console.error('React forwardRef error detected, attempting reload...');
+          setTimeout(() => {
+            window.location.reload();
+          }, 1000);
+        }
+      });
+      
+      // Ensure React globals are available
+      window.__REACT_DEVTOOLS_GLOBAL_HOOK__ = window.__REACT_DEVTOOLS_GLOBAL_HOOK__ || {};
+    </script>
   </head>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
+    
+    <noscript>
+      <div style="display: flex; justify-content: center; align-items: center; height: 100vh; background: #000; color: white; font-family: system-ui; text-align: center;">
+        <div>
+          <h2>JavaScript Required</h2>
+          <p>This application requires JavaScript to run properly.</p>
+        </div>
+      </div>
+    </noscript>
   </body>
 </html>

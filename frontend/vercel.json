@@ -3,6 +3,22 @@
   "outputDirectory": "dist",
   "framework": "vite",
   "installCommand": "npm install",
+  "functions": {
+    "app/api/**/*.js": {
+      "runtime": "nodejs18.x"
+    }
+  },
+  "headers": [
+    {
+      "source": "/assets/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    }
+  ],
   "rewrites": [
     { "source": "/(.*)", "destination": "/index.html" }
   ]
