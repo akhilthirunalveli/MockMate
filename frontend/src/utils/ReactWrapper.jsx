@@ -22,6 +22,11 @@ if (ReactWrapper && typeof ReactWrapper === 'object') {
   if (!ReactWrapper.Fragment) {
     ReactWrapper.Fragment = React.Fragment;
   }
+
+  // Ensure forwardRef property exists and is properly defined
+  if (!ReactWrapper.forwardRef) {
+    ReactWrapper.forwardRef = React.forwardRef;
+  }
 }
 
 export default ReactWrapper;
