@@ -80,7 +80,7 @@ export const Button = ({
   const variants = {
     primary: { backgroundColor: "#007bff", hoverColor: "#0056b3" },
     danger: { backgroundColor: "#dc3545", hoverColor: "#c82333" },
-    tab: { backgroundColor: "#333", hoverColor: "#444", border: "1px solid #555" }
+    tab: { backgroundColor: "#000000ff", hoverColor: "#000000ff", border: "1px solid #555" }
   };
   const variantStyle = variants[variant];
   return (
@@ -220,7 +220,7 @@ export const TabNavigation = ({ activeTab, setActiveTab, setLoadedTabs, tabs }) 
         }}
         // ...existing code...
 style={{
-  backgroundColor: activeTab === key ? "#000" : "#000000ff",
+  backgroundColor: activeTab === key ? "#000000ff" : "#353535ff",
   border: "1px solid #000",
   padding: "6px 12px",
   fontSize: "0.85rem",

@@ -25,19 +25,13 @@ const QuestionsTab = ({ groupedQuestions, expandedGroups, toggleGroupExpansion }
             {/* User Header - Collapsible */}
             <Card 
               style={{ 
-                backgroundColor: "#2a2a2a", 
+                backgroundColor: "#000000ff", 
                 color: "white",
                 cursor: "pointer",
                 transition: "all 0.2s ease",
                 marginBottom: isExpanded ? "0.5rem" : "0"
               }}
               onClick={() => toggleGroupExpansion(userId)}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = "#333";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = "#2a2a2a";
-              }}
             >
               <div style={{ 
                 display: "flex", 

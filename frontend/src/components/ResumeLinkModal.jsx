@@ -4,12 +4,13 @@ import axiosInstance from "../utils/axiosInstance";
 import { API_PATHS } from "../utils/apiPaths";
 import toast from "react-hot-toast";
 import { IoClose } from "react-icons/io5";
+import Input from "./Inputs/Input";
 
 const ResumeLinkModal = ({ onClose, onSave }) => {
   const { user, updateUser } = useContext(UserContext);
   const [resumeLink, setResumeLink] = useState(user?.resumeLink || "");
   const [loading, setLoading] = useState(false);
-  const [isEditing, setIsEditing] = useState(!user?.resumeLink); // Auto-edit mode if no resume link exists
+  const [isEditing, setIsEditing] = useState(!user?.resumeLink);
 
   const handleSave = async () => {
     if (!resumeLink.trim()) {
@@ -66,96 +67,121 @@ const ResumeLinkModal = ({ onClose, onSave }) => {
   };
 
   return (
-    <div className="p-4 sm:p-6 bg-black/80 backdrop-blur-xl border border-white/20 rounded-xl shadow-2xl w-full max-w-[95vw] sm:max-w-[500px] md:max-w-[600px] mx-auto relative">
-      {/* Close Button */}
+    <div
+      className="w-[90vw] md:w-[35vw] p-7 flex flex-col justify-center relative rounded-lg shadow"
+      style={{
+        background: "linear-gradient(120deg, #ff6a00, #ee0979, #00c3ff, rgb(0,74,25), rgb(0,98,80), #ff6a00)",
+        backgroundSize: "300% 100%",
+        animation: "gradientBG 8s ease-in-out infinite",
+        boxShadow: "0 4px 32px 0 rgba(0,0,0,0.13)",
+        position: "relative",
+        overflow: "hidden",
+      }}
+    >
+      <style>
+        {`
+          @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+          }
+        `}
+      </style>
+      <div style={{
+        background: "rgba(255, 255, 255, 0.9)",
+        borderRadius: "inherit",
+        position: "absolute",
+        inset: 0,
+        zIndex: 0,
+        pointerEvents: "none"
+      }} />
       <button
         onClick={onClose}
-        className="absolute top-3 right-3 sm:top-4 sm:right-4 p-1.5 sm:p-2 rounded-full bg-white/10 hover:bg-white/20 transition-all duration-200 group"
+        className="absolute top-4 right-4 z-20 p-2 rounded-full text-gray-500 transition-all duration-200 cursor-pointer"
         aria-label="Close"
       >
-        <IoClose className="w-5 h-5 sm:w-6 sm:h-6 text-gray-400 group-hover:text-white transition-colors duration-200" />
+        <IoClose className="w-6 h-6" />
       </button>
-
-      <h2 className="text-xl sm:text-2xl font-semibold mb-2 text-white pr-8 sm:pr-10">
-        {!user?.resumeLink ? "Add Resume Link" : isEditing ? "Edit Resume Link" : "Resume Link"}
-      </h2>
-      {user?.resumeLink && !isEditing && (
-        <p className="text-gray-400 text-xs sm:text-sm mb-4 sm:mb-6">You can view your resume or edit the link below</p>
-      )}
-      {(!user?.resumeLink || isEditing) && (
-        <p className="text-gray-400 text-xs sm:text-sm mb-4 sm:mb-6">
-          {!user?.resumeLink ? "Add a link to your resume for easy access" : "Update your resume link"}
-        </p>
-      )}
-      
-      {user?.resumeLink && !isEditing ? (
-        <div className="space-y-3 sm:space-y-4">
-          <div className="p-3 sm:p-4 bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg">
-            <p className="text-xs sm:text-sm text-gray-300 mb-2">Current Resume Link:</p>
-            <p className="text-blue-400 break-all font-medium text-sm sm:text-base">{user.resumeLink}</p>
+      <div style={{ position: "relative", zIndex: 1 }}>
+        <h3 className="text-lg font-semibold text-black">
+          {!user?.resumeLink ? "Add Resume Link" : isEditing ? "Edit Resume Link" : "Resume Link"}
+        </h3>
+        <p className="text-xs text-slate-700 mt-[5px] mb-3">
+        {user?.resumeLink && !isEditing
+          ? "You can view your resume or edit the link below"
+          : !user?.resumeLink
+          ? "Add a link to your resume for easy access"
+          : "Update your resume link"}
+      </p>
+        {user?.resumeLink && !isEditing ? (
+          <div className="flex flex-col gap-3 mt-2">
+            <div className=" border border-gray-100 rounded-lg px-4 py-3 flex flex-col items-center">
+              <span className="text-xs text-gray-600 mb-1">Current Resume Link:</span>
+              <span className="text-black break-all font-medium text-base text-center">{user.resumeLink}</span>
+            </div>
+            <div className="flex gap-3">
+              <button
+                onClick={handleOpen}
+                className="btn-primary w-1/2"
+              >
+                Open Resume
+              </button>
+              <button
+                onClick={handleEdit}
+                className="btn-primary w-1/2"
+              >
+                Edit Link
+              </button>
+            </div>
           </div>
-          
-          <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
-            <button
-              onClick={handleOpen}
-              className="w-full sm:flex-1 bg-blue-600/80 backdrop-blur-sm border border-blue-400/30 text-white py-2.5 sm:py-3 px-4 sm:px-6 rounded-lg hover:bg-blue-500/90 transition-all duration-200 font-medium text-sm sm:text-base"
-            >
-              Open Resume
-            </button>
-            <button
-              onClick={handleEdit}
-              className="w-full sm:flex-1 bg-amber-600/80 backdrop-blur-sm border border-amber-400/30 text-white py-2.5 sm:py-3 px-4 sm:px-6 rounded-lg hover:bg-amber-500/90 transition-all duration-200 font-medium text-sm sm:text-base"
-            >
-              Edit Link
-            </button>
-          </div>
-        </div>
-      ) : null}
-
-      {(!user?.resumeLink || isEditing) && (
-        <div className="space-y-4 sm:space-y-6 mt-4 sm:mt-6">
-          <div>
-            <label className="block text-xs sm:text-sm font-medium text-gray-300 mb-2 sm:mb-3">
-              Resume Link (Google Drive, Dropbox, etc.)
-            </label>
-            <input
-              type="url"
+        ) : null}
+        {(!user?.resumeLink || isEditing) && (
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleSave();
+            }}
+            className="flex flex-col gap-3 mt-2"
+          >
+            <Input
               value={resumeLink}
-              onChange={(e) => setResumeLink(e.target.value)}
+              onChange={({ target }) => setResumeLink(target.value)}
+              label="Resume Link (Google Drive, Dropbox, etc.)"
               placeholder="https://drive.google.com/file/d/..."
-              className="w-full px-3 sm:px-4 py-2.5 sm:py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-400/50 text-white placeholder-gray-400 transition-all duration-200 text-sm sm:text-base"
+              type="url"
             />
-            <p className="text-xs text-gray-400 mt-2">
+            <p className="text-xs text-slate-700 mt-1 mb-1 text-center">
               Make sure your resume link is publicly accessible
             </p>
-          </div>
-
-          <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 pt-2">
-            <button
-              onClick={handleSave}
-              disabled={loading || !resumeLink.trim()}
-              className="w-full sm:flex-1 bg-green-600/80 backdrop-blur-sm border border-green-400/30 text-white py-2.5 sm:py-3 px-4 sm:px-6 rounded-lg hover:bg-green-500/90 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed font-medium text-sm sm:text-base"
-            >
-              {loading ? "Saving..." : (user?.resumeLink ? "Update Resume Link" : "Save Resume Link")}
-            </button>
-            {user?.resumeLink && isEditing ? (
+            <div className="flex gap-3">
               <button
-                onClick={handleCancelEdit}
-                className="w-full sm:flex-1 bg-gray-600/80 backdrop-blur-sm border border-gray-400/30 text-gray-300 py-2.5 sm:py-3 px-4 sm:px-6 rounded-lg hover:bg-gray-500/90 hover:text-white transition-all duration-200 font-medium text-sm sm:text-base"
+                type="submit"
+                disabled={loading || !resumeLink.trim()}
+                className="btn-primary w-1/2 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                Cancel Edit
+                {loading ? "Saving..." : (user?.resumeLink ? "Update Resume Link" : "Save Resume Link")}
               </button>
-            ) : (
-              <button
-                onClick={onClose}
-                className="w-full sm:flex-1 bg-white/10 backdrop-blur-sm border border-white/30 text-gray-300 py-2.5 sm:py-3 px-4 sm:px-6 rounded-lg hover:bg-white/20 hover:text-white transition-all duration-200 font-medium text-sm sm:text-base"
-              >
-                Cancel
-              </button>
-            )}
-          </div>
-        </div>
-      )}
+              {user?.resumeLink && isEditing ? (
+                <button
+                  type="button"
+                  onClick={handleCancelEdit}
+                  className="btn-primary w-1/2"
+                >
+                  Cancel Edit
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={onClose}
+                  className="btn-primary w-1/2"
+                >
+                  Cancel
+                </button>
+              )}
+            </div>
+          </form>
+        )}
+      </div>
     </div>
   );
 };
