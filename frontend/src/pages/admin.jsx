@@ -1,4 +1,5 @@
-import React, { useState, useEffect, Suspense, lazy } from "react";
+
+import React, { useState, useEffect } from "react";
 import { BASE_URL } from "../utils/apiPaths";
 import {
   PieChart,
@@ -15,8 +16,11 @@ import {
   Line,
   ResponsiveContainer,
 } from "recharts";
+import { Card, StatsCard, ChartCard, Button, SkeletonLoader, CardSkeleton, ConnectionStatus, TabNavigation, baseStyles } from "./admin/AdminUI";
+import UsersTab from "./admin/UsersTab";
+import SessionsTab from "./admin/SessionsTab";
+import QuestionsTab from "./admin/QuestionsTab";
 
-// Constants
 const ADMIN_CODE = "1110";
 const COLORS = ['#007bff', '#28a745', '#ffc107', '#dc3545', '#6f42c1', '#fd7e14', '#20c997', '#6c757d'];
 
@@ -29,256 +33,13 @@ const loadGoogleFonts = () => {
     document.head.appendChild(link);
   }
 };
-
-// Load fonts on module import
 loadGoogleFonts();
 
-// Base styles
-const baseStyles = {
-  fontFamily: "'Montserrat', sans-serif",
-  cardBase: {
-    backgroundColor: "#000000",
-    border: "1px solid #333",
-    borderRadius: "12px",
-    padding: "clamp(1rem, 3vw, 2rem)",
-  },
-  glassMorphism: {
-    background: "rgba(255, 255, 255, 0.05)",
-    backdropFilter: "blur(20px)",
-    WebkitBackdropFilter: "blur(20px)",
-    border: "1px solid rgba(255, 255, 255, 0.1)",
-    borderRadius: "20px",
-  }
-};
-
-// Skeleton Components
-const SkeletonLoader = ({ height = "clamp(250px, 40vw, 300px)" }) => (
-  <div style={{ 
-    width: "100%", 
-    height, 
-    backgroundColor: "#2a2a2a", 
-    borderRadius: "clamp(6px, 2vw, 8px)",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    animation: "pulse 1.5s ease-in-out infinite"
-  }}>
-    <div style={{ color: "#666", fontSize: "clamp(12px, 3vw, 14px)" }}>Loading...</div>
-  </div>
-);
-
-const CardSkeleton = () => (
-  <div style={{
-    backgroundColor: "#1a1a1a",
-    border: "1px solid #333",
-    borderRadius: "clamp(6px, 2vw, 8px)",
-    padding: "clamp(1.2rem, 4vw, 1.5rem)",
-    animation: "pulse 1.5s ease-in-out infinite",
-    minHeight: "clamp(120px, 20vw, 150px)"
-  }}>
-    {[
-      { height: "clamp(18px, 5vw, 24px)", width: "100%" },
-      { height: "clamp(14px, 4vw, 18px)", width: "70%" },
-      { height: "clamp(12px, 3.5vw, 16px)", width: "50%" }
-    ].map((style, index) => (
-      <div 
-        key={index}
-        style={{ 
-          height: style.height, 
-          backgroundColor: "#333", 
-          borderRadius: "clamp(3px, 1vw, 4px)", 
-          marginBottom: "clamp(0.4rem, 2vw, 0.6rem)",
-          width: style.width
-        }}
-      />
-    ))}
-  </div>
-);
-
-// Reusable Components
-const Card = ({ children, style = {}, ...props }) => (
-  <div style={{ ...baseStyles.cardBase, ...style }} {...props}>
-    {children}
-  </div>
-);
-
-const StatsCard = ({ value, label, subtitle, color }) => (
-  <Card style={{ textAlign: "center" }}>
-    <div style={{ 
-      color, 
-      fontSize: "clamp(2rem, 6vw, 3rem)",
-      fontWeight: "700",
-      marginBottom: "0.5rem"
-    }}>
-      {value}
-    </div>
-    <div style={{ 
-      color: "#ccc", 
-      fontSize: "clamp(0.9rem, 2.5vw, 1.1rem)", 
-      fontWeight: "500" 
-    }}>
-      {label}
-    </div>
-    <div style={{ 
-      color: "#888", 
-      fontSize: "clamp(0.8rem, 2vw, 0.9rem)", 
-      marginTop: "0.5rem" 
-    }}>
-      {subtitle}
-    </div>
-  </Card>
-);
-
-const ChartCard = ({ title, children, height = "clamp(250px, 40vw, 300px)" }) => (
-  <Card>
-    <h3 style={{ 
-      color: "white", 
-      marginBottom: "1rem",
-      fontFamily: baseStyles.fontFamily,
-      fontWeight: "500",
-      fontSize: "clamp(1rem, 3vw, 1.3rem)",
-      textAlign: "center"
-    }}>
-      {title}
-    </h3>
-    <div style={{ width: "100%", height, minWidth: "250px", minHeight: "250px" }}>
-      {children}
-    </div>
-  </Card>
-);
-
-const Button = ({ 
-  children, 
-  onClick, 
-  variant = "primary", 
-  disabled = false, 
-  style = {},
-  ...props 
-}) => {
-  const variants = {
-    primary: { backgroundColor: "#007bff", hoverColor: "#0056b3" },
-    danger: { backgroundColor: "#dc3545", hoverColor: "#c82333" },
-    tab: { backgroundColor: "#333", hoverColor: "#444", border: "1px solid #555" }
-  };
-
-  const variantStyle = variants[variant];
-
-  return (
-    <button
-      onClick={onClick}
-      disabled={disabled}
-      style={{
-        padding: "clamp(0.35rem, 1.5vw, 0.45rem) clamp(0.7rem, 2.5vw, 0.9rem)",
-        borderRadius: "20px",
-        cursor: disabled ? "not-allowed" : "pointer",
-        fontFamily: baseStyles.fontFamily,
-        fontWeight: "500",
-        fontSize: "clamp(0.75rem, 2vw, 0.85rem)",
-        transition: "all 0.2s ease",
-        opacity: disabled ? 0.6 : 1,
-        color: "white",
-        border: "none",
-        ...variantStyle,
-        ...style
-      }}
-      onMouseEnter={(e) => {
-        if (!disabled && variantStyle.hoverColor) {
-          e.target.style.backgroundColor = variantStyle.hoverColor;
-        }
-      }}
-      onMouseLeave={(e) => {
-        if (!disabled) {
-          e.target.style.backgroundColor = variantStyle.backgroundColor;
-        }
-      }}
-      {...props}
-    >
-      {children}
-    </button>
-  );
-};
-
-const ConnectionStatus = ({ status, url }) => {
-  const statusConfig = {
-    connected: { color: "#28a745", icon: "✓", text: "Connected" },
-    failed: { color: "#dc3545", icon: "✗", text: "Disconnected" },
-    testing: { color: "#ffc107", icon: "⏳", text: "Testing..." }
-  };
-
-  const config = statusConfig[status] || statusConfig.testing;
-
-  return (
-    <div style={{ 
-      marginBottom: "clamp(0.6rem, 2vw, 0.8rem)", 
-      padding: "clamp(0.4rem, 2vw, 0.6rem) clamp(0.6rem, 2.5vw, 0.8rem)", 
-      borderRadius: "clamp(6px, 1.5vw, 10px)", 
-      backgroundColor: config.color,
-      color: "white",
-      fontSize: "clamp(0.7rem, 2vw, 0.8rem)",
-      fontWeight: "500",
-      fontFamily: baseStyles.fontFamily
-    }}>
-      <div style={{ display: "flex", flexDirection: "column", gap: "clamp(0.2rem, 0.8vw, 0.4rem)" }}>
-        <div style={{ fontWeight: "600" }}>
-          Backend: {config.icon} {config.text}
-        </div>
-        {status === "connected" && url && (
-          <div style={{ 
-            fontSize: "clamp(0.6rem, 1.6vw, 0.7rem)", 
-            opacity: "0.85",
-            wordBreak: "break-all",
-            fontWeight: "400",
-            color: "rgba(255, 255, 255, 0.9)"
-          }}>
-            {url}
-          </div>
-        )}
-      </div>
-    </div>
-  );
-};
-
-const TabNavigation = ({ activeTab, setActiveTab, setLoadedTabs, tabs }) => (
-  <div style={{ 
-    marginBottom: "clamp(0.8rem, 2.5vw, 1.2rem)", 
-    display: "flex", 
-    flexWrap: "nowrap", 
-    gap: "clamp(0.3rem, 1.2vw, 0.4rem)",
-    width: "100%",
-    overflowX: "auto",
-    scrollbarWidth: "thin",
-    WebkitOverflowScrolling: "touch"
-  }}>
-    {tabs.map(({ key, label, count }) => (
-      <Button
-        key={key}
-        variant="tab"
-        onClick={() => {
-          setActiveTab(key);
-          setLoadedTabs(prev => new Set([...prev, key]));
-        }}
-        style={{
-          backgroundColor: activeTab === key ? "#000000ff" : "#000000ff",
-          border: activeTab === key ? "2px solid #ffffffff" : "1px solid #000000ff",
-          minWidth: "fit-content",
-          padding: "clamp(5px, 1.5vw, 7px) clamp(10px, 2.5vw, 14px)",
-          fontSize: "clamp(0.7rem, 1.8vw, 0.8rem)",
-          color: activeTab === key ? "#ffffff" : "#ccc",
-          fontWeight: activeTab === key ? "600" : "500"
-        }}
-      >
-        {label}{count !== undefined ? ` (${count})` : ''}
-      </Button>
-    ))}
-  </div>
-);
-
-// Login Component
+// LoginPage component remains here for now
 const LoginPage = ({ onLogin }) => {
   const [code, setCode] = useState("");
   const [error, setError] = useState("");
   const [isShaking, setIsShaking] = useState(false);
-
   const handleSubmit = (e) => {
     e.preventDefault();
     if (code === ADMIN_CODE) {
@@ -291,13 +52,6 @@ const LoginPage = ({ onLogin }) => {
       setCode("");
     }
   };
-
-  const handleCodeChange = (e) => {
-    const value = e.target.value.replace(/\D/g, "").slice(0, 4);
-    setCode(value);
-    if (error) setError("");
-  };
-
   return (
     <div style={{
       minHeight: "100vh",
@@ -315,7 +69,7 @@ const LoginPage = ({ onLogin }) => {
       paddingBottom: "2rem",
       boxSizing: "border-box"
     }}>
-      {/* Background blur elements */}
+      {/* ...existing code... */}
       <div style={{
         position: "absolute",
         top: "20%",
@@ -327,7 +81,6 @@ const LoginPage = ({ onLogin }) => {
         filter: "blur(60px)",
         animation: "float1 6s ease-in-out infinite"
       }} />
-      
       <div style={{
         position: "absolute",
         top: "60%",
@@ -339,7 +92,6 @@ const LoginPage = ({ onLogin }) => {
         filter: "blur(50px)",
         animation: "float2 8s ease-in-out infinite"
       }} />
-
       <div style={{
         ...baseStyles.glassMorphism,
         padding: "3rem 2.5rem",
@@ -361,7 +113,6 @@ const LoginPage = ({ onLogin }) => {
         }}>
           Admin Access
         </h1>
-        
         <p style={{
           color: "rgba(255, 255, 255, 0.7)",
           marginBottom: "2rem",
@@ -369,7 +120,6 @@ const LoginPage = ({ onLogin }) => {
         }}>
           Enter 4-digit access code
         </p>
-
         <form onSubmit={handleSubmit}>
           <div style={{
             display: "flex",
@@ -392,8 +142,6 @@ const LoginPage = ({ onLogin }) => {
                     const updatedCode = newCode.join("").slice(0, 4);
                     setCode(updatedCode);
                     if (error) setError("");
-                    
-                    // Auto-focus next input
                     if (value && index < 3) {
                       const nextInput = e.target.parentElement.children[index + 1];
                       if (nextInput) nextInput.focus();
@@ -401,7 +149,6 @@ const LoginPage = ({ onLogin }) => {
                   }
                 }}
                 onKeyDown={(e) => {
-                  // Handle backspace to move to previous input
                   if (e.key === "Backspace" && !code[index] && index > 0) {
                     const prevInput = e.target.parentElement.children[index - 1];
                     if (prevInput) prevInput.focus();
@@ -437,7 +184,6 @@ const LoginPage = ({ onLogin }) => {
               />
             ))}
           </div>
-
           {error && (
             <div style={{
               color: "rgba(220, 53, 69, 0.9)",
@@ -453,7 +199,6 @@ const LoginPage = ({ onLogin }) => {
               {error}
             </div>
           )}
-
           <button
             type="submit"
             disabled={code.length !== 4}
@@ -495,7 +240,6 @@ const LoginPage = ({ onLogin }) => {
           </button>
         </form>
       </div>
-
       <style>{`
         @keyframes pulse {
           0%, 100% { opacity: 0.6; }
@@ -538,377 +282,7 @@ const LoginPage = ({ onLogin }) => {
   );
 };
 
-// Lazy load user tab
-const UsersTab = lazy(() => 
-  new Promise(resolve => {
-    setTimeout(() => {
-      resolve({ 
-        default: ({ users, handleDeleteUser }) => (
-          <div>
-            <h2 style={{ 
-              color: "white", 
-              marginBottom: "1rem",
-              fontFamily: baseStyles.fontFamily,
-              fontWeight: "600",
-              fontSize: "clamp(1.5rem, 4vw, 2rem)"
-            }}>
-              All Registered Users
-            </h2>
-            <div style={{ 
-              display: "grid", 
-              gap: "1rem", 
-              gridTemplateColumns: "repeat(auto-fill, minmax(min(350px, 100%), 1fr))"
-            }}>
-              {users.map((user) => (
-                <Card key={user._id} style={{ backgroundColor: "#1a1a1a", color: "white" }}>
-                  <div style={{ 
-                    display: "flex", 
-                    justifyContent: "space-between", 
-                    alignItems: "flex-start", 
-                    marginBottom: "1rem",
-                    flexWrap: "wrap",
-                    gap: "1rem"
-                  }}>
-                    <div style={{ flex: "1", minWidth: "0" }}>
-                      <h3 style={{ 
-                        margin: "0 0 0.5rem 0", 
-                        color: "#007bff",
-                        fontSize: "clamp(1rem, 3vw, 1.2rem)",
-                        fontFamily: baseStyles.fontFamily,
-                        fontWeight: "600",
-                        wordBreak: "break-word"
-                      }}>
-                        {user.name}
-                      </h3>
-                      <p style={{ 
-                        margin: "0 0 0.5rem 0", 
-                        color: "#ccc",
-                        fontSize: "clamp(0.8rem, 2.5vw, 0.9rem)",
-                        wordBreak: "break-word"
-                      }}>
-                        {user.email}
-                      </p>
-                    </div>
-                    <Button
-                      variant="danger"
-                      onClick={() => handleDeleteUser(user._id)}
-                      style={{
-                        padding: "clamp(6px, 2vw, 10px) clamp(12px, 3vw, 16px)",
-                        fontSize: "clamp(0.75rem, 2vw, 0.9rem)",
-                        minWidth: "fit-content",
-                        flexShrink: "0"
-                      }}
-                    >
-                      Delete
-                    </Button>
-                  </div>
-                  <div style={{ fontSize: "14px", color: "#999" }}>
-                    <p style={{ margin: "0.25rem 0" }}><strong>ID:</strong> {user._id}</p>
-                    <p style={{ margin: "0.25rem 0" }}>
-                      <strong>Registered:</strong> {new Date(user.createdAt).toLocaleDateString()}
-                    </p>
-                  </div>
-                </Card>
-              ))}
-            </div>
-          </div>
-        )
-      });
-    }, 100); // Small delay to ensure proper initialization
-  })
-);
 
-// Lazy load sessions tab
-const SessionsTab = lazy(() => 
-  new Promise(resolve => {
-    setTimeout(() => {
-      resolve({ 
-        default: ({ sessions }) => (
-          <div>
-            <h2 style={{ 
-              color: "white", 
-              marginBottom: "1rem",
-              fontFamily: baseStyles.fontFamily,
-              fontWeight: "600",
-              fontSize: "clamp(1.5rem, 4vw, 2rem)"
-            }}>
-              All Interview Sessions
-            </h2>
-            <div style={{ 
-              display: "grid", 
-              gap: "1rem", 
-              gridTemplateColumns: "repeat(auto-fill, minmax(min(350px, 100%), 1fr))"
-            }}>
-              {sessions.map((session) => (
-                <Card key={session._id} style={{ backgroundColor: "#1a1a1a", color: "white" }}>
-                  <div style={{ marginBottom: "1rem" }}>
-                    <h3 style={{ 
-                      margin: "0 0 0.5rem 0", 
-                      color: "#28a745",
-                      fontSize: "clamp(1rem, 3vw, 1.2rem)",
-                      fontFamily: baseStyles.fontFamily,
-                      fontWeight: "600"
-                    }}>
-                      {session.role || 'Unknown Role'}
-                    </h3>
-                    <div style={{ 
-                      display: "flex", 
-                      flexWrap: "wrap", 
-                      gap: "0.5rem", 
-                      marginBottom: "0.5rem" 
-                    }}>
-                      <span style={{ 
-                        backgroundColor: "#007bff", 
-                        padding: "0.25rem 0.5rem", 
-                        borderRadius: "12px", 
-                        fontSize: "clamp(0.7rem, 2vw, 0.8rem)",
-                        fontWeight: "500"
-                      }}>
-                        {session.experience || 'Unknown'}
-                      </span>
-                      <span style={{ 
-                        backgroundColor: "#6f42c1", 
-                        padding: "0.25rem 0.5rem", 
-                        borderRadius: "12px", 
-                        fontSize: "clamp(0.7rem, 2vw, 0.8rem)",
-                        fontWeight: "500"
-                      }}>
-                        {session.difficulty || 'Unknown'}
-                      </span>
-                    </div>
-                    {session.user && (
-                      <p style={{ 
-                        margin: "0.5rem 0", 
-                        color: "#ccc",
-                        fontSize: "clamp(0.8rem, 2.5vw, 0.9rem)"
-                      }}>
-                        <strong>User:</strong> {session.user.name || 'Unknown'}
-                      </p>
-                    )}
-                  </div>
-                  <div style={{ fontSize: "14px", color: "#999" }}>
-                    <p style={{ margin: "0.25rem 0" }}><strong>ID:</strong> {session._id}</p>
-                    <p style={{ margin: "0.25rem 0" }}>
-                      <strong>Created:</strong> {new Date(session.createdAt).toLocaleDateString()}
-                    </p>
-                    {session.endTime && (
-                      <p style={{ margin: "0.25rem 0" }}>
-                        <strong>Completed:</strong> {new Date(session.endTime).toLocaleDateString()}
-                      </p>
-                    )}
-                  </div>
-                </Card>
-              ))}
-            </div>
-          </div>
-        )
-      });
-    }, 100);
-  })
-);
-
-// Lazy load questions tab
-const QuestionsTab = lazy(() => 
-  new Promise(resolve => {
-    setTimeout(() => {
-      resolve({ 
-        default: ({ groupedQuestions, expandedGroups, toggleGroupExpansion }) => (
-          <div>
-            <h2 style={{ 
-              color: "white", 
-              marginBottom: "1rem",
-              fontFamily: baseStyles.fontFamily,
-              fontWeight: "600",
-              fontSize: "clamp(1.5rem, 4vw, 2rem)"
-            }}>
-              Questions by User
-            </h2>
-            <div style={{ 
-              display: "flex",
-              flexDirection: "column",
-              gap: "1rem"
-            }}>
-              {Object.entries(groupedQuestions).map(([userId, { user, questions }]) => {
-                const isExpanded = expandedGroups.has(userId);
-                const questionCount = questions.length;
-                
-                return (
-                  <div key={userId} style={{ width: "100%" }}>
-                    {/* User Header - Collapsible */}
-                    <Card 
-                      style={{ 
-                        backgroundColor: "#2a2a2a", 
-                        color: "white",
-                        cursor: "pointer",
-                        transition: "all 0.2s ease",
-                        marginBottom: isExpanded ? "0.5rem" : "0"
-                      }}
-                      onClick={() => toggleGroupExpansion(userId)}
-                      onMouseEnter={(e) => {
-                        e.currentTarget.style.backgroundColor = "#333";
-                      }}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.style.backgroundColor = "#2a2a2a";
-                      }}
-                    >
-                      <div style={{ 
-                        display: "flex", 
-                        justifyContent: "space-between", 
-                        alignItems: "center",
-                        flexWrap: "wrap",
-                        gap: "0.5rem"
-                      }}>
-                        <div style={{ flex: "1", minWidth: "0" }}>
-                          <h3 style={{ 
-                            margin: "0 0 0.25rem 0", 
-                            color: "#007bff",
-                            fontSize: "clamp(1.1rem, 3.2vw, 1.3rem)",
-                            fontFamily: baseStyles.fontFamily,
-                            fontWeight: "600",
-                            wordBreak: "break-word"
-                          }}>
-                            {user.name}
-                          </h3>
-                          {user.email && (
-                            <p style={{ 
-                              margin: "0", 
-                              color: "#ccc",
-                              fontSize: "clamp(0.8rem, 2.5vw, 0.9rem)",
-                              wordBreak: "break-word"
-                            }}>
-                              {user.email}
-                            </p>
-                          )}
-                        </div>
-                        <div style={{ 
-                          display: "flex", 
-                          alignItems: "center", 
-                          gap: "0.5rem",
-                          flexShrink: "0"
-                        }}>
-                          <span style={{ 
-                            backgroundColor: "#28a745", 
-                            padding: "0.25rem 0.5rem", 
-                            borderRadius: "12px", 
-                            fontSize: "clamp(0.7rem, 2vw, 0.8rem)",
-                            fontWeight: "500",
-                            color: "white"
-                          }}>
-                            {questionCount} question{questionCount !== 1 ? 's' : ''}
-                          </span>
-                          <span style={{ 
-                            fontSize: "clamp(1.2rem, 3vw, 1.5rem)",
-                            color: "#ccc",
-                            transform: isExpanded ? "rotate(90deg)" : "rotate(0deg)",
-                            transition: "transform 0.2s ease"
-                          }}>
-                            ▶
-                          </span>
-                        </div>
-                      </div>
-                    </Card>
-
-                    {/* Questions Grid - Collapsible Content */}
-                    {isExpanded && (
-                      <div style={{ 
-                        display: "grid", 
-                        gap: "1rem", 
-                        gridTemplateColumns: "repeat(auto-fill, minmax(min(400px, 100%), 1fr))",
-                        paddingLeft: "1rem",
-                        borderLeft: "3px solid #007bff",
-                        animation: "slideDown 0.3s ease-out"
-                      }}>
-                        {questions.map((question) => (
-                          <Card key={question._id} style={{ backgroundColor: "#1a1a1a", color: "white" }}>
-                            <div style={{ marginBottom: "1rem" }}>
-                              <h4 style={{ 
-                                margin: "0 0 0.5rem 0", 
-                                color: "#ffc107",
-                                fontSize: "clamp(0.9rem, 2.8vw, 1rem)",
-                                fontFamily: baseStyles.fontFamily,
-                                fontWeight: "600",
-                                lineHeight: "1.4"
-                              }}>
-                                {question.question || 'No question text'}
-                              </h4>
-                              {question.followUpQuestions && question.followUpQuestions.length > 0 && (
-                                <div style={{ marginTop: "0.5rem" }}>
-                                  <p style={{ 
-                                    color: "#ccc", 
-                                    fontSize: "clamp(0.75rem, 2.2vw, 0.85rem)",
-                                    margin: "0 0 0.25rem 0",
-                                    fontWeight: "500"
-                                  }}>
-                                    Follow-up Questions:
-                                  </p>
-                                  <ul style={{ 
-                                    margin: "0", 
-                                    paddingLeft: "1rem", 
-                                    color: "#aaa",
-                                    fontSize: "clamp(0.7rem, 1.8vw, 0.8rem)"
-                                  }}>
-                                    {question.followUpQuestions.slice(0, 3).map((followUp, index) => (
-                                      <li key={index} style={{ marginBottom: "0.25rem" }}>
-                                        {followUp}
-                                      </li>
-                                    ))}
-                                    {question.followUpQuestions.length > 3 && (
-                                      <li style={{ color: "#666", fontStyle: "italic" }}>
-                                        +{question.followUpQuestions.length - 3} more...
-                                      </li>
-                                    )}
-                                  </ul>
-                                </div>
-                              )}
-                              {question.session && (
-                                <div style={{ 
-                                  marginTop: "0.5rem",
-                                  padding: "0.5rem",
-                                  backgroundColor: "#2a2a2a",
-                                  borderRadius: "6px"
-                                }}>
-                                  <p style={{ 
-                                    margin: "0", 
-                                    color: "#ccc",
-                                    fontSize: "clamp(0.7rem, 1.8vw, 0.8rem)"
-                                  }}>
-                                    <strong>Session:</strong> {question.session.role || 'Unknown Role'}
-                                  </p>
-                                </div>
-                              )}
-                            </div>
-                            <div style={{ fontSize: "clamp(0.7rem, 1.8vw, 0.8rem)", color: "#999" }}>
-                              <p style={{ margin: "0.25rem 0" }}>
-                                <strong>Generated:</strong> {new Date(question.createdAt).toLocaleDateString()}
-                              </p>
-                            </div>
-                          </Card>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-            
-            <style>{`
-              @keyframes slideDown {
-                from {
-                  opacity: 0;
-                  transform: translateY(-10px);
-                }
-                to {
-                  opacity: 1;
-                  transform: translateY(0);
-                }
-              }
-            `}</style>
-          </div>
-        )
-      });
-    }, 100);
-  })
-);
 
 // Main Dashboard Component
 const AdminDashboard = () => {
@@ -1360,79 +734,21 @@ const AdminDashboard = () => {
             )}
 
             {activeTab === "users" && loadedTabs.has("users") && (
-              <Suspense fallback={
-                <div style={{ 
-                  background: 'transparent',
-                  minHeight: '200px',
-                  width: '100%',
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center'
-                }}>
-                  <div 
-                    className="animate-spin rounded-full h-8 w-8 border-2 border-transparent"
-                    style={{
-                      borderTopColor: 'rgba(59, 130, 246, 0.2)',
-                      borderRightColor: 'rgba(59, 130, 246, 0.1)',
-                    }}
-                  ></div>
-                </div>
-              }>
-                <UsersTab users={users} handleDeleteUser={handleDeleteUser} />
-              </Suspense>
+              <UsersTab users={users} handleDeleteUser={handleDeleteUser} />
             )}
 
             {activeTab === "sessions" && loadedTabs.has("sessions") && (
-              <Suspense fallback={
-                <div style={{ 
-                  background: 'transparent',
-                  minHeight: '200px',
-                  width: '100%',
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center'
-                }}>
-                  <div 
-                    className="animate-spin rounded-full h-8 w-8 border-2 border-transparent"
-                    style={{
-                      borderTopColor: 'rgba(59, 130, 246, 0.2)',
-                      borderRightColor: 'rgba(59, 130, 246, 0.1)',
-                    }}
-                  ></div>
-                </div>
-              }>
-                <SessionsTab sessions={sessions} />
-              </Suspense>
+              <SessionsTab sessions={sessions} />
             )}
 
             {activeTab === "questions" && loadedTabs.has("questions") && (
-              <Suspense fallback={
-                <div style={{ 
-                  background: 'transparent',
-                  minHeight: '200px',
-                  width: '100%',
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center'
-                }}>
-                  <div 
-                    className="animate-spin rounded-full h-8 w-8 border-2 border-transparent"
-                    style={{
-                      borderTopColor: 'rgba(59, 130, 246, 0.2)',
-                      borderRightColor: 'rgba(59, 130, 246, 0.1)',
-                    }}
-                  ></div>
-                </div>
-              }>
-                <QuestionsTab 
-                  groupedQuestions={groupedQuestions} 
-                  expandedGroups={expandedQuestionGroups}
-                  toggleGroupExpansion={toggleQuestionGroupExpansion}
-                />
-              </Suspense>
+              <QuestionsTab 
+                groupedQuestions={groupedQuestions} 
+                expandedGroups={expandedQuestionGroups}
+                toggleGroupExpansion={toggleQuestionGroupExpansion}
+              />
             )}
 
-            {/* Other tabs can be added here */}
           </>
         )}
       </div>
