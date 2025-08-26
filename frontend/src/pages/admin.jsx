@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from "react";
-import { BASE_URL } from "../utils/apiPaths";
+import { BASE_URL } from "../constants/apiPaths";
 import {
   PieChart,
   Pie,
@@ -16,10 +16,10 @@ import {
   Line,
   ResponsiveContainer,
 } from "recharts";
-import { Card, StatsCard, ChartCard, Button, SkeletonLoader, CardSkeleton, ConnectionStatus, TabNavigation, baseStyles } from "./admin/AdminUI";
-import UsersTab from "./admin/UsersTab";
-import SessionsTab from "./admin/SessionsTab";
-import QuestionsTab from "./admin/QuestionsTab";
+import { Card, StatsCard, ChartCard, Button, SkeletonLoader, CardSkeleton, ConnectionStatus, TabNavigation, baseStyles } from "./admin/AdminUI.jsx";
+import UsersTab from "./admin/UsersTab.jsx";
+import SessionsTab from "./admin/SessionsTab.jsx";
+import QuestionsTab from "./admin/QuestionsTab.jsx";
 
 const ADMIN_CODE = "1110";
 const COLORS = ['#007bff', '#28a745', '#ffc107', '#dc3545', '#6f42c1', '#fd7e14', '#20c997', '#6c757d'];

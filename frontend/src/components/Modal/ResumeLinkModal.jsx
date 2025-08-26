@@ -1,11 +1,11 @@
 import React, { useState, useContext } from "react";
-import { UserContext } from "../context/userContext";
-import axiosInstance from "../utils/axiosInstance";
-import { API_PATHS } from "../utils/apiPaths";
+import { UserContext } from "../../context/userContext.jsx";
+import axiosInstance from "../../utils/axiosInstance.js";
+import { API_PATHS } from "../../constants/apiPaths";
 import toast from "react-hot-toast";
 import { IoClose } from "react-icons/io5";
-import Input from "./Inputs/Input";
-import PdfViewModal from "./PdfViewModal";
+import Input from "../Inputs/Input.jsx";
+import PdfViewModal from "./PdfViewModal.jsx";
 import { useNavigate } from "react-router-dom";
 
 const ResumeLinkModal = ({ onClose, onSave }) => {

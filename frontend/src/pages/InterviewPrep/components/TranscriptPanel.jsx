@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useState } from 'react';
-import axiosInstance from '../../../utils/axiosInstance';
-import { API_PATHS } from '../../../utils/apiPaths';
+import axiosInstance from '../../../utils/axiosInstance.js';
+import { API_PATHS } from '../../../constants/apiPaths';
 
 const TranscriptPanel = ({ 
   transcript, 

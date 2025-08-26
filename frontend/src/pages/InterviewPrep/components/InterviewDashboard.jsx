@@ -1,8 +1,8 @@
 import React, { useRef, useState } from 'react';
 import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, ResponsiveContainer, RadialBarChart, RadialBar } from 'recharts';
-import { generateInterviewReportPDF } from '../../../utils/pdfGenerator';
-import axiosInstance from '../../../utils/axiosInstance';
-import { API_PATHS } from '../../../utils/apiPaths';
+import { generateInterviewReportPDF } from '../../../utils/pdfGenerator.js';
+import axiosInstance from '../../../utils/axiosInstance.js';
+import { API_PATHS } from '../../../constants/apiPaths';
 import toast from 'react-hot-toast';
 import { 
   ChartBarIcon, 

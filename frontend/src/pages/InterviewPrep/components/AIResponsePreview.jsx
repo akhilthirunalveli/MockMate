@@ -2,7 +2,7 @@ import React, { useState, Suspense } from 'react'
 import { LuCopy, LuCheck, LuCode } from "react-icons/lu";
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import OptimizedSyntaxHighlighter from '../../../components/OptimizedSyntaxHighlighter';
+import OptimizedSyntaxHighlighter from '../../../components/OptimizedSyntaxHighlighter.jsx';
 
 const AIResponsePreview = ({content}) => {
     if(!content) return null

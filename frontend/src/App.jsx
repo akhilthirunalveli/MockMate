@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 
 import LandingPage from "./pages/LandingPage/LandingPage";
-import UserProvider from "./context/userContext";
+import UserProvider from "./context/userContext.jsx";
 import SpinnerLoader from "./components/Loader/SpinnerLoader";
 import ResumeViewPage from "./pages/ResumeView/ResumeViewPage";
 
@@ -89,6 +89,12 @@ const Admin = React.lazy(() =>
   })
 );
 
+const SessionInterview = React.lazy(() => 
+  import("./pages/InterviewPrep/SessionInterview").catch(() => {
+    return { default: () => <div style={{padding: "20px", textAlign: "center"}}>Error loading Session Interview</div> };
+  })
+);
+
 const App = () => {
   return (
     <ErrorBoundary>
@@ -103,6 +109,7 @@ const App = () => {
                 <Route path="/interview-prep/:sessionId" element={<InterviewPrep />}/>
                 <Route path="/interview-prep/record" element={<Record />}/>
                 <Route path="/resume-view" element={<ResumeViewPage />} />
+                <Route path="/interview-prep/session-interview" element={<SessionInterview />} />
               </Routes>
             </Suspense>
           </ErrorBoundary>

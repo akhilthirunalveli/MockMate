@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext, lazy, Suspense } from "react";
 import { useNavigate } from "react-router-dom";
 import Modal from "../../components/Modal.jsx";
-import { UserContext } from "../../context/userContext";
+import { UserContext } from "../../context/userContext.jsx";
 import GeminiLogo from "../../assets/gemini-color.svg";
 import GithubLogo from "../../assets/github.png";
 

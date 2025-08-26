@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import axiosInstance from '../../../utils/axiosInstance';
-import { API_PATHS } from '../../../utils/apiPaths';
+import axiosInstance from '../utils/axiosInstance';
+import { API_PATHS } from '../constants/apiPaths';
 
 export const useTranscriptAnalysis = () => {
   const [analysis, setAnalysis] = useState(null);

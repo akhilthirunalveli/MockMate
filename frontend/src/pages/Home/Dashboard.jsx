@@ -1,22 +1,22 @@
 import React, { useEffect, useState, useContext, lazy, Suspense } from "react";
-import { LuPlus } from "react-icons/lu";
+import { LuPlus, LuLaptop } from "react-icons/lu";
 import { BsRecordCircle } from "react-icons/bs";
 import { IoDocumentTextOutline } from "react-icons/io5";
 import { CARD_BG } from "../../utils/data";
 import toast from "react-hot-toast";
-import DashboardLayout from "../../components/DashboardLayout";
+import DashboardLayout from "../../layouts/DashboardLayout.jsx";
 import { useNavigate } from "react-router-dom";
-import axiosInstance from "../../utils/axiosInstance";
-import { API_PATHS } from "../../utils/apiPaths";
-import SummaryCard from "../../components/Cards/SummaryCard";
+import axiosInstance from "../../utils/axiosInstance.js";
+import { API_PATHS } from "../../constants/apiPaths";
+import SummaryCard from "../../components/Cards/SummaryCard.jsx";
 import moment from "moment";
-import Modal from "../../components/Modal";
-import { UserContext } from "../../context/userContext";
+import Modal from "../../components/Modal.jsx";
+import { UserContext } from "../../context/userContext.jsx";
 
 // Lazy load modal components
 const CreateSessionForm = lazy(() => import("./CreateSessionForm"));
 const DeleteAlertContent = lazy(() => import("../../components/DeleteAlertContent"));
-const ResumeLinkModal = lazy(() => import("../../components/ResumeLinkModal"));
+const ResumeLinkModal = lazy(() => import("../../components/Modal/ResumeLinkModal.jsx"));
 
 const LoadingSpinner = () => (
   <div 
@@ -124,6 +124,13 @@ const Dashboard = () => {
             >
               <BsRecordCircle className="text-lg sm:text-xl text-black" />
               Record
+            </button>
+            <button
+              className="h-10 sm:h-12 flex items-center justify-center gap-2 bg-white text-xs sm:text-sm font-semibold text-black px-4 sm:px-5 py-2 rounded-full transition-colors cursor-pointer"
+              onClick={() => navigate("/interview-prep/session-interview")}
+            >
+              <LuLaptop className="text-lg sm:text-xl text-black" />
+              Test
             </button>
             <button
               className="h-10 sm:h-12 flex items-center justify-center gap-2 bg-white text-xs sm:text-sm font-semibold text-black px-4 sm:px-5 py-2 rounded-full transition-colors cursor-pointer"
