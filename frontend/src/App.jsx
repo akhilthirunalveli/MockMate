@@ -6,6 +6,7 @@ import { Toaster } from "react-hot-toast";
 import LandingPage from "./pages/LandingPage";
 import UserProvider from "./context/userContext";
 import SpinnerLoader from "./components/Loader/SpinnerLoader";
+import ResumeViewPage from "./pages/ResumeViewPage";
 
 // Error Boundary Component
 class ErrorBoundary extends React.Component {
@@ -101,6 +102,7 @@ const App = () => {
                 <Route path="/admin" element={<Admin />} />
                 <Route path="/interview-prep/:sessionId" element={<InterviewPrep />}/>
                 <Route path="/interview-prep/record" element={<Record />}/>
+                <Route path="/resume-view" element={<ResumeViewPage />} />
               </Routes>
             </Suspense>
           </ErrorBoundary>

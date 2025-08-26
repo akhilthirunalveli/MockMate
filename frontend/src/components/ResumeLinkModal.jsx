@@ -5,12 +5,16 @@ import { API_PATHS } from "../utils/apiPaths";
 import toast from "react-hot-toast";
 import { IoClose } from "react-icons/io5";
 import Input from "./Inputs/Input";
+import PdfViewModal from "./PdfViewModal";
+import { useNavigate } from "react-router-dom";
 
 const ResumeLinkModal = ({ onClose, onSave }) => {
   const { user, updateUser } = useContext(UserContext);
   const [resumeLink, setResumeLink] = useState(user?.resumeLink || "");
   const [loading, setLoading] = useState(false);
   const [isEditing, setIsEditing] = useState(!user?.resumeLink);
+  const [showPdf, setShowPdf] = useState(false);
+  const navigate = useNavigate();
 
   const handleSave = async () => {
     if (!resumeLink.trim()) {
@@ -61,8 +65,16 @@ const ResumeLinkModal = ({ onClose, onSave }) => {
 
   const handleOpen = () => {
     if (user?.resumeLink) {
-      window.open(user.resumeLink, "_blank");
-      onClose();
+      navigate("/resume-view", {
+        state: {
+          pdfUrl: user.resumeLink,
+          details: {
+            name: user?.name,
+            email: user?.email,
+            // Add more user details as needed
+          },
+        },
+      });
     }
   };
 
@@ -180,6 +192,9 @@ const ResumeLinkModal = ({ onClose, onSave }) => {
               )}
             </div>
           </form>
+        )}
+        {showPdf && (
+          <PdfViewModal pdfUrl={user.resumeLink} onClose={() => setShowPdf(false)} />
         )}
       </div>
     </div>
