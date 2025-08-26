@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useContext, lazy, Suspense } from "react";
 import { useNavigate } from "react-router-dom";
-import Modal from "../components/Modal";
-import { UserContext } from "../context/userContext";
-import GeminiLogo from "../assets/gemini-color.svg"; // add this line
-import GithubLogo from "../assets/github.png"; // add GitHub logo import
+import Modal from "../../components/Modal.jsx";
+import { UserContext } from "../../context/userContext";
+import GeminiLogo from "../../assets/gemini-color.svg";
+import GithubLogo from "../../assets/github.png";
 
 // Lazy load auth components
-const Login = lazy(() => import("./Auth/Login"));
-const SignUp = lazy(() => import("./Auth/SignUp"));
+const Login = lazy(() => import("../Auth/Login.jsx"));
+const SignUp = lazy(() => import("../Auth/SignUp.jsx"));
 
 const TYPEWRITER_TEXT = "MockMate";
 const TYPING_SPEED = 100; // smoother, slightly faster
@@ -261,7 +261,7 @@ function LandingPage() {
                     background: "#000",
                     border: "2px solid #fff",
                     borderRadius: "10em",
-                    padding: "0.4em 1.6em",
+                    padding: "0.3em 1em",
                     color: "#fff",
                     fontWeight: 600,
                     fontSize: "0.8rem",
@@ -329,7 +329,7 @@ function LandingPage() {
                       {user.email}
                     </span>
                   </div>
-                  <span style={{ marginLeft: "0.3em", fontSize: "2.4em", color: "#fff", display: "flex", alignItems: "center" }}>
+                  <span style={{ marginLeft: "0.3em", fontSize: "2.4em", color: "#ffffff4d", display: "flex", alignItems: "center" }}>
                   &#x203A;
                   </span>
                 </button>

@@ -3,10 +3,10 @@ import { Analytics } from "@vercel/analytics/react"
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 
-import LandingPage from "./pages/LandingPage";
+import LandingPage from "./pages/LandingPage/LandingPage";
 import UserProvider from "./context/userContext";
 import SpinnerLoader from "./components/Loader/SpinnerLoader";
-import ResumeViewPage from "./pages/ResumeViewPage";
+import ResumeViewPage from "./pages/ResumeView/ResumeViewPage";
 
 // Error Boundary Component
 class ErrorBoundary extends React.Component {
