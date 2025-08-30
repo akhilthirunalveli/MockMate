@@ -1,51 +1,54 @@
 import React, { useRef, useState } from 'react';
-import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, ResponsiveContainer, RadialBarChart, RadialBar } from 'recharts';
+import { 
+  PieChart, 
+  Pie, 
+  Cell, 
+  BarChart, 
+  Bar, 
+  XAxis, 
+  YAxis, 
+  ResponsiveContainer, 
+  RadialBarChart, 
+  RadialBar 
+} from 'recharts';
 import { generateInterviewReportPDF } from '../Utils/pdfGenerator.js';
 import axiosInstance from '../../../utils/axiosInstance.js';
 import { API_PATHS } from '../../../constants/apiPaths.js';
 import toast from 'react-hot-toast';
-import { 
-  ChartBarIcon, 
-  DocumentTextIcon, 
-  ChartPieIcon,
-  LightBulbIcon,
-  StarIcon,
-  TrophyIcon,
-  AcademicCapIcon,
-  ClockIcon,
-  UserIcon,
-  ChatBubbleLeftRightIcon,
-  SparklesIcon
-} from '@heroicons/react/24/outline';
 
-const InterviewDashboard = ({ analysis, currentQuestion, transcript }) => {
+const InterviewDashboard = ({ analysis, sessionStats, currentQuestion, transcript }) => {
   const dashboardRef = useRef(null);
   const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
 
   if (!analysis) return null;
 
-  // Prepare data for charts with better color palette
+  // Prepare data for charts with black and white theme
+  const scoreValue = analysis?.score || 5;
   const scoreData = [
-    { name: 'Your Score', value: analysis.score, fill: '#6366F1' },
-    { name: 'Remaining', value: 10 - analysis.score, fill: '#1E293B' }
+    { name: 'Your Score', value: scoreValue, fill: '#FFFFFF' },
+    { name: 'Remaining', value: 10 - scoreValue, fill: '#374151' }
   ];
 
   const skillsData = [
-    { skill: 'Clarity', score: Math.min(analysis.score + Math.random() * 2, 10) },
-    { skill: 'Structure', score: Math.min(analysis.score + Math.random() * 1.5, 10) },
-    { skill: 'Confidence', score: Math.min(analysis.score + Math.random() * 1, 10) },
-    { skill: 'Relevance', score: Math.min(analysis.score + Math.random() * 0.5, 10) }
+    { skill: 'Clarity', score: Math.min(Math.max((scoreValue) + Math.random() * 2, 0), 10) },
+    { skill: 'Structure', score: Math.min(Math.max((scoreValue) + Math.random() * 1.5, 0), 10) },
+    { skill: 'Confidence', score: Math.min(Math.max((scoreValue) + Math.random() * 1, 0), 10) },
+    { skill: 'Relevance', score: Math.min(Math.max((scoreValue) + Math.random() * 0.5, 0), 10) }
   ];
 
   const performanceData = [
-    { name: 'Performance', value: (analysis.score / 10) * 100, fill: getScoreColor(analysis.score) }
+    { name: 'Performance', value: (scoreValue / 10) * 100, fill: '#FFFFFF' }
+  ];
+
+  // Benchmark comparison data
+  const benchmarkData = [
+    { category: 'Your Score', score: scoreValue, fill: '#FFFFFF' },
+    { category: 'Average', score: 6.5, fill: '#6B7280' },
+    { category: 'Top 10%', score: 8.5, fill: '#9CA3AF' }
   ];
 
   function getScoreColor(score) {
-    if (score >= 8) return '#10B981'; // Emerald
-    if (score >= 6) return '#F59E0B'; // Amber  
-    if (score >= 4) return '#F97316'; // Orange
-    return '#EF4444'; // Red
+    return '#FFFFFF'; // Always white for black/white theme
   }
 
   function getScoreGrade(score) {
@@ -73,8 +76,8 @@ const InterviewDashboard = ({ analysis, currentQuestion, transcript }) => {
       // Generate detailed PDF report
       const response = await axiosInstance.post(API_PATHS.AI.GENERATE_PDF_DATA, {
         analysis,
-        question: currentQuestion,
-        transcript,
+        question: currentQuestion || 'Interview Question',
+        transcript: transcript || '',
         userInfo: {
           name: localStorage.getItem('userName') || 'Anonymous',
           role: localStorage.getItem('userRole') || 'N/A'
@@ -101,200 +104,255 @@ const InterviewDashboard = ({ analysis, currentQuestion, transcript }) => {
   };
 
   return (
-    <div ref={dashboardRef} data-dashboard className="space-y-8">
-      {/* Header Section with Black Theme */}
-      <div className="bg-black border border-gray-700 rounded-2xl p-8 shadow-2xl">
-        <div className="flex items-center justify-between mb-6">
-          <div className="flex items-center gap-4">
-            <div className="w-14 h-14 bg-white rounded-2xl flex items-center justify-center shadow-lg">
-              <ChartBarIcon className="w-7 h-7 text-black" />
-            </div>
-            <div>
-              <h3 className="text-white font-bold text-xl tracking-wide">Performance Analysis</h3>
-              <p className="text-gray-400 text-sm">AI-powered assessment • Real-time insights</p>
-            </div>
+    <div ref={dashboardRef} data-dashboard className="space-y-6">
+      {/* Header Section */}
+      <div className="bg-black border border-white/20 rounded-lg p-6">
+        <div className="flex items-center justify-between">
+          <div>
+            <h3 className="text-white font-semibold text-xl mb-1">Interview Analysis Report</h3>
+            <p className="text-gray-400 text-sm">Professional Assessment & Development Feedback</p>
           </div>
-          <div className="flex items-center gap-6">
+          <div className="flex items-center gap-4">
             <div className="text-right">
-              <div className={`text-4xl font-bold tracking-wider ${getScoreColor(analysis.score) === '#10B981' ? 'text-green-400' : 
-                                getScoreColor(analysis.score) === '#F59E0B' ? 'text-yellow-400' : 
-                                getScoreColor(analysis.score) === '#F97316' ? 'text-orange-400' : 'text-red-400'}`}>
-                {getScoreGrade(analysis.score)}
-              </div>
-              <div className="text-gray-400 text-sm font-medium">{getScoreLabel(analysis.score)}</div>
+              <div className="text-2xl font-bold text-white">{scoreValue}/10</div>
+              <div className="text-gray-400 text-sm">{getScoreGrade(scoreValue)} Grade</div>
             </div>
-            
-            {/* PDF Download Button */}
             <button
               onClick={handleDownloadPDF}
               disabled={isGeneratingPDF}
-              className="bg-white hover:bg-gray-100 disabled:bg-gray-300 disabled:opacity-50 text-black px-6 py-3 rounded-xl text-sm font-medium transition-all duration-300 flex items-center gap-3 shadow-lg hover:shadow-white/10 border border-gray-200"
+              className="bg-white hover:bg-gray-200 disabled:bg-gray-300 text-black px-4 py-2 rounded text-sm font-medium transition-colors"
             >
-              {isGeneratingPDF ? (
-                <>
-                  <div className="w-4 h-4 border-2 border-black border-t-transparent rounded-full animate-spin"></div>
-                  Generating...
-                </>
-              ) : (
-                <>
-                  <DocumentTextIcon className="w-5 h-5" />
-                  Download Report
-                </>
-              )}
+              {isGeneratingPDF ? 'Generating...' : 'Download Report'}
             </button>
           </div>
         </div>
       </div>
 
-      {/* Main Dashboard Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        
+      {/* Enhanced Response - Primary Section */}
+      <div className="bg-black border border-white/20 rounded-lg p-6">
+        <h4 className="text-white font-semibold text-lg mb-4">Enhanced Professional Response</h4>
+        <div className="bg-white/90 border-l-4 border-black p-4 rounded">
+          <h2 className="text-black text-base leading-relaxed">{analysis.refinedAnswer || 'No enhanced response available.'}</h2>
+        </div>
+      </div>
+
+      {/* Performance Charts Section */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Overall Score Chart */}
-        <div className="bg-black border border-gray-700 rounded-2xl p-7 shadow-xl">
-          <h4 className="text-white font-semibold mb-6 flex items-center gap-3">
-            <div className="w-2 h-6 bg-white rounded-full"></div>
-            Overall Score
-          </h4>
-          <div className="h-36 flex items-center justify-center">
+        <div className="bg-black border border-white/20 rounded-lg p-6">
+          <h4 className="text-white font-semibold mb-4">Overall Score</h4>
+          <div className="h-40 flex items-center justify-center">
             <ResponsiveContainer width="100%" height="100%">
-              <RadialBarChart cx="50%" cy="50%" innerRadius="65%" outerRadius="90%" data={performanceData}>
-                <RadialBar dataKey="value" cornerRadius={12} fill={getScoreColor(analysis.score)} />
-                <text x="50%" y="50%" textAnchor="middle" dominantBaseline="middle" className="fill-white font-bold text-xl">
-                  {analysis.score}/10
+              <RadialBarChart cx="50%" cy="50%" innerRadius="60%" outerRadius="85%" data={performanceData}>
+                <RadialBar dataKey="value" cornerRadius={8} fill="#56b200ff" />
+                <text x="50%" y="50%" textAnchor="middle" dominantBaseline="middle" className="fill-white font-bold text-2xl">
+                  {scoreValue}/10
                 </text>
               </RadialBarChart>
             </ResponsiveContainer>
           </div>
         </div>
 
-        {/* Skills Breakdown */}
-        <div className="bg-black border border-gray-700 rounded-2xl p-7 shadow-xl">
-          <h4 className="text-white font-semibold mb-6 flex items-center gap-3">
-            <div className="w-2 h-6 bg-white rounded-full"></div>
-            Skills Assessment
-          </h4>
-          <div className="h-36">
+        {/* Skills Breakdown Chart */}
+        <div className="bg-black border border-white/20 rounded-lg p-6">
+          <h4 className="text-white font-semibold mb-4">Skills Assessment</h4>
+          <div className="h-40">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={skillsData}>
-                <XAxis dataKey="skill" tick={{ fontSize: 11, fill: '#9CA3AF' }} />
-                <YAxis domain={[0, 10]} tick={{ fontSize: 11, fill: '#9CA3AF' }} />
-                <Bar dataKey="score" fill="#FFFFFF" radius={[4, 4, 0, 0]} />
+              <BarChart data={skillsData} margin={{ top: 5, right: 5, left: 5, bottom: 5 }}>
+                <XAxis 
+                  dataKey="skill" 
+                  tick={{ fontSize: 10, fill: '#9CA3AF' }} 
+                  axisLine={false}
+                  tickLine={false}
+                />
+                <YAxis 
+                  domain={[0, 10]} 
+                  tick={{ fontSize: 10, fill: '#9CA3AF' }}
+                  axisLine={false}
+                  tickLine={false}
+                />
+                <Bar dataKey="score" fill="#FFFFFF" radius={[2, 2, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>
         </div>
 
-        {/* Stats Card */}
-        <div className="bg-black border border-gray-700 rounded-2xl p-7 shadow-xl">
-          <h4 className="text-white font-semibold mb-6 flex items-center gap-3">
-            <div className="w-2 h-6 bg-white rounded-full"></div>
-            Session Metrics
-          </h4>
-          <div className="space-y-4">
-            <div className="flex justify-between items-center py-2">
-              <span className="text-gray-400 text-sm flex items-center gap-3">
-                <ChatBubbleLeftRightIcon className="w-4 h-4 text-gray-500" />
-                Words spoken
-              </span>
-              <span className="text-white font-semibold">{transcript.split(' ').length}</span>
-            </div>
-            <div className="flex justify-between items-center py-2">
-              <span className="text-gray-400 text-sm flex items-center gap-3">
-                <ClockIcon className="w-4 h-4 text-gray-500" />
-                Speaking time
-              </span>
-              <span className="text-white font-semibold">~{Math.ceil(transcript.split(' ').length / 150)}min</span>
-            </div>
-            <div className="flex justify-between items-center py-2">
-              <span className="text-gray-400 text-sm flex items-center gap-3">
-                <UserIcon className="w-4 h-4 text-gray-500" />
-                Confidence level
-              </span>
-              <span className={`font-semibold ${analysis.score >= 7 ? 'text-green-400' : analysis.score >= 5 ? 'text-yellow-400' : 'text-red-400'}`}>
-                {analysis.score >= 7 ? 'High' : analysis.score >= 5 ? 'Medium' : 'Low'}
-              </span>
-            </div>
-            <div className="flex justify-between items-center py-2">
-              <span className="text-gray-400 text-sm flex items-center gap-3">
-                <LightBulbIcon className="w-4 h-4 text-gray-500" />
-                Areas identified
-              </span>
-              <span className="text-white font-semibold">{analysis.improvements?.length || 0}</span>
-            </div>
+        {/* Score Distribution Pie Chart */}
+        <div className="bg-black border border-white/20 rounded-lg p-6">
+          <h4 className="text-white font-semibold mb-4">Score Breakdown</h4>
+          <div className="h-40 flex items-center justify-center">
+            <ResponsiveContainer width="100%" height="100%">
+              <PieChart>
+                <Pie
+                  data={scoreData}
+                  cx="50%"
+                  cy="50%"
+                  innerRadius={30}
+                  outerRadius={60}
+                  paddingAngle={2}
+                  dataKey="value"
+                >
+                  {scoreData.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={index === 0 ? '#FFFFFF' : '#ffaa00ff'} />
+                  ))}
+                </Pie>
+                <text x="50%" y="50%" textAnchor="middle" dominantBaseline="middle" className="fill-white font-semibold text-sm">
+                  {Math.round((scoreValue / 10) * 100)}%
+                </text>
+              </PieChart>
+            </ResponsiveContainer>
           </div>
         </div>
       </div>
 
-      {/* Detailed Analysis Sections */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        
-        {/* Refined Answer */}
-        <div className="bg-black border border-gray-700 rounded-2xl p-7 shadow-xl">
-          <h4 className="text-white font-semibold mb-5 flex items-center gap-3">
-            <div className="w-2 h-6 bg-white rounded-full"></div>
-            Enhanced Response
-          </h4>
-          <div className="bg-gray-900 p-6 rounded-xl border-l-4 border-white">
-            <p className="text-gray-200 leading-relaxed text-sm font-light">{analysis.refinedAnswer}</p>
+      {/* Detailed Performance Metrics */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Skills Comparison Bar Chart */}
+        <div className="bg-black border border-white/20 rounded-lg p-6">
+          <h4 className="text-white font-semibold mb-4">Detailed Skills Analysis</h4>
+          <div className="h-64">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart 
+                data={skillsData} 
+                layout="horizontal" 
+                margin={{ top: 5, right: 30, left: 60, bottom: 5 }}
+              >
+                <XAxis type="number" domain={[0, 10]} tick={{ fontSize: 12, fill: '#9CA3AF' }} />
+                <YAxis type="category" dataKey="skill" tick={{ fontSize: 12, fill: '#9CA3AF' }} />
+                <Bar dataKey="score" fill="#FFFFFF" radius={[0, 4, 4, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
           </div>
         </div>
 
-        {/* Strengths & Improvements */}
-        <div className="space-y-6">
-          {/* Strengths */}
-          {analysis.strengths && analysis.strengths.length > 0 && (
-            <div className="bg-black border border-gray-700 rounded-2xl p-7 shadow-xl">
-              <h4 className="text-white font-semibold mb-5 flex items-center gap-3">
-                <div className="w-2 h-6 bg-green-400 rounded-full"></div>
-                What You Nailed
-              </h4>
-              <div className="space-y-3">
-                {analysis.strengths.map((strength, index) => (
-                  <div key={index} className="flex items-start gap-4">
-                    <div className="w-2 h-2 bg-green-400 rounded-full mt-2 flex-shrink-0"></div>
-                    <span className="text-green-300 text-sm leading-relaxed">{strength}</span>
-                  </div>
-                ))}
+        {/* Performance Comparison */}
+        <div className="bg-black border border-white/20 rounded-lg p-6">
+          <h4 className="text-white font-semibold mb-4">Performance Comparison</h4>
+          <div className="space-y-4">
+            {skillsData.map((skill, index) => (
+              <div key={index} className="space-y-2">
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-300">{skill.skill}</span>
+                  <span className="text-white font-medium">{skill.score.toFixed(1)}/10</span>
+                </div>
+                <div className="w-full bg-gray-700 rounded-full h-2">
+                  <div 
+                    className="bg-white h-2 rounded-full transition-all duration-1000 ease-out"
+                    style={{ width: `${(skill.score / 10) * 100}%` }}
+                  ></div>
+                </div>
               </div>
-            </div>
-          )}
-
-          {/* Improvements */}
-          {analysis.improvements && analysis.improvements.length > 0 && (
-            <div className="bg-black border border-gray-700 rounded-2xl p-7 shadow-xl">
-              <h4 className="text-white font-semibold mb-5 flex items-center gap-3">
-                <div className="w-2 h-6 bg-yellow-400 rounded-full"></div>
-                Growth Opportunities
-              </h4>
-              <div className="space-y-3">
-                {analysis.improvements.map((improvement, index) => (
-                  <div key={index} className="flex items-start gap-4">
-                    <div className="w-2 h-2 bg-yellow-400 rounded-full mt-2 flex-shrink-0"></div>
-                    <span className="text-yellow-300 text-sm leading-relaxed">{improvement}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
+            ))}
+          </div>
         </div>
+      </div>
+
+      {/* Benchmark Comparison Chart */}
+      <div className="bg-black border border-white/20 rounded-lg p-6">
+        <h4 className="text-white font-semibold mb-4">Performance vs Benchmarks</h4>
+        <div className="h-64">
+          <ResponsiveContainer width="100%" height="100%">
+            <BarChart data={benchmarkData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+              <XAxis 
+                dataKey="category" 
+                tick={{ fontSize: 12, fill: '#9CA3AF' }} 
+                axisLine={false}
+                tickLine={false}
+              />
+              <YAxis 
+                domain={[0, 10]} 
+                tick={{ fontSize: 12, fill: '#9CA3AF' }}
+                axisLine={false}
+                tickLine={false}
+              />
+              <Bar dataKey="score" radius={[4, 4, 0, 0]}>
+                {benchmarkData.map((entry, index) => (
+                  <Cell key={`cell-${index}`} fill={entry.fill} />
+                ))}
+              </Bar>
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+        <div className="mt-4 grid grid-cols-3 gap-4 text-center">
+          <div className="p-3 bg-black rounded">
+            <div className="text-white font-bold text-lg">{scoreValue}/10</div>
+            <div className="text-gray-400 text-sm">Your Score</div>
+          </div>
+          <div className="p-3 bg-black rounded">
+            <div className="text-gray-400 font-bold text-lg">6.5/10</div>
+            <div className="text-gray-400 text-sm">Average</div>
+          </div>
+          <div className="p-3 bg-black rounded">
+            <div className="text-gray-500 font-bold text-lg">8.5/10</div>
+            <div className="text-gray-400 text-sm">Top 10%</div>
+          </div>
+        </div>
+      </div>
+
+      {/* Quick Stats Grid */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="bg-black border border-white/20 rounded-lg p-4 text-center">
+          <div className="text-white font-semibold text-lg">{transcript ? transcript.split(' ').length : 0}</div>
+          <div className="text-gray-400 text-sm">Words</div>
+        </div>
+        <div className="bg-black border border-white/20 rounded-lg p-4 text-center">
+          <div className="text-white font-semibold text-lg">~{transcript ? Math.ceil(transcript.split(' ').length / 150) : 0}min</div>
+          <div className="text-gray-400 text-sm">Duration</div>
+        </div>
+        <div className="bg-black border border-white/20 rounded-lg p-4 text-center">
+          <div className="text-white font-semibold text-lg">{scoreValue >= 7 ? 'High' : scoreValue >= 5 ? 'Medium' : 'Low'}</div>
+          <div className="text-gray-400 text-sm">Confidence</div>
+        </div>
+        <div className="bg-black border border-white/20 rounded-lg p-4 text-center">
+          <div className="text-white font-semibold text-lg">{analysis.improvements?.length || 0}</div>
+          <div className="text-gray-400 text-sm">Areas</div>
+        </div>
+      </div>
+
+      {/* Analysis Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Strengths */}
+        {analysis.strengths && analysis.strengths.length > 0 && (
+          <div className="bg-black border border-white/20 rounded-lg p-6">
+            <h4 className="text-white font-semibold mb-4">Strengths</h4>
+            <div className="space-y-2">
+              {analysis.strengths.map((strength, index) => (
+                <div key={index} className="flex items-start gap-2">
+                  <div className="w-1 h-1 bg-white rounded-full mt-2 flex-shrink-0"></div>
+                  <span className="text-gray-300 text-sm">{strength}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Improvements */}
+        {analysis.improvements && analysis.improvements.length > 0 && (
+          <div className="bg-black border border-white/20 rounded-lg p-6">
+            <h4 className="text-white font-semibold mb-4">Areas for Development</h4>
+            <div className="space-y-2">
+              {analysis.improvements.map((improvement, index) => (
+                <div key={index} className="flex items-start gap-2">
+                  <div className="w-1 h-1 bg-gray-400 rounded-full mt-2 flex-shrink-0"></div>
+                  <span className="text-gray-300 text-sm">{improvement}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Key Takeaways */}
       {analysis.keyTakeaways && analysis.keyTakeaways.length > 0 && (
-        <div className="bg-black border border-gray-700 rounded-2xl p-8 shadow-xl">
-          <h4 className="text-white font-semibold mb-6 flex items-center gap-3">
-            <div className="w-2 h-6 bg-white rounded-full"></div>
-            Key Insights & Takeaways
-          </h4>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="bg-black border border-white/20 rounded-lg p-6">
+          <h4 className="text-white font-semibold mb-4">Key Takeaways</h4>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {analysis.keyTakeaways.map((takeaway, index) => (
-              <div key={index} className="bg-gray-900 p-6 rounded-xl border border-gray-600 hover:border-gray-400 transition-colors duration-300">
-                <div className="flex items-start gap-4">
-                  <div className="w-8 h-8 bg-white rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg">
-                    <span className="text-black text-sm font-bold">{index + 1}</span>
-                  </div>
-                  <span className="text-white text-sm leading-relaxed font-light">{takeaway}</span>
+              <div key={index} className="flex items-start gap-3">
+                <div className="w-5 h-5 bg-white rounded flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <span className="text-black text-xs font-bold">{index + 1}</span>
                 </div>
+                <span className="text-gray-300 text-sm">{takeaway}</span>
               </div>
             ))}
           </div>
@@ -303,13 +361,10 @@ const InterviewDashboard = ({ analysis, currentQuestion, transcript }) => {
 
       {/* Overall Feedback */}
       {analysis.overallFeedback && (
-        <div className="bg-black border border-gray-700 rounded-2xl p-8 shadow-xl">
-          <h4 className="text-white font-semibold mb-6 flex items-center gap-3">
-            <div className="w-2 h-6 bg-white rounded-full"></div>
-            Coach's Summary
-          </h4>
-          <div className="bg-gray-900 p-6 rounded-xl border-l-4 border-white">
-            <p className="text-gray-200 text-sm leading-relaxed italic font-light">"{analysis.overallFeedback}"</p>
+        <div className="bg-black border border-white/20 rounded-lg p-6">
+          <h4 className="text-white font-semibold mb-4">Summary</h4>
+          <div className="bg-black border-l-2 border-white p-4 rounded">
+            <p className="text-white text-base leading-relaxed">{analysis.overallFeedback}</p>
           </div>
         </div>
       )}

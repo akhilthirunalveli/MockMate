@@ -13,7 +13,6 @@
     "lint": "eslint .",
     "preview": "vite preview"
   },
-
   "dependencies": {
     "@heroicons/react": "^2.2.0",
     "@tailwindcss/vite": "^4.1.5",
@@ -31,11 +30,10 @@
     "react-markdown": "^10.1.0",
     "react-router-dom": "^7.5.3",
     "react-syntax-highlighter": "^15.6.1",
-    "recharts": "^3.1.0",
+    "recharts": "^3.1.2",
     "remark-gfm": "^4.0.1",
     "tailwindcss": "^4.1.5"
   },
-
   "devDependencies": {
     "@eslint/js": "^9.25.0",
     "@types/react": "^18.3.3",
@@ -48,5 +46,4 @@
     "terser": "^5.43.1",
     "vite": "^6.3.5"
   }
-
 }

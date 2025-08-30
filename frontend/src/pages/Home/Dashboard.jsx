@@ -11,6 +11,7 @@ import { API_PATHS } from "../../constants/apiPaths.js";
 import SummaryCard from "./Cards/SummaryCard.jsx";
 import moment from "moment";
 import Modal from "../Preparation/Components/Modal.jsx";
+import RecordTypeModal from "./Components/RecordTypeModal.jsx";
 import { UserContext } from "../../context/userContext.jsx";
 
 // Lazy load modal components
@@ -46,11 +47,11 @@ const Dashboard = () => {
   const [openCreateModal, setOpenCreateModal] = useState(false);
   const [openResumeModal, setOpenResumeModal] = useState(false);
   const [sessions, setSessions] = useState([]);
-
   const [openDeleteAlert, setOpenDeleteAlert] = useState({
     open: false,
     data: null,
   });
+  const [openRecordTypeModal, setOpenRecordTypeModal] = useState(false);
 
   const handleResumeClick = () => {
     // Always open the modal first to show edit options
@@ -120,18 +121,23 @@ const Dashboard = () => {
             </button>
             <button
               className="h-10 sm:h-12 flex items-center justify-center gap-2 bg-white text-xs sm:text-sm font-semibold text-black px-4 sm:px-5 py-2 rounded-full transition-colors cursor-pointer"
-              onClick={() => navigate("/interview-prep/record")}
+              onClick={() => setOpenRecordTypeModal(true)}
             >
               <BsRecordCircle className="text-lg sm:text-xl text-black" />
               Record
             </button>
-            <button
-              className="h-10 sm:h-12 flex items-center justify-center gap-2 bg-white text-xs sm:text-sm font-semibold text-black px-4 sm:px-5 py-2 rounded-full transition-colors cursor-pointer"
-              onClick={() => navigate("/interview-prep/session-interview")}
-            >
-              <LuLaptop className="text-lg sm:text-xl text-black" />
-              Test
-            </button>
+      <RecordTypeModal
+        isOpen={openRecordTypeModal}
+        onClose={() => setOpenRecordTypeModal(false)}
+        onSelect={(type) => {
+          setOpenRecordTypeModal(false);
+          if (type === "hr") {
+            navigate("/interview/hr/record");
+          } else if (type === "session") {
+            navigate("/interview/session-interview");
+          }
+        }}
+      />
             <button
               className="h-10 sm:h-12 flex items-center justify-center gap-2 bg-white text-xs sm:text-sm font-semibold text-black px-4 sm:px-5 py-2 rounded-full transition-colors cursor-pointer"
               onClick={handleResumeClick}

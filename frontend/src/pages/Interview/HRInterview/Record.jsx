@@ -11,6 +11,7 @@ import QuestionPanel from "../Components/QuestionPanel.jsx";
 import TranscriptPanel from "../Components/TranscriptPanel.jsx";
 import AnalysisPanel from "../Components/AnalysisPanel.jsx";
 import PermissionModal from "../Components/PermissionModal.jsx";
+import { interviewQuestions } from "../Utils/questions.js";
 
 const Record = () => {
   const navigate = useNavigate();
@@ -105,7 +106,7 @@ const Record = () => {
         <div className="max-w-[90rem] mt-24 mx-auto flex flex-col gap-6 pb-8">
           {/* Header with Exit Button */}
           <div className="flex justify-between items-center mb-4">
-            <h1 className="text-white text-2xl font-bold">Interview Recording Session</h1>
+            <h1 className="text-white text-2xl font-bold">HR Mock Interview</h1>
             <button
               onClick={() => handleNavigation("/dashboard")}
               className="flex items-center gap-2 px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors"
@@ -139,6 +140,7 @@ const Record = () => {
                 setCurrentQuestion={handleNewQuestion}
                 setTranscript={setTranscript}
                 setInterimTranscript={setInterimTranscript}
+                questions={interviewQuestions}
               />
               
               {/* Transcript Panel */}

@@ -4,7 +4,11 @@ import {
   ExclamationTriangleIcon, 
   ArrowPathIcon, 
   CheckCircleIcon,
-  LightBulbIcon 
+  LightBulbIcon,
+  ChatBubbleLeftRightIcon,
+  VideoCameraIcon,
+  DocumentTextIcon,
+  ClockIcon
 } from '@heroicons/react/24/outline';
 
 const AnalysisPanel = ({ 
@@ -19,7 +23,7 @@ const AnalysisPanel = ({
   const canAnalyze = transcript && transcript.trim().length >= 10;
 
   return (
-    <div className="bg-black border border-gray-700/50 rounded-2xl p-6 min-h-[360px] shadow-2xl">
+    <div className="bg-black border-2 border-white rounded-2xl p-6 min-h-[360px] shadow-2xl">
       <div className="flex justify-between items-center mb-6">
         <div className="flex items-center gap-3">
           <div className="w-2 h-8 bg-gradient-to-b from-white to-gray-300 rounded-full"></div>
@@ -80,7 +84,7 @@ const AnalysisPanel = ({
             <div className="mt-8 text-center">
               <button
                 onClick={() => onAnalyzeTranscript(currentQuestion, transcript)}
-                className="bg-gray-800 hover:bg-gray-700 text-gray-300 hover:text-white px-5 py-2.5 rounded-lg text-sm transition-all duration-300 border border-gray-600 hover:border-gray-400 flex items-center gap-2 mx-auto"
+                className="bg-white text-black px-5 py-2.5 rounded-lg text-sm transition-all duration-300 border border-gray-600 hover:border-gray-400 flex items-center gap-2 mx-auto"
               >
                 <ArrowPathIcon className="w-4 h-4" />
                 Re-analyze Response
@@ -96,38 +100,62 @@ const AnalysisPanel = ({
               <CheckCircleIcon className="w-6 h-6 text-emerald-400" />
               <p className="text-emerald-300 font-medium">Recording completed successfully!</p>
             </div>
-            <div className="bg-gray-900 border border-gray-700 p-6 rounded-xl">
-              <h4 className="font-semibold mb-4 text-white flex items-center gap-2">
-                <div className="w-2 h-2 bg-green-400 rounded-full"></div>
-                Session Summary
+            <div className="bg-black border-2 border-white/20 p-6 rounded-xl shadow-lg">
+              <h4 className="font-semibold mb-6 text-white flex items-center gap-3 text-lg">
+                <CheckCircleIcon className="w-6 h-6 text-white" />
+                Recording Session Complete
               </h4>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-                <div className="space-y-3">
-                  <div className="flex justify-between">
-                    <span className="text-gray-400">Question:</span>
-                    <span className="text-white font-medium text-right max-w-[60%]">{currentQuestion.length > 50 ? currentQuestion.substring(0, 50) + '...' : currentQuestion}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-400">Recording:</span>
-                    <span className="text-green-300 font-medium">Available</span>
-                  </div>
-                </div>
-                <div className="space-y-3">
-                  <div className="flex justify-between">
-                    <span className="text-gray-400">Transcript length:</span>
-                    <span className="text-white font-medium">{transcript.length} chars</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-400">Status:</span>
-                    <span className={`font-medium ${canAnalyze ? 'text-green-300' : 'text-yellow-300'}`}>
-                      {canAnalyze ? 'Ready for analysis' : 'Transcript too short'}
-                    </span>
+              
+              {/* Current Question Section */}
+              <div className="mb-6 p-4 bg-black rounded-lg border border-white/10">
+                <div className="flex items-start gap-3 mb-2">
+                  <ChatBubbleLeftRightIcon className="w-5 h-5 text-white mt-0.5" />
+                  <div className="flex-1">
+                    <h5 className="text-white font-medium text-sm mb-1">Interview Question</h5>
+                    <p className="text-gray-300 text-sm leading-relaxed">{currentQuestion}</p>
                   </div>
                 </div>
               </div>
+
+              {/* Session Stats Grid */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                <div className="bg-black border border-white/20 p-4 rounded-lg text-center">
+                  <VideoCameraIcon className="w-6 h-6 text-white mx-auto mb-2" />
+                  <div className="text-xs text-gray-400 mb-1">Video Recording</div>
+                  <div className="text-white font-semibold text-sm">✓ Captured</div>
+                </div>
+                
+                <div className="bg-black border border-white/20 p-4 rounded-lg text-center">
+                  <DocumentTextIcon className="w-6 h-6 text-white mx-auto mb-2" />
+                  <div className="text-xs text-gray-400 mb-1">Transcript</div>
+                  <div className="text-white font-semibold text-sm">{transcript.length} characters</div>
+                </div>
+                
+                <div className="bg-black border border-white/20 p-4 rounded-lg text-center">
+                  <ClockIcon className="w-6 h-6 text-white mx-auto mb-2" />
+                  <div className="text-xs text-gray-400 mb-1">Analysis Status</div>
+                  <div className={`font-semibold text-sm ${canAnalyze ? 'text-white' : 'text-gray-400'}`}>
+                    {canAnalyze ? '✓ Ready' : 'Need more content'}
+                  </div>
+                </div>
+              </div>
+
+              {/* What's Next Section */}
+              <div className="bg-black rounded-lg p-4">
+                <h5 className="text-white font-medium text-sm mb-2 flex items-center gap-2">
+                  <LightBulbIcon className="w-4 h-4 text-white" />
+                  What's Next?
+                </h5>
+                <p className="text-gray-300 text-sm">
+                  {canAnalyze 
+                    ? "Your response is ready for AI analysis. Click the 'Analyze with AI' button above to get detailed feedback, scoring, and improvement suggestions."
+                    : "Keep speaking to build a more substantial response (minimum 10 characters needed for analysis)."
+                  }
+                </p>
+              </div>
             </div>
             {canAnalyze && (
-              <div className="bg-gray-900 border border-white/20 rounded-xl p-5 flex items-center gap-4">
+              <div className="bg-black border-2 border-white/20 rounded-xl p-5 flex items-center gap-4 shadow-lg">
                 <LightBulbIcon className="w-6 h-6 text-white flex-shrink-0" />
                 <div>
                   <p className="text-white font-medium">Ready for AI Analysis</p>
@@ -141,9 +169,6 @@ const AnalysisPanel = ({
         {/* Default state */}
         {recordedChunks.length === 0 && !analysis && !isAnalyzing && (
           <div className="text-center py-12">
-            <div className="w-16 h-16 bg-gray-800 border border-gray-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
-              <LightBulbIcon className="w-8 h-8 text-gray-400" />
-            </div>
             <p className="text-white font-medium mb-2">No recording data available yet</p>
             <p className="text-gray-400 text-sm">Start recording to see AI-powered interview analysis and feedback here</p>
           </div>

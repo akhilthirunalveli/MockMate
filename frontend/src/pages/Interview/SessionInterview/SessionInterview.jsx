@@ -148,26 +148,49 @@ const SessionInterview = () => {
           {/* Header with Session Selector and Exit Button */}
           <div className="flex justify-between items-center mb-4">
             <div className="flex items-center gap-4">
-              <div>
-                <select
-                  className="w-full p-3 rounded-full bg-black text-white border border-white/100 focus:outline-none focus:ring-2 focus:ring-white font-semibold transition-all duration-150"
-                  value={selectedSession || ''}
-                  onChange={e => setSelectedSession(e.target.value)}
-                >
-                  <option value="" disabled>Select session</option>
-                  {sessions.map(session => (
-                    <option key={session._id} value={session._id}>
-                      {session.role || 'Session'} - {session.topicsToFocus || ''}
+              <div className="relative">
+                <div className="relative">
+                  <label htmlFor="session-select" className="block text-white text-sm font-medium mb-2 ml-1">
+                    Choose Interview Session
+                  </label>
+                  <select
+                    id="session-select"
+                    className="min-w-[400px] p-4 rounded-full bg-black/80 backdrop-blur-sm text-white border border-white/30 focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-white font-medium transition-all duration-300 hover:border-white/60 cursor-pointer appearance-none"
+                    value={selectedSession || ''}
+                    onChange={e => setSelectedSession(e.target.value)}
+                    style={{
+                      backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23ffffff' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e")`,
+                      backgroundPosition: 'right 16px center',
+                      backgroundRepeat: 'no-repeat',
+                      backgroundSize: '16px'
+                    }}
+                  >
+                    <option value="" disabled className="bg-black text-gray-300">
+                      Select a session to begin
                     </option>
-                  ))}
-                </select>
+                    {sessions.map(session => (
+                      <option 
+                        key={session._id} 
+                        value={session._id}
+                        className="bg-black text-white py-2"
+                      >
+                        {session.role || 'Interview'} • {session.topicsToFocus || 'General Topics'}
+                      </option>
+                    ))}
+                  </select>
+                  {!selectedSession && (
+                    <p className="text-gray-400 text-xs mt-1 ml-1">
+                      Please select a session to start your interview
+                    </p>
+                  )}
+                </div>
               </div>
             </div>
             <button
               onClick={() => handleNavigation("/dashboard")}
-              className="flex items-center gap-2 px-4 py-2 bg-white text-black border border-black rounded-lg transition-colors font-semibold hover:bg-gray-100"
+              className="flex items-center gap-2 px-6 py-3 bg-red-600 text-white border border-red-500 rounded-full transition-all duration-300 font-semibold hover:bg-red-700 hover:border-red-600 active:scale-95"
             >
-              <MdHome size={20} color="#000" />
+              <MdHome size={20} color="#ffffff" />
               Exit Session
             </button>
           </div>

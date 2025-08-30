@@ -107,6 +107,8 @@ const App = () => {
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/admin" element={<Admin />} />
                 <Route path="/interview-prep/:sessionId" element={<InterviewPrep />}/>
+                <Route path="/interview/hr/record" element={<Record />}/>
+                <Route path="/interview/session-interview" element={<SessionInterview />} />
                 <Route path="/interview-prep/record" element={<Record />}/>
                 <Route path="/resume-view" element={<ResumeViewPage />} />
                 <Route path="/interview-prep/session-interview" element={<SessionInterview />} />

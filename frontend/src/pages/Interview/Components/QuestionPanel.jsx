@@ -12,7 +12,7 @@ const QuestionPanel = ({ currentQuestion, setCurrentQuestion, setTranscript, set
   };
 
   return (
-    <div className="bg-[#111] border border-gray-700 rounded-2xl p-6 flex flex-col justify-center min-h-[120px] relative shadow-lg">
+    <div className="bg-black border-2 border-white rounded-2xl p-6 flex flex-col justify-center min-h-[120px] relative shadow-lg hover:border-gray-500 transition-colors">
       <div className="flex justify-between items-start mb-2">
         <span className="text-white text-sm opacity-70">Current Question</span>
         <button
