@@ -3,10 +3,10 @@ import { Analytics } from "@vercel/analytics/react"
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 
-import LandingPage from "./pages/LandingPage/LandingPage";
+import LandingPage from "./pages/Home/LandingPage.jsx";
 import UserProvider from "./context/userContext.jsx";
-import SpinnerLoader from "./components/Loader/SpinnerLoader";
-import ResumeViewPage from "./pages/ResumeView/ResumeViewPage";
+import SpinnerLoader from "./pages/Preparation/Loader/SpinnerLoader.jsx";
+import ResumeViewPage from "./pages/Resume/ResumeViewPage.jsx";
 
 // Error Boundary Component
 class ErrorBoundary extends React.Component {
@@ -72,25 +72,25 @@ const Dashboard = React.lazy(() =>
 );
 
 const InterviewPrep = React.lazy(() => 
-  import("./pages/InterviewPrep/InterviewPrep").catch(() => {
+  import("./pages/Preparation/InterviewPrep").catch(() => {
     return { default: () => <div style={{padding: "20px", textAlign: "center"}}>Error loading Interview Prep</div> };
   })
 );
 
 const Record = React.lazy(() => 
-  import("./pages/InterviewPrep/Record").catch(() => {
+  import("./pages/Interview/HRInterview/Record").catch(() => {
     return { default: () => <div style={{padding: "20px", textAlign: "center"}}>Error loading Record</div> };
   })
 );
 
 const Admin = React.lazy(() => 
-  import("./pages/admin").catch(() => {
+  import("./pages/Admin/admin").catch(() => {
     return { default: () => <div style={{padding: "20px", textAlign: "center"}}>Error loading Admin</div> };
   })
 );
 
 const SessionInterview = React.lazy(() => 
-  import("./pages/InterviewPrep/SessionInterview").catch(() => {
+  import("./pages/Interview/SessionInterview/SessionInterview").catch(() => {
     return { default: () => <div style={{padding: "20px", textAlign: "center"}}>Error loading Session Interview</div> };
   })
 );

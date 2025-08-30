@@ -22,9 +22,23 @@
           }, 1000);
         }
       });
-      
-      // Ensure React globals are available
-      window.__REACT_DEVTOOLS_GLOBAL_HOOK__ = window.__REACT_DEVTOOLS_GLOBAL_HOOK__ || {};
+
+      // Workaround: neutralize React DevTools global hook before React loads.
+      // Some Chrome React DevTools versions inject a hook that breaks react-refresh.
+      // This removes the hook if present (safe for development). Remove this block
+      // if you prefer to manage extensions instead.
+      try {
+        if (window.__REACT_DEVTOOLS_GLOBAL_HOOK__) {
+          try {
+            delete window.__REACT_DEVTOOLS_GLOBAL_HOOK__;
+          } catch (err) {
+            // some environments prevent delete; fall back to undefined
+            window.__REACT_DEVTOOLS_GLOBAL_HOOK__ = undefined;
+          }
+        }
+      } catch (err) {
+        // ignore any errors here to avoid blocking app load
+      }
     </script>
   </head>
   <body>

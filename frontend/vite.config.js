@@ -4,7 +4,13 @@ import tailwindcss from '@tailwindcss/vite'
 
 export default defineConfig({
   plugins: [
-    react(),
+    react({
+      // Add explicit configuration for React plugin
+      include: "**/*.{jsx,tsx}",
+      babel: {
+        plugins: []
+      }
+    }),
     tailwindcss()
   ],
   server: {
@@ -12,5 +18,8 @@ export default defineConfig({
     proxy: {
       '/api': 'http://localhost:8000'
     }
+  },
+  optimizeDeps: {
+    include: ['react', 'react-dom']
   }
 })

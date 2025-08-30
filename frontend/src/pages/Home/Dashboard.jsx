@@ -2,21 +2,21 @@ import React, { useEffect, useState, useContext, lazy, Suspense } from "react";
 import { LuPlus, LuLaptop } from "react-icons/lu";
 import { BsRecordCircle } from "react-icons/bs";
 import { IoDocumentTextOutline } from "react-icons/io5";
-import { CARD_BG } from "../../utils/data";
+import { CARD_BG } from "./Utils/data";
 import toast from "react-hot-toast";
-import DashboardLayout from "../../layouts/DashboardLayout.jsx";
+import DashboardLayout from "./Components/DashboardLayout.jsx";
 import { useNavigate } from "react-router-dom";
 import axiosInstance from "../../utils/axiosInstance.js";
 import { API_PATHS } from "../../constants/apiPaths";
-import SummaryCard from "../../components/Cards/SummaryCard.jsx";
+import SummaryCard from "./Cards/SummaryCard.jsx";
 import moment from "moment";
-import Modal from "../../components/Modal.jsx";
+import Modal from "../Preparation/Components/Modal.jsx";
 import { UserContext } from "../../context/userContext.jsx";
 
 // Lazy load modal components
-const CreateSessionForm = lazy(() => import("./CreateSessionForm"));
-const DeleteAlertContent = lazy(() => import("../../components/DeleteAlertContent"));
-const ResumeLinkModal = lazy(() => import("../../components/Modal/ResumeLinkModal.jsx"));
+const CreateSessionForm = lazy(() => import("../Preparation/CreateSessionForm"));
+const DeleteAlertContent = lazy(() => import("../Preparation/Components/DeleteAlertContent"));
+const ResumeLinkModal = lazy(() => import("../Resume/Modal/ResumeLinkModal.jsx"));
 
 const LoadingSpinner = () => (
   <div 
