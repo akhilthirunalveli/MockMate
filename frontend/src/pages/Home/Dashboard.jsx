@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useContext, lazy, Suspense } from "react";
+import { HashLoader } from 'react-spinners';
 import { LuPlus, LuLaptop } from "react-icons/lu";
 import { BsRecordCircle } from "react-icons/bs";
 import { IoDocumentTextOutline } from "react-icons/io5";
@@ -30,13 +31,7 @@ const LoadingSpinner = () => (
       alignItems: 'center'
     }}
   >
-    <div 
-      className="animate-spin rounded-full h-8 w-8 border-2 border-transparent"
-      style={{
-        borderTopColor: 'rgba(59, 130, 246, 0.2)',
-        borderRightColor: 'rgba(59, 130, 246, 0.1)',
-      }}
-    ></div>
+    <HashLoader color="#ffffff" />
   </div>
 );
 

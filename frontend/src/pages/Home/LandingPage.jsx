@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext, lazy, Suspense } from "react";
 import { useNavigate } from "react-router-dom";
+import { HashLoader } from 'react-spinners';
 import Modal from "../Preparation/Components/Modal.jsx";
 import { UserContext } from "../../context/userContext.jsx";
 import GeminiLogo from "../../assets/gemini-color.svg";

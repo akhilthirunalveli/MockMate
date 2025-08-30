@@ -1,4 +1,5 @@
 import React from 'react';
+import { HashLoader } from 'react-spinners';
 import InterviewDashboard from './InterviewDashboard';
 import { 
   ExclamationTriangleIcon, 
@@ -23,7 +24,7 @@ const AnalysisPanel = ({
   const canAnalyze = transcript && transcript.trim().length >= 10;
 
   return (
-    <div className="bg-black border-2 border-white rounded-2xl p-6 min-h-[360px] shadow-2xl">
+    <div className="bg-black border-2 border-white rounded-2xl p-6 min-h-[200px] shadow-2xl">
       <div className="flex justify-between items-center mb-6">
         <div className="flex items-center gap-3">
           <div className="w-2 h-8 bg-gradient-to-b from-white to-gray-300 rounded-full"></div>
@@ -43,10 +44,7 @@ const AnalysisPanel = ({
         {/* Loading state */}
         {isAnalyzing && (
           <div className="flex flex-col items-center justify-center py-12">
-            <div className="relative">
-              <div className="w-12 h-12 border-4 border-gray-700 rounded-full"></div>
-              <div className="absolute top-0 left-0 w-12 h-12 border-4 border-t-white border-r-gray-300 rounded-full animate-spin"></div>
-            </div>
+            <HashLoader color="#ffffff" />
             <div className="mt-6 text-center">
               <div className="text-white font-medium text-base">Analyzing your response...</div>
               <div className="text-gray-400 text-sm mt-2">Our AI is reviewing your answer for insights</div>

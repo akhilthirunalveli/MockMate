@@ -11,6 +11,8 @@ export const useSpeechRecognition = (micOn) => {
   const recognitionRef = useRef(null);
   const restartTimeoutRef = useRef(null);
   const isInitializedRef = useRef(false);
+  const restartCountRef = useRef(0);
+  const maxRestarts = 5; // Limit automatic restarts
   const confidenceThreshold = 0.6; // Lowered for better acceptance
 
   // Enhanced browser support detection
@@ -71,7 +73,18 @@ export const useSpeechRecognition = (micOn) => {
     if (!isInitializedRef.current) return;
     
     if (micOn && speechSupported) {
-      startSpeechRecognition();
+      // Reset restart counter when mic is turned on
+      restartCountRef.current = 0;
+      
+      // Add a longer delay to ensure media stream is completely stable
+      const timer = setTimeout(() => {
+        // Double-check that mic is still on before starting
+        if (micOn && speechSupported) {
+          startSpeechRecognition();
+        }
+      }, 1500); // Increased delay from 500ms to 1500ms
+      
+      return () => clearTimeout(timer);
     } else {
       cleanup();
     }
@@ -81,6 +94,29 @@ export const useSpeechRecognition = (micOn) => {
     if (!speechSupported) {
       setError('Speech recognition not supported');
       console.warn('Speech recognition not supported');
+      return;
+    }
+
+    // Check if microphone is actually available and working
+    const checkMicrophoneAccess = () => {
+      const videoElements = document.querySelectorAll('video');
+      let hasActiveAudioTrack = false;
+      
+      videoElements.forEach(video => {
+        if (video.srcObject) {
+          const audioTracks = video.srcObject.getAudioTracks();
+          if (audioTracks.some(track => track.enabled && track.readyState === 'live')) {
+            hasActiveAudioTrack = true;
+          }
+        }
+      });
+      
+      return hasActiveAudioTrack;
+    };
+    
+    if (!checkMicrophoneAccess()) {
+      console.log('No active audio tracks found, delaying speech recognition start');
+      scheduleRestart(2000);
       return;
     }
 
@@ -106,6 +142,7 @@ export const useSpeechRecognition = (micOn) => {
       recognition.onstart = () => {
         setIsListening(true);
         setError(null);
+        restartCountRef.current = 0; // Reset restart counter on successful start
         console.log('Speech recognition started successfully');
       };
       
@@ -162,7 +199,7 @@ export const useSpeechRecognition = (micOn) => {
         switch (event.error) {
           case 'no-speech':
             console.log('No speech detected');
-            scheduleRestart(1000);
+            scheduleRestart(2000); // Longer delay for no-speech
             break;
           case 'audio-capture':
             setError('Microphone access failed. Please check permissions.');
@@ -172,17 +209,28 @@ export const useSpeechRecognition = (micOn) => {
             break;
           case 'network':
             setError('Network error. Please check your internet connection.');
-            scheduleRestart(3000);
+            scheduleRestart(5000); // Longer delay for network errors
             break;
           case 'service-not-allowed':
             setError('Speech recognition service not allowed.');
             break;
           case 'aborted':
-            // Intentional abort, don't restart
+            // Speech recognition was aborted - likely due to media stream changes
+            // Don't restart immediately to avoid loops
+            console.log('Speech recognition aborted - waiting before restart');
+            
+            // Check if this is happening too frequently
+            if (restartCountRef.current >= 3) {
+              console.log('Too many aborted errors, stopping auto-restart');
+              setError('Speech recognition keeps getting interrupted. Please try turning the microphone off and on again.');
+              return;
+            }
+            
+            scheduleRestart(5000); // Even longer delay for aborted errors
             break;
           default:
             console.log('Speech recognition error:', event.error);
-            scheduleRestart(1500);
+            scheduleRestart(2000); // Increased default delay
         }
       };
       
@@ -191,9 +239,12 @@ export const useSpeechRecognition = (micOn) => {
         setInterimTranscript('');
         console.log('Speech recognition ended');
         
-        // Auto-restart if mic is still on, no error, and we haven't manually stopped
-        if (micOn && speechSupported && !error && !restartTimeoutRef.current) {
-          scheduleRestart(300);
+        // Only auto-restart if we haven't had many failures
+        if (micOn && speechSupported && !error && !restartTimeoutRef.current && restartCountRef.current < 3) {
+          scheduleRestart(2000); // Longer delay
+        } else if (restartCountRef.current >= 3) {
+          console.log('Too many restart attempts, stopping auto-restart');
+          setError('Speech recognition stopped due to repeated errors. Click the microphone button to restart.');
         }
       };
       
@@ -212,10 +263,18 @@ export const useSpeechRecognition = (micOn) => {
       clearTimeout(restartTimeoutRef.current);
     }
     
+    // Check restart limit
+    if (restartCountRef.current >= maxRestarts) {
+      console.log('Maximum restart attempts reached, stopping auto-restart');
+      setError('Speech recognition failed multiple times. Please refresh the page or check your microphone.');
+      return;
+    }
+    
     restartTimeoutRef.current = setTimeout(() => {
       restartTimeoutRef.current = null;
       if (micOn && speechSupported && !error) {
-        console.log('Restarting speech recognition...');
+        restartCountRef.current += 1;
+        console.log(`Restarting speech recognition... (attempt ${restartCountRef.current}/${maxRestarts})`);
         startSpeechRecognition();
       }
     }, delay);
@@ -271,6 +330,19 @@ export const useSpeechRecognition = (micOn) => {
     }
   }, [isListening, micOn, speechSupported, cleanup, startSpeechRecognition]);
 
+  const manualRestart = useCallback(() => {
+    console.log('Manual restart of speech recognition');
+    restartCountRef.current = 0; // Reset restart counter
+    setError(null); // Clear any errors
+    cleanup();
+    
+    setTimeout(() => {
+      if (micOn && speechSupported) {
+        startSpeechRecognition();
+      }
+    }, 1000);
+  }, [micOn, speechSupported, cleanup, startSpeechRecognition]);
+
   return {
     transcript,
     interimTranscript,
@@ -286,6 +358,7 @@ export const useSpeechRecognition = (micOn) => {
     correctTranscript,
     changeLanguage,
     setTranscript,
-    setInterimTranscript
+    setInterimTranscript,
+    manualRestart
   };
 };

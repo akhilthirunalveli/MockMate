@@ -26,7 +26,7 @@ const VideoPlayer = ({
       
       {/* Camera Off Placeholder */}
       {!cameraOn && (
-        <div className="absolute inset-0 bg-gray-800 flex items-center justify-center rounded-2xl">
+        <div className="absolute inset-0 bg-black flex items-center justify-center rounded-2xl">
           <div className="text-white text-center">
             <MdVideocamOff size={48} className="mx-auto mb-2" />
             <p>Camera is off</p>

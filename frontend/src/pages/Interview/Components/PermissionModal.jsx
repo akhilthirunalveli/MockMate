@@ -1,11 +1,19 @@
 import React from 'react';
 
-const PermissionModal = ({ permissionGranted, errorMessage, audioOnly }) => {
-  // Don't show modal if permissions are granted, unless it's audio-only info
-  if (permissionGranted && !audioOnly) return null;
+const PermissionModal = ({ permissionGranted, errorMessage, audioOnly, hasAttemptedMediaAccess, retryPermissions }) => {
+  // Don't show modal if:
+  // 1. Permissions are granted and not audio-only info, OR
+  // 2. User hasn't attempted to access media yet
+  if ((permissionGranted && !audioOnly) || (!hasAttemptedMediaAccess && !permissionGranted)) {
+    return null;
+  }
 
   const handleRetry = () => {
-    window.location.reload();
+    if (retryPermissions) {
+      retryPermissions();
+    } else {
+      window.location.reload();
+    }
   };
 
   const handleContinueAudioOnly = () => {

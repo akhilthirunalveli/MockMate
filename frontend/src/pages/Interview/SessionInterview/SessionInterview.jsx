@@ -65,9 +65,11 @@ const SessionInterview = () => {
     permissionGranted,
     errorMessage,
     audioOnly,
+    hasAttemptedMediaAccess,
     handleMicToggle,
     handleCameraToggle,
-    stopAllMediaTracks
+    stopAllMediaTracks,
+    retryPermissions
   } = useMediaStream();
 
   const {
@@ -77,12 +79,14 @@ const SessionInterview = () => {
     speechSupported,
     accuracy,
     language,
+    error: speechError,
     clearTranscript,
     downloadTranscript,
     correctTranscript,
     changeLanguage,
     setTranscript,
-    setInterimTranscript
+    setInterimTranscript,
+    manualRestart
   } = useSpeechRecognition(micOn);
 
   const {
@@ -115,6 +119,18 @@ const SessionInterview = () => {
     navigate(path);
   };
 
+  // Custom mic toggle that also handles speech recognition restart
+  const handleMicToggleWithRestart = async () => {
+    await handleMicToggle();
+    
+    // If mic is being turned on and there are speech recognition errors, restart it
+    if (!micOn && speechSupported) {
+      setTimeout(() => {
+        manualRestart();
+      }, 2000); // Give mic time to fully initialize
+    }
+  };
+
   // Handle new question selection - clear analysis too
   const handleNewQuestion = (newQuestion) => {
     setCurrentQuestion(newQuestion);
@@ -137,11 +153,13 @@ const SessionInterview = () => {
 
   {/* Session Selector - now inside header row, left of title */}
 
-        {/* Permission Request Modal */}
+        {/* Permission Request Modal - only show if user attempted access and there's an error */}
         <PermissionModal 
           permissionGranted={permissionGranted} 
           errorMessage={errorMessage}
           audioOnly={audioOnly}
+          hasAttemptedMediaAccess={hasAttemptedMediaAccess}
+          retryPermissions={retryPermissions}
         />
 
   <div className="max-w-[90rem] mt-24 mx-auto flex flex-col gap-6 pb-8">
@@ -204,7 +222,7 @@ const SessionInterview = () => {
               mirrored={mirrored}
               setMirrored={setMirrored}
               micOn={micOn}
-              handleMicToggle={handleMicToggle}
+              handleMicToggle={handleMicToggleWithRestart}
               handleCameraToggle={handleCameraToggle}
               isRecording={isRecording}
               startRecording={startRecording}
@@ -236,6 +254,8 @@ const SessionInterview = () => {
                 correctTranscript={correctTranscript}
                 changeLanguage={changeLanguage}
                 currentQuestion={currentQuestion}
+                speechError={speechError}
+                manualRestart={manualRestart}
               />
             </div>
           </div>

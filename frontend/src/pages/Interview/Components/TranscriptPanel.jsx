@@ -14,7 +14,9 @@ const TranscriptPanel = ({
   downloadTranscript, 
   correctTranscript,
   changeLanguage,
-  currentQuestion 
+  currentQuestion,
+  speechError,
+  manualRestart
 }) => {
   const transcriptEndRef = useRef(null);
   const [isEditing, setIsEditing] = useState(false);
@@ -116,7 +118,7 @@ const TranscriptPanel = ({
             <select
               value={language}
               onChange={(e) => changeLanguage(e.target.value)}
-              className="text-xs bg-gray-800 text-white px-2 py-1 rounded border border-gray-600"
+              className="text-xs bg-black text-white px-2 py-1 rounded border border-gray-600"
               disabled={isListening}
             >
               <option value="en-US">English (US)</option>
@@ -135,11 +137,23 @@ const TranscriptPanel = ({
           )}
           
           {speechSupported && micOn && (
-            <div className="flex items-center gap-1">
-              <div className={`w-2 h-2 rounded-full ${isListening ? 'bg-green-400 animate-pulse' : 'bg-gray-400'}`} />
-              <span className={`text-xs ${isListening ? 'text-green-400' : 'text-gray-400'}`}>
-                {isListening ? 'Listening...' : 'Ready'}
-              </span>
+            <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1">
+                <div className={`w-2 h-2 rounded-full ${isListening ? 'bg-green-400 animate-pulse' : 'bg-gray-400'}`} />
+                <span className={`text-xs ${isListening ? 'text-green-400' : 'text-gray-400'}`}>
+                  {isListening ? 'Listening...' : 'Ready'}
+                </span>
+              </div>
+              
+              {speechError && (
+                <button
+                  onClick={manualRestart}
+                  className="text-xs px-2 py-1 bg-red-600 text-white rounded hover:bg-red-700 transition-colors"
+                  title="Restart speech recognition"
+                >
+                  Restart
+                </button>
+              )}
             </div>
           )}
         </div>

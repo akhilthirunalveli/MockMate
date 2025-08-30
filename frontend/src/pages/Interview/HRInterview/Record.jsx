@@ -26,9 +26,11 @@ const Record = () => {
     permissionGranted,
     errorMessage,
     audioOnly,
+    hasAttemptedMediaAccess,
     handleMicToggle,
     handleCameraToggle,
-    stopAllMediaTracks
+    stopAllMediaTracks,
+    retryPermissions
   } = useMediaStream();
 
   const {
@@ -38,12 +40,14 @@ const Record = () => {
     speechSupported,
     accuracy,
     language,
+    error: speechError,
     clearTranscript,
     downloadTranscript,
     correctTranscript,
     changeLanguage,
     setTranscript,
-    setInterimTranscript
+    setInterimTranscript,
+    manualRestart
   } = useSpeechRecognition(micOn);
 
   const {
@@ -76,6 +80,18 @@ const Record = () => {
     navigate(path);
   };
 
+  // Custom mic toggle that also handles speech recognition restart
+  const handleMicToggleWithRestart = async () => {
+    await handleMicToggle();
+    
+    // If mic is being turned on and there are speech recognition errors, restart it
+    if (!micOn && speechSupported) {
+      setTimeout(() => {
+        manualRestart();
+      }, 2000); // Give mic time to fully initialize
+    }
+  };
+
   // Handle new question generation - clear analysis too
   const handleNewQuestion = (newQuestion) => {
     setCurrentQuestion(newQuestion);
@@ -96,11 +112,13 @@ const Record = () => {
       >
         <Navbar />
         
-        {/* Permission Request Modal */}
+        {/* Permission Request Modal - only show if user attempted access and there's an error */}
         <PermissionModal 
           permissionGranted={permissionGranted} 
           errorMessage={errorMessage}
           audioOnly={audioOnly}
+          hasAttemptedMediaAccess={hasAttemptedMediaAccess}
+          retryPermissions={retryPermissions}
         />
 
         <div className="max-w-[90rem] mt-24 mx-auto flex flex-col gap-6 pb-8">
@@ -109,7 +127,7 @@ const Record = () => {
             <h1 className="text-white text-2xl font-bold">HR Mock Interview</h1>
             <button
               onClick={() => handleNavigation("/dashboard")}
-              className="flex items-center gap-2 px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors"
+              className="flex items-center gap-2 px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-full transition-colors"
             >
               <MdHome size={20} />
               Exit Session
@@ -125,7 +143,7 @@ const Record = () => {
               mirrored={mirrored}
               setMirrored={setMirrored}
               micOn={micOn}
-              handleMicToggle={handleMicToggle}
+              handleMicToggle={handleMicToggleWithRestart}
               handleCameraToggle={handleCameraToggle}
               isRecording={isRecording}
               startRecording={startRecording}
@@ -157,6 +175,8 @@ const Record = () => {
                 correctTranscript={correctTranscript}
                 changeLanguage={changeLanguage}
                 currentQuestion={currentQuestion}
+                speechError={speechError}
+                manualRestart={manualRestart}
               />
             </div>
           </div>
