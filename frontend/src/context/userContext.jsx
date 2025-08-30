@@ -1,0 +1,67 @@
+import React, { createContext, useState, useEffect } from "react";
+import axiosInstance from "../utils/axiosInstance.js";
+import { API_PATHS } from "../constants/apiPaths.js";
+
+export const UserContext = createContext();
+
+const UserProvider = ({ children }) => {
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // Only run this effect on the client side
+    if (typeof window === 'undefined') return;
+    
+    if (user) {
+      setLoading(false);
+      return;
+    }
+
+    const accessToken = localStorage.getItem("token");
+    if (!accessToken) {
+      setLoading(false);
+      return;
+    }
+
+    const fetchUser = async () => {
+      try {
+        const response = await axiosInstance.get(API_PATHS.AUTH.GET_PROFILE);
+        setUser(response.data);
+      } catch (error) {
+        console.error("User not authenticated", error);
+        clearUser();
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUser();
+  }, [user]);
+
+  const updateUser = (userData, token) => {
+    setUser(userData);
+    if (typeof window !== 'undefined') {
+      if (token) {
+        localStorage.setItem("token", token);
+      } else if (userData.token) {
+        localStorage.setItem("token", userData.token);
+      }
+    }
+    setLoading(false);
+  };
+
+  const clearUser = () => {
+    setUser(null);
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem("token");
+    }
+  };
+
+  return (
+    <UserContext.Provider value={{ user, loading, updateUser, clearUser }}>
+      {children}
+    </UserContext.Provider>
+  );
+};
+
+export default UserProvider;

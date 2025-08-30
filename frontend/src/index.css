@@ -1,0 +1,98 @@
+@import url('https://fonts.googleapis.com/css2?family=Urbanist:ital,wght@0,100..900;1,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Nabla&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Anta&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-display: "nunito", sans-serif;
+}
+
+@layer base {
+  html {
+    font-family: var(--font-display);
+  }
+
+  body {
+    background-color: #fcfbfc;
+    overflow-x: hidden;
+  }
+}
+/* Custom scrollbar styling for WebKit browsers */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.4);
+  border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Optional: Firefox support */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0,0,0,0.4) transparent;
+}
+
+@layer utilities {
+  /* Animate text with a shine effect */
+  @keyframes text-shine {
+    0% {
+      background-position: 0% 50%;
+    }
+    100% {
+      background-position: 100% 50%;
+    }
+  }
+
+  .animate-text-shine {
+    animation: text-shine 3s ease-in-out infinite alternate;
+  }
+  
+  @keyframes blob1 {
+    0%, 100% { transform: translate(0px, 0px) scale(1); }
+    33% { transform: translate(30px, -60px) scale(1.1); }
+    66% { transform: translate(-20px, 20px) scale(0.9); }
+  }
+
+  @keyframes blob2 {
+    0%, 100% { transform: translate(0px, 0px) scale(1); }
+    33% { transform: translate(-40px, 60px) scale(1.05); }
+    66% { transform: translate(20px, -40px) scale(0.95); }
+  }
+
+  @keyframes blob3 {
+    0%, 100% { transform: translate(0px, 0px) scale(1); }
+    33% { transform: translate(20px, 140px) scale(1.15); }
+    66% { transform: translate(-30px, -30px) scale(0.85); }
+  }
+
+  .animate-blob1 {
+    animation: blob1 8s ease-in-out infinite;
+  }
+
+  .animate-blob2 {
+    animation: blob2 10s ease-in-out infinite;
+  }
+
+  .animate-blob3 {
+    animation: blob3 12s ease-in-out infinite;
+  }
+}
+
+.input-box {
+  @apply w-full flex justify-between gap-3 text-sm text-black bg-gray-50/20 rounded px-4 py-4 mb-3 mt-3 border border-gray-100/50 outline-none;
+}
+
+.btn-primary {
+  @apply w-full flex items-center justify-center gap-3 text-sm font-medium text-white bg-black  p-[10px] rounded-md my-1 cursor-pointer;
+}
+
+.btn-small {
+  @apply flex items-center justify-center gap-3 bg-black text-sm font-semibold text-white px-7 py-2 rounded-lg hover:bg-black hover:text-white transition-colors
+}
