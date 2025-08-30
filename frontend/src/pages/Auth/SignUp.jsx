@@ -1,10 +1,10 @@
 import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Input from "../Home/Components/Input.jsx";
-import { validateEmail } from "../Home/Utils/helper";
-import { UserContext } from "../../context/userContext";
+import { validateEmail } from "../Home/Utils/helper.js";
+import { UserContext } from "../../context/userContext.jsx";
 import axiosInstance from "../../utils/axiosInstance.js";
-import { API_PATHS } from "../../constants/apiPaths";
+import { API_PATHS } from "../../constants/apiPaths.js";
 
 const SignUp = ({ setCurrentPage }) => {
   const [fullName, setFullName] = useState("");

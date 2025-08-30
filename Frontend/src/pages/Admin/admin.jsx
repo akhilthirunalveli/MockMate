@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from "react";
-import { BASE_URL } from "../../constants/apiPaths";
+import { BASE_URL } from "../../constants/apiPaths.js";
 import {
   PieChart,
   Pie,

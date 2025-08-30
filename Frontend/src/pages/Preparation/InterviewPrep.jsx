@@ -8,7 +8,7 @@ import { toast } from "react-hot-toast";
 import DashboardLayout from "../Home/Components/DashboardLayout.jsx";
 import RoleInfoHeader from "../Interview/Components/RoleInfoHeader.jsx";
 import axiosInstance from "../../utils/axiosInstance.js";
-import { API_PATHS } from "../../constants/apiPaths";
+import { API_PATHS } from "../../constants/apiPaths.js";
 import QuestionCard from "./Cards/QuestionCard.jsx";
 import Drawer from "./Components/Drawer.jsx";
 import SkeletonLoader from "./Loader/SkeletonLoader.jsx";

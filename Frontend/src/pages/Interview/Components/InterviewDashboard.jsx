@@ -2,7 +2,7 @@ import React, { useRef, useState } from 'react';
 import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, ResponsiveContainer, RadialBarChart, RadialBar } from 'recharts';
 import { generateInterviewReportPDF } from '../Utils/pdfGenerator.js';
 import axiosInstance from '../../../utils/axiosInstance.js';
-import { API_PATHS } from '../../../constants/apiPaths';
+import { API_PATHS } from '../../../constants/apiPaths.js';
 import toast from 'react-hot-toast';
 import { 
   ChartBarIcon, 

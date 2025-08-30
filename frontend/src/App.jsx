@@ -3,7 +3,7 @@ import { Analytics } from "@vercel/analytics/react"
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 
-import LandingPage from "./pages/Home/LandingPage";
+import LandingPage from "./pages/Home/LandingPage.jsx";
 import UserProvider from "./context/userContext.jsx";
 import SpinnerLoader from "./pages/Preparation/Loader/SpinnerLoader.jsx";
 import ResumeViewPage from "./pages/Resume/ResumeViewPage.jsx";
@@ -66,31 +66,31 @@ class ErrorBoundary extends React.Component {
 
 // Lazy load components with proper error boundaries
 const Dashboard = React.lazy(() => 
-  import("./pages/Home/Dashboard").catch(() => {
+  import("./pages/Home/Dashboard.jsx").catch(() => {
     return { default: () => <div style={{padding: "20px", textAlign: "center"}}>Error loading Dashboard</div> };
   })
 );
 
 const InterviewPrep = React.lazy(() => 
-  import("./pages/Preparation/InterviewPrep").catch(() => {
+  import("./pages/Preparation/InterviewPrep.jsx").catch(() => {
     return { default: () => <div style={{padding: "20px", textAlign: "center"}}>Error loading Interview Prep</div> };
   })
 );
 
 const Record = React.lazy(() => 
-  import("./pages/Interview/HRInterview/Record").catch(() => {
+  import("./pages/Interview/HRInterview/Record.jsx").catch(() => {
     return { default: () => <div style={{padding: "20px", textAlign: "center"}}>Error loading Record</div> };
   })
 );
 
 const Admin = React.lazy(() => 
-  import("./pages/Admin/admin").catch(() => {
+  import("./pages/Admin/admin.jsx").catch(() => {
     return { default: () => <div style={{padding: "20px", textAlign: "center"}}>Error loading Admin</div> };
   })
 );
 
 const SessionInterview = React.lazy(() => 
-  import("./pages/Interview/SessionInterview/SessionInterview").catch(() => {
+  import("./pages/Interview/SessionInterview/SessionInterview.jsx").catch(() => {
     return { default: () => <div style={{padding: "20px", textAlign: "center"}}>Error loading Session Interview</div> };
   })
 );

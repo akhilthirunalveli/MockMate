@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import axiosInstance from "../../../utils/axiosInstance";
-import { API_PATHS } from "../../../constants/apiPaths";
+import axiosInstance from "../../../utils/axiosInstance.js";
+import { API_PATHS } from "../../../constants/apiPaths.js";
 import { useNavigate } from "react-router-dom";
 import { MdHome } from "react-icons/md";
 import Navbar from "../../Navbar/Navbar.jsx";

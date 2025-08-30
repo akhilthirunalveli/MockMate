@@ -1,7 +1,7 @@
 import React, { useState, useContext } from "react";
 import { UserContext } from "../../../context/userContext.jsx";
 import axiosInstance from "../../../utils/axiosInstance.js";
-import { API_PATHS } from "../../../constants/apiPaths";
+import { API_PATHS } from "../../../constants/apiPaths.js";
 import toast from "react-hot-toast";
 import { IoClose } from "react-icons/io5";
 import Input from "../../Home/Components/Input.jsx";
