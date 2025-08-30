@@ -12,6 +12,7 @@ import {
   RadialBar 
 } from 'recharts';
 import { generateInterviewReportPDF } from '../Utils/pdfGenerator.js';
+import { generateCustomInterviewPDF } from '../Utils/customPdfGenerator.js';
 import axiosInstance from '../../../utils/axiosInstance.js';
 import { API_PATHS } from '../../../constants/apiPaths.js';
 import toast from 'react-hot-toast';
@@ -69,12 +70,20 @@ const InterviewDashboard = ({ analysis, sessionStats, currentQuestion, transcrip
   }
 
   const handleDownloadPDF = async () => {
+    if (isGeneratingPDF) return; // Prevent multiple clicks
+    
     setIsGeneratingPDF(true);
-    const loadingToast = toast.loading('Generating PDF report...');
+    const loadingToast = toast.loading('Generating custom PDF report...');
 
     try {
-      // Generate detailed PDF report
-      const response = await axiosInstance.post(API_PATHS.AI.GENERATE_PDF_DATA, {
+      console.log('Starting PDF generation with data:', {
+        analysis,
+        question: currentQuestion,
+        transcript: transcript?.substring(0, 100) + '...' // Log first 100 chars
+      });
+
+      // Use custom PDF template with your design
+      const result = await generateCustomInterviewPDF({
         analysis,
         question: currentQuestion || 'Interview Question',
         transcript: transcript || '',
@@ -84,19 +93,34 @@ const InterviewDashboard = ({ analysis, sessionStats, currentQuestion, transcrip
         }
       });
 
-      if (response.data.success) {
-        const result = await generateInterviewReportPDF(response.data.data);
-        if (result.success) {
-          toast.success('PDF report downloaded successfully!');
-        } else {
-          throw new Error(result.message);
-        }
+      toast.dismiss(loadingToast);
+
+      if (result.success) {
+        toast.success(`Custom PDF report downloaded: ${result.fileName}`);
+        console.log('PDF generation successful:', result.fileName);
       } else {
-        throw new Error('Failed to generate PDF data');
+        throw new Error(result.message || 'Unknown error during PDF generation');
       }
     } catch (error) {
-      console.error('PDF generation error:', error);
-      toast.error(error.message || 'Failed to generate PDF report');
+      toast.dismiss(loadingToast);
+      console.error('Custom PDF generation error:', error);
+      console.error('Error details:', {
+        message: error.message,
+        stack: error.stack,
+        name: error.name
+      });
+      
+      // Provide specific error messages based on error type
+      let errorMessage = 'Failed to generate custom PDF report';
+      if (error.message?.includes('html2canvas')) {
+        errorMessage = 'PDF rendering failed. Please try again.';
+      } else if (error.message?.includes('jsPDF')) {
+        errorMessage = 'PDF creation failed. Please check your browser settings.';
+      } else if (error.message?.includes('Network')) {
+        errorMessage = 'Network error. Please check your connection.';
+      }
+      
+      toast.error(errorMessage);
     } finally {
       setIsGeneratingPDF(false);
       toast.dismiss(loadingToast);
