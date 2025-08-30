@@ -200,16 +200,16 @@ export const ConnectionStatus = ({ status, url }) => {
 };
 
 export const TabNavigation = ({ activeTab, setActiveTab, setLoadedTabs, tabs }) => (
-  <div style={{ 
-    marginBottom: "clamp(0.8rem, 2.5vw, 1.2rem)", 
-    display: "flex", 
-    flexWrap: "nowrap", 
-    gap: "clamp(0.3rem, 1.2vw, 0.4rem)",
-    width: "100%",
-    overflowX: "auto",
-    scrollbarWidth: "thin",
-    WebkitOverflowScrolling: "touch"
-  }}>
+  <div
+    style={{
+      marginBottom: "clamp(0.8rem, 2.5vw, 1.2rem)",
+      display: "flex",
+      flexWrap: "wrap",
+      gap: "clamp(0.3rem, 1.2vw, 0.4rem)",
+      width: "100%",
+      alignItems: "stretch"
+    }}
+  >
     {tabs.map(({ key, label, count }) => (
       <Button
         key={key}
@@ -218,19 +218,40 @@ export const TabNavigation = ({ activeTab, setActiveTab, setLoadedTabs, tabs }) 
           setActiveTab(key);
           setLoadedTabs(prev => new Set([...prev, key]));
         }}
-        // ...existing code...
-style={{
-  backgroundColor: activeTab === key ? "#000000ff" : "#353535ff",
-  border: "1px solid #000",
-  padding: "6px 12px",
-  fontSize: "0.85rem",
-  fontWeight: activeTab === key ? "600" : "500",
-  minWidth: 80
-}}
-// ...existing code...
+        style={{
+          backgroundColor: activeTab === key ? "#fff" : "#181818",
+          color: activeTab === key ? "#111" : "#fff",
+          border: activeTab === key ? "2px solid #fff" : "1.5px solid #333",
+          fontWeight: activeTab === key ? 700 : 500,
+          boxShadow: activeTab === key ? "0 2px 8px #0004" : "none",
+          padding: "8px 18px",
+          fontSize: "clamp(0.9rem, 2vw, 1.05rem)",
+          minWidth: 100,
+          flex: "1 1 120px",
+          transition: "all 0.18s"
+        }}
+        onMouseEnter={e => {
+          e.target.style.backgroundColor = activeTab === key ? "#fff" : "#222";
+          e.target.style.color = activeTab === key ? "#111" : "#fff";
+          e.target.style.border = activeTab === key ? "2px solid #fff" : "1.5px solid #555";
+        }}
+        onMouseLeave={e => {
+          e.target.style.backgroundColor = activeTab === key ? "#fff" : "#181818";
+          e.target.style.color = activeTab === key ? "#111" : "#fff";
+          e.target.style.border = activeTab === key ? "2px solid #fff" : "1.5px solid #333";
+        }}
       >
         {label}{count !== undefined ? ` (${count})` : ''}
       </Button>
     ))}
+    <style>{`
+      @media (max-width: 600px) {
+        .admin-tab-nav-btn {
+          min-width: 90px !important;
+          font-size: 0.98rem !important;
+          flex: 1 1 100px !important;
+        }
+      }
+    `}</style>
   </div>
 );
