@@ -3,7 +3,7 @@ import { Analytics } from "@vercel/analytics/react"
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 
-import LandingPage from "./pages/Home/LandingPage.jsx";
+import LandingPage from "./pages/Home/LandingPage";
 import UserProvider from "./context/userContext.jsx";
 import SpinnerLoader from "./pages/Preparation/Loader/SpinnerLoader.jsx";
 import ResumeViewPage from "./pages/Resume/ResumeViewPage.jsx";
