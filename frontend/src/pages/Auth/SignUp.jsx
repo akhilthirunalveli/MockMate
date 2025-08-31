@@ -1,4 +1,5 @@
 import React, { useContext, useState } from "react";
+import { PropagateLoader } from 'react-spinners';
 import { useNavigate } from "react-router-dom";
 import Input from "../Home/Components/Input.jsx";
 import { validateEmail } from "../Home/Utils/helper.js";
@@ -11,6 +12,7 @@ const SignUp = ({ setCurrentPage }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
+  const [signUpLoading, setSignUpLoading] = useState(false);
 
   const { updateUser } = useContext(UserContext);
   const navigate = useNavigate();
@@ -31,20 +33,24 @@ const SignUp = ({ setCurrentPage }) => {
   // Handle regular signup
   const handleSignUp = async (e) => {
     e.preventDefault();
+    setSignUpLoading(true);
     setError("");
 
     if (!fullName) {
       setError("Please enter full name.");
+      setSignUpLoading(false);
       return;
     }
 
     if (!validateEmail(email)) {
       setError("Please enter a valid email address.");
+      setSignUpLoading(false);
       return;
     }
 
     if (!password) {
       setError("Please enter the password");
+      setSignUpLoading(false);
       return;
     }
 
@@ -70,6 +76,8 @@ const SignUp = ({ setCurrentPage }) => {
       } else {
         setError("Something went wrong. Please try again.");
       }
+    } finally {
+      setSignUpLoading(false);
     }
   };
 
@@ -136,8 +144,14 @@ const SignUp = ({ setCurrentPage }) => {
 
         {error && <p className="text-red-500 text-xs pb-2.5">{error}</p>}
 
-        <button type="submit" className="btn-primary">
-          SIGN UP
+        <button type="submit" className="btn-primary" disabled={signUpLoading}>
+          <div className="flex items-center justify-center h-6">
+            {signUpLoading ? (
+              <PropagateLoader color="white" size={8} speedMultiplier={0.8} />
+            ) : (
+              "SIGN UP"
+            )}
+          </div>
         </button>
 
         <p className="text-[13px] text-slate-800 mt-3">

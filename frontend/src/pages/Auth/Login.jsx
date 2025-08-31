@@ -1,4 +1,5 @@
 import React, { useContext, useState } from "react";
+import { PropagateLoader } from 'react-spinners';
 import { useNavigate } from "react-router-dom";
 import Input from "../Home/Components/Input.jsx";
 import { validateEmail } from "../Home/Utils/helper.js";
@@ -112,7 +113,13 @@ const Login = ({ setCurrentPage }) => {
           {error && <p className="text-red-500 text-xs pb-2.5">{error}</p>}
 
           <button type="submit" className="btn-primary" disabled={loginLoading}>
-            {loginLoading ? "Logging in..." : "LOGIN"}
+            <div className="flex items-center justify-center h-6">
+              {loginLoading ? (
+                <PropagateLoader color="white" size={8} speedMultiplier={0.8} />
+              ) : (
+                "LOGIN"
+              )}
+            </div>
           </button>
 
           <p className="text-[13px] text-slate-800 mt-3">
