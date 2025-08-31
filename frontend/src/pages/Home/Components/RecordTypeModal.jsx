@@ -21,7 +21,7 @@ const RecordTypeModal = ({ isOpen, onClose, onSelect }) => {
 
       {/* Modal box with gradient background like Login.jsx */}
       <div 
-        className="w-[80vw] md:w-[45vw] lg:w-[40vw] p-10 flex flex-col justify-center rounded-lg shadow"
+        className="w-[80vw] md:w-[45vw] lg:w-[40vw] p-8 flex flex-col justify-center rounded-lg shadow"
         style={{
           background: "linear-gradient(120deg, #ff6a00, #ee0979, #00c3ff, rgb(0,74,25), rgb(0,98,80), #ff6a00)",
           backgroundSize: "300% 100%",
@@ -51,10 +51,10 @@ const RecordTypeModal = ({ isOpen, onClose, onSelect }) => {
               position: "absolute",
               top: -10,
               right: -10,
-              color: "#666",
+              color: "#2d2d2dff",
               width: 32,
               height: 32,
-              fontSize: 18,
+              fontSize: 28,
               cursor: "pointer",
               fontWeight: 700,
               transition: "all 0.15s",
@@ -81,9 +81,6 @@ const RecordTypeModal = ({ isOpen, onClose, onSelect }) => {
                 color: "#111",
                 fontWeight: 600,
                 fontSize: "1rem",
-                border: "1px solid rgba(0,0,0,0.2)",
-                boxShadow: "0 2px 10px rgba(2,6,23,0.05)",
-                transition: "all 0.16s",
                 cursor: "pointer",
                 display: "flex",
                 flexDirection: "column",
@@ -108,9 +105,6 @@ const RecordTypeModal = ({ isOpen, onClose, onSelect }) => {
                 color: "#111",
                 fontWeight: 600,
                 fontSize: "1rem",
-                border: "1px solid rgba(0,0,0,0.2)",
-                boxShadow: "0 2px 10px rgba(2,6,23,0.05)",
-                transition: "all 0.16s",
                 cursor: "pointer",
                 display: "flex",
                 flexDirection: "column",

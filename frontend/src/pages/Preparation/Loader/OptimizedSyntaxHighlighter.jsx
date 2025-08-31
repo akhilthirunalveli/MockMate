@@ -23,13 +23,6 @@ const OptimizedSyntaxHighlighter = ({ language, children, customStyle }) => {
   return (
     <div className="relative">
       <div className="absolute top-2 right-2 z-10">
-        <button
-          onClick={copyCode}
-          className="p-1 rounded bg-gray-700 text-white hover:bg-gray-600 transition-colors"
-          aria-label="Copy code"
-        >
-          {copied ? <LuCheck size={16} /> : <LuCopy size={16} />}
-        </button>
       </div>
       
       <Suspense 

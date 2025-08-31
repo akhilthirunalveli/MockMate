@@ -198,7 +198,7 @@ const InterviewPrep = () => {
                               onClick={uploadMoreQuestions}
                             >
                               {isUpdateLoader ? (
-                                <SpinnerLoader />
+                                <SpinnerLoader size={15} />
                               ) : (
                                 <LuListCollapse className="text-lg" />
                               )}{" "}
