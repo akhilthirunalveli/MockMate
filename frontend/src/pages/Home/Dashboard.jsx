@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext, lazy, Suspense } from "react";
 import { HashLoader } from 'react-spinners';
-import { LuPlus, LuLaptop } from "react-icons/lu";
+import { LuPlus, LuLaptop  } from "react-icons/lu";
 import { BsRecordCircle } from "react-icons/bs";
 import { IoDocumentTextOutline } from "react-icons/io5";
 import { CARD_BG } from "./Utils/data.js";
@@ -21,8 +21,8 @@ const DeleteAlertContent = lazy(() => import("../Preparation/Components/DeleteAl
 const ResumeLinkModal = lazy(() => import("../Resume/Modal/ResumeLinkModal.jsx"));
 
 const LoadingSpinner = () => (
-  <div 
-    style={{ 
+  <div
+    style={{
       background: 'transparent',
       minHeight: '100px',
       width: '100%',
@@ -121,18 +121,18 @@ const Dashboard = () => {
               <BsRecordCircle className="text-lg sm:text-xl text-black" />
               Record
             </button>
-      <RecordTypeModal
-        isOpen={openRecordTypeModal}
-        onClose={() => setOpenRecordTypeModal(false)}
-        onSelect={(type) => {
-          setOpenRecordTypeModal(false);
-          if (type === "hr") {
-            navigate("/interview/hr/record");
-          } else if (type === "session") {
-            navigate("/interview/session-interview");
-          }
-        }}
-      />
+            <RecordTypeModal
+              isOpen={openRecordTypeModal}
+              onClose={() => setOpenRecordTypeModal(false)}
+              onSelect={(type) => {
+                setOpenRecordTypeModal(false);
+                if (type === "hr") {
+                  navigate("/interview/hr/record");
+                } else if (type === "session") {
+                  navigate("/interview/session-interview");
+                }
+              }}
+            />
             <button
               className="h-10 sm:h-12 flex items-center justify-center gap-2 bg-white text-xs sm:text-sm font-semibold text-black px-4 sm:px-5 py-2 rounded-full transition-colors cursor-pointer"
               onClick={handleResumeClick}
