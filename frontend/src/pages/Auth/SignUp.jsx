@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { PropagateLoader } from 'react-spinners';
+import { SyncLoader } from 'react-spinners';
 import { useNavigate } from "react-router-dom";
 import Input from "../Home/Components/Input.jsx";
 import { validateEmail } from "../Home/Utils/helper.js";
@@ -147,7 +147,7 @@ const SignUp = ({ setCurrentPage }) => {
         <button type="submit" className="btn-primary" disabled={signUpLoading}>
           <div className="flex items-center justify-center h-6">
             {signUpLoading ? (
-              <PropagateLoader color="white" size={8} speedMultiplier={0.8} />
+              <SyncLoader color="white" size={8} speedMultiplier={0.8} />
             ) : (
               "SIGN UP"
             )}

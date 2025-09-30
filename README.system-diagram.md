@@ -53,9 +53,3 @@ flowchart TD
 - **External Services:** AI/ML APIs for interview analysis, and authentication provider (e.g., OAuth).
 
 ---
-
-Notes:
-- GitHub's Mermaid parser is sensitive to certain label characters and layout; quoting labels and using `flowchart TD` with safe node ids avoids common parse errors.
-- If rendering still fails on GitHub, view the diagram at https://mermaid.live by copying the mermaid block there.
-
-For more details, see the respective folders in the repository.

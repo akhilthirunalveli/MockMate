@@ -1,5 +1,6 @@
 const express = require('express');
-const { createSession, getSessionById, getMySessions, deleteSession, getAllSessions } = require('../controllers/sessionController');
+const { createSession, getSessionById, getMySessions, deleteSession, 
+getAllSessions } = require('../controllers/sessionController');
 const { protect } = require('../middlewares/authMiddleware');
 
 const router = express.Router();
