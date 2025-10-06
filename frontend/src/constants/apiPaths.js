@@ -6,6 +6,7 @@ export const API_PATHS = {
     LOGIN: "/api/auth/login", // Authenticate user & return JWT token
     GET_PROFILE: "/api/auth/profile", // Get logged-in user details
     UPDATE_RESUME_LINK: "/api/auth/resume-link", // Update resume link
+    GOOGLE: "/api/auth/google", // Google login/registration
   },
 
   IMAGE: {

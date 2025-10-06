@@ -1,3 +1,34 @@
+// @desc    Login/Register user via Google OAuth
+// @route   POST /api/auth/google
+// @access  Public
+const googleAuthUser = async (req, res) => {
+  try {
+    const { email, name, profileImageUrl } = req.body;
+    if (!email) {
+      return res.status(400).json({ message: "Email is required" });
+    }
+    let user = await User.findOne({ email });
+    if (!user) {
+      // Create new user with no password
+      user = await User.create({
+        name,
+        email,
+        profileImageUrl,
+        initials: generateInitials(name),
+      });
+    }
+    // Return user data with JWT
+    res.status(200).json({
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      profileImageUrl: user.profileImageUrl,
+      token: generateToken(user._id),
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
 const User = require("../models/User");
 const Session = require("../models/Session");
 const Question = require("../models/Question");
@@ -221,4 +252,4 @@ const updateResumeLink = async (req, res) => {
   }
 };
 
-module.exports = { registerUser, loginUser, getUserProfile, getAllUsers, deleteUser, updateResumeLink };
+module.exports = { registerUser, loginUser, getUserProfile, getAllUsers, deleteUser, updateResumeLink, googleAuthUser };

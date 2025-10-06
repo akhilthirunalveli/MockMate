@@ -93,6 +93,11 @@
   @apply w-full flex items-center justify-center gap-3 text-sm font-medium text-white bg-black  p-[10px] rounded-md my-1 cursor-pointer;
 }
 
+.btn-primary-google {
+  @apply w-full flex items-center justify-center gap-3 text-sm font-medium text-black bg-black p-[10px] rounded-full my-1 cursor-pointer;
+}
+
+
 .btn-small {
   @apply flex items-center justify-center gap-3 bg-black text-sm font-semibold text-white px-7 py-2 rounded-lg hover:bg-black hover:text-white transition-colors
 }
