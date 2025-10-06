@@ -9,7 +9,7 @@ const DashboardLayout = ({ children }) => {
       className="min-h-screen"
       style={{
         opacity: 1,
-        backgroundImage: "radial-gradient(#e5e5e5 0.5px,#080708 0.5px)",
+        backgroundImage: "radial-gradient(#e5e5e5 0.5px,#030202 0.5px)",
         backgroundSize: "21px 21px",
       }}
     >
