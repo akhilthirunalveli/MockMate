@@ -5,7 +5,7 @@ import { LuCopy, LuCheck } from "react-icons/lu";
 import { oneLight } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
 // Create stable lazy components
-const PrismHighlighter = lazy(() => 
+const PrismHighlighter = lazy(() =>
   import('react-syntax-highlighter').then(module => ({
     default: module.Prism
   }))
@@ -24,12 +24,12 @@ const OptimizedSyntaxHighlighter = ({ language, children, customStyle }) => {
     <div className="relative">
       <div className="absolute top-2 right-2 z-10">
       </div>
-      
-      <Suspense 
+
+      <Suspense
         fallback={
-          <pre 
-            className="bg-transparent p-4 rounded text-sm overflow-x-auto" 
-            style={{ 
+          <pre
+            className="bg-transparent p-4 rounded text-sm overflow-x-auto"
+            style={{
               background: 'transparent',
               border: 'none',
               color: 'rgba(107, 114, 128, 0.5)'
@@ -39,9 +39,9 @@ const OptimizedSyntaxHighlighter = ({ language, children, customStyle }) => {
           </pre>
         }
       >
-        <PrismHighlighter 
-          language={language} 
-          style={oneLight} 
+        <PrismHighlighter
+          language={language}
+          style={oneLight}
           customStyle={{
             fontSize: 12.5,
             margin: 0,

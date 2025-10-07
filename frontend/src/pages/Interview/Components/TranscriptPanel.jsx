@@ -2,16 +2,16 @@ import React, { useRef, useEffect, useState } from 'react';
 import axiosInstance from '../../../utils/axiosInstance.js';
 import { API_PATHS } from '../../../constants/apiPaths.js';
 
-const TranscriptPanel = ({ 
-  transcript, 
-  interimTranscript, 
-  speechSupported, 
-  micOn, 
-  isListening, 
+const TranscriptPanel = ({
+  transcript,
+  interimTranscript,
+  speechSupported,
+  micOn,
+  isListening,
   accuracy,
   language,
-  clearTranscript, 
-  downloadTranscript, 
+  clearTranscript,
+  downloadTranscript,
   correctTranscript,
   changeLanguage,
   currentQuestion,
@@ -135,7 +135,7 @@ const TranscriptPanel = ({
               <option value="zh-CN">Chinese</option>
             </select>
           )}
-          
+
           {speechSupported && micOn && (
             <div className="flex items-center gap-2">
               <div className="flex items-center gap-1">
@@ -144,7 +144,7 @@ const TranscriptPanel = ({
                   {isListening ? 'Listening...' : 'Ready'}
                 </span>
               </div>
-              
+
               {speechError && (
                 <button
                   onClick={manualRestart}
@@ -158,7 +158,7 @@ const TranscriptPanel = ({
           )}
         </div>
       </div>
-      
+
       <div className="flex-1 text-white text-sm leading-relaxed overflow-y-auto max-h-96 pr-2 scroll-smooth" id="transcript-container">
         {isEditing ? (
           <div className="space-y-2">
@@ -195,7 +195,7 @@ const TranscriptPanel = ({
                     ))}
                   </div>
                 )}
-                
+
                 {/* Interim transcript (real-time typing) */}
                 {interimTranscript && (
                   <div className="text-gray-300 italic opacity-75 border-l-2 border-blue-400 pl-2">
@@ -203,7 +203,7 @@ const TranscriptPanel = ({
                     <span className="animate-pulse">|</span>
                   </div>
                 )}
-                
+
                 {/* Auto-scroll target */}
                 <div ref={transcriptEndRef} />
               </div>
@@ -233,7 +233,7 @@ const TranscriptPanel = ({
           </>
         )}
       </div>
-      
+
       {/* Transcript Controls */}
       <div className="flex justify-between items-center mt-4 pt-4 border-t border-gray-700">
         <div className="text-xs text-gray-400">
@@ -276,14 +276,14 @@ const TranscriptPanel = ({
           )}
         </div>
       </div>
-      
+
       {/* Cleanup Error */}
       {cleanupError && (
         <div className="mt-2 p-2 bg-red-900/20 border border-red-600 rounded text-xs">
           <span className="text-red-400">❌ {cleanupError}</span>
         </div>
       )}
-      
+
       {/* Accuracy Tips */}
       {speechSupported && accuracy > 0 && accuracy < 70 && (
         <div className="mt-2 p-3 bg-yellow-900/20 border border-yellow-600 rounded text-xs">

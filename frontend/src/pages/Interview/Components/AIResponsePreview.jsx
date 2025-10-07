@@ -4,10 +4,10 @@ import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import OptimizedSyntaxHighlighter from '../../Preparation/Loader/OptimizedSyntaxHighlighter.jsx';
 
-const AIResponsePreview = ({content}) => {
-    if(!content) return null
+const AIResponsePreview = ({ content }) => {
+  if (!content) return null
   return (
-     <div className="max-w-4xl mx-auto">
+    <div className="max-w-4xl mx-auto">
       <div className="text-[14px] prose prose-slate dark:prose-invert max-w-none">
         <ReactMarkdown
           remarkPlugins={[remarkGfm]}
@@ -15,9 +15,9 @@ const AIResponsePreview = ({content}) => {
             code({ node, className, children, ...props }) {
               const match = /language-(\w+)/.exec(className || '');
               const language = match ? match[1] : '';
-        
+
               const isInline = !className;
-        
+
               return !isInline ? (
                 <CodeBlock
                   code={String(children).replace(/\n$/, '')}
@@ -114,35 +114,35 @@ function CodeBlock({ code, language }) {
   };
 
   return <div className="relative my-6 rounded-lg overflow-hidden bg-gray-50 border border-gray-200">
-      <div className="flex items-center justify-between px-4 py-2 bg-gray-100 border-b border-gray-200">
-        <div className="flex items-center space-x-2">
-          <LuCode size={16} className="text-gray-500" />
-          <span className="text-xs font-semibold text-gray-600 uppercase tracking-wide">
-            {language || 'Code'}
-          </span>
-        </div>
-        <button
-          onClick={copyCode}
-          className="text-gray-500 hover:text-gray-700 focus:outline-none relative group"
-          aria-label="Copy code"
-        >
-          {copied ? (
-            <LuCheck size={16} className="text-green-600" />
-          ) : (
-            <LuCopy size={16} />
-          )}
-          {copied && (
-            <span className="absolute -top-8 right-0 bg-black text-white text-xs rounded-md px-2 py-1 opacity-80 group-hover:opacity-100 transition">
-              Copied!
-            </span>
-          )}
-        </button>
+    <div className="flex items-center justify-between px-4 py-2 bg-gray-100 border-b border-gray-200">
+      <div className="flex items-center space-x-2">
+        <LuCode size={16} className="text-gray-500" />
+        <span className="text-xs font-semibold text-gray-600 uppercase tracking-wide">
+          {language || 'Code'}
+        </span>
       </div>
-
-      <OptimizedSyntaxHighlighter language={language}>
-        {code}
-      </OptimizedSyntaxHighlighter>
+      <button
+        onClick={copyCode}
+        className="text-gray-500 hover:text-gray-700 focus:outline-none relative group"
+        aria-label="Copy code"
+      >
+        {copied ? (
+          <LuCheck size={16} className="text-green-600" />
+        ) : (
+          <LuCopy size={16} />
+        )}
+        {copied && (
+          <span className="absolute -top-8 right-0 bg-black text-white text-xs rounded-md px-2 py-1 opacity-80 group-hover:opacity-100 transition">
+            Copied!
+          </span>
+        )}
+      </button>
     </div>
+
+    <OptimizedSyntaxHighlighter language={language}>
+      {code}
+    </OptimizedSyntaxHighlighter>
+  </div>
 }
 
 

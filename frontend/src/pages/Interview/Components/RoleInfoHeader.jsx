@@ -55,7 +55,7 @@ const RoleInfoHeader = ({
 
           {Array.from({ length: 8 }).map((_, row) => (
             <div key={row} style={{ width: "90%", display: "flex", justifyContent: "center" }}>
-              {Array.from({length: 15}).map((_, col) => (
+              {Array.from({ length: 15 }).map((_, col) => (
                 <span key={col} style={{ margin: "0 8px 5px 6px" }}>MOCKMATE</span>
               ))}
             </div>

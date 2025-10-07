@@ -7,8 +7,8 @@ const SpinnerLoader = ({ transparent = false, size = 40, color = 'black' }) => {
 
   if (transparent) {
     return (
-      <div 
-        style={{ 
+      <div
+        style={{
           background: 'transparent',
           minHeight: '50px',
           width: '100%',

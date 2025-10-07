@@ -1,15 +1,15 @@
 import React, { useRef, useState } from 'react';
-import { 
-  PieChart, 
-  Pie, 
-  Cell, 
-  BarChart, 
-  Bar, 
-  XAxis, 
-  YAxis, 
-  ResponsiveContainer, 
-  RadialBarChart, 
-  RadialBar 
+import {
+  PieChart,
+  Pie,
+  Cell,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  ResponsiveContainer,
+  RadialBarChart,
+  RadialBar
 } from 'recharts';
 import { generateInterviewReportPDF } from '../Utils/pdfGenerator.js';
 import { generateCustomInterviewPDF } from '../Utils/customPdfGenerator.js';
@@ -71,7 +71,7 @@ const InterviewDashboard = ({ analysis, sessionStats, currentQuestion, transcrip
 
   const handleDownloadPDF = async () => {
     if (isGeneratingPDF) return; // Prevent multiple clicks
-    
+
     setIsGeneratingPDF(true);
     const loadingToast = toast.loading('Generating custom PDF report...');
 
@@ -109,7 +109,7 @@ const InterviewDashboard = ({ analysis, sessionStats, currentQuestion, transcrip
         stack: error.stack,
         name: error.name
       });
-      
+
       // Provide specific error messages based on error type
       let errorMessage = 'Failed to generate custom PDF report';
       if (error.message?.includes('html2canvas')) {
@@ -119,7 +119,7 @@ const InterviewDashboard = ({ analysis, sessionStats, currentQuestion, transcrip
       } else if (error.message?.includes('Network')) {
         errorMessage = 'Network error. Please check your connection.';
       }
-      
+
       toast.error(errorMessage);
     } finally {
       setIsGeneratingPDF(false);
@@ -183,14 +183,14 @@ const InterviewDashboard = ({ analysis, sessionStats, currentQuestion, transcrip
           <div className="h-40">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={skillsData} margin={{ top: 5, right: 5, left: 5, bottom: 5 }}>
-                <XAxis 
-                  dataKey="skill" 
-                  tick={{ fontSize: 10, fill: '#9CA3AF' }} 
+                <XAxis
+                  dataKey="skill"
+                  tick={{ fontSize: 10, fill: '#9CA3AF' }}
                   axisLine={false}
                   tickLine={false}
                 />
-                <YAxis 
-                  domain={[0, 10]} 
+                <YAxis
+                  domain={[0, 10]}
                   tick={{ fontSize: 10, fill: '#9CA3AF' }}
                   axisLine={false}
                   tickLine={false}
@@ -236,9 +236,9 @@ const InterviewDashboard = ({ analysis, sessionStats, currentQuestion, transcrip
           <h4 className="text-white font-semibold mb-4">Detailed Skills Analysis</h4>
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart 
-                data={skillsData} 
-                layout="horizontal" 
+              <BarChart
+                data={skillsData}
+                layout="horizontal"
                 margin={{ top: 5, right: 30, left: 60, bottom: 5 }}
               >
                 <XAxis type="number" domain={[0, 10]} tick={{ fontSize: 12, fill: '#9CA3AF' }} />
@@ -260,7 +260,7 @@ const InterviewDashboard = ({ analysis, sessionStats, currentQuestion, transcrip
                   <span className="text-white font-medium">{skill.score.toFixed(1)}/10</span>
                 </div>
                 <div className="w-full bg-gray-700 rounded-full h-2">
-                  <div 
+                  <div
                     className="bg-white h-2 rounded-full transition-all duration-1000 ease-out"
                     style={{ width: `${(skill.score / 10) * 100}%` }}
                   ></div>
@@ -277,14 +277,14 @@ const InterviewDashboard = ({ analysis, sessionStats, currentQuestion, transcrip
         <div className="h-64">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={benchmarkData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
-              <XAxis 
-                dataKey="category" 
-                tick={{ fontSize: 12, fill: '#9CA3AF' }} 
+              <XAxis
+                dataKey="category"
+                tick={{ fontSize: 12, fill: '#9CA3AF' }}
                 axisLine={false}
                 tickLine={false}
               />
-              <YAxis 
-                domain={[0, 10]} 
+              <YAxis
+                domain={[0, 10]}
                 tick={{ fontSize: 12, fill: '#9CA3AF' }}
                 axisLine={false}
                 tickLine={false}

@@ -4,14 +4,12 @@ const Modal = ({ children, isOpen, onClose, title, hideHeader, isDark, isLoading
   if (!isOpen) return null;
 
   return (
-    <div className={`fixed inset-0 z-50 flex justify-center items-center w-full h-full ${
-      isLoading ? 'bg-transparent' : (isDark ? 'bg-black/20' : 'bg-black/10')
-    }`}>
+    <div className={`fixed inset-0 z-50 flex justify-center items-center w-full h-full ${isLoading ? 'bg-transparent' : (isDark ? 'bg-black/20' : 'bg-black/10')
+      }`}>
       {/* Modal Content */}
       <div
-        className={`relative flex flex-col shadow-lg rounded-lg overflow-hidden ${
-          isLoading ? 'bg-transparent shadow-none' : (isDark ? 'bg-transparent' : 'bg-white')
-        }`}
+        className={`relative flex flex-col shadow-lg rounded-lg overflow-hidden ${isLoading ? 'bg-transparent shadow-none' : (isDark ? 'bg-transparent' : 'bg-white')
+          }`}
       >
         {/* Modal Header */}
         {!hideHeader && (

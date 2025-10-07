@@ -20,12 +20,12 @@ const SignUp = ({ setCurrentPage }) => {
   // Helper function to generate initials from full name
   const generateInitials = (name) => {
     if (!name) return "U"; // Default fallback
-    
+
     const words = name.trim().split(" ");
     if (words.length === 1) {
       return words[0].charAt(0).toUpperCase();
     }
-    
+
     // Take first letter of first name and first letter of last name
     return (words[0].charAt(0) + words[words.length - 1].charAt(0)).toUpperCase();
   };
@@ -56,7 +56,7 @@ const SignUp = ({ setCurrentPage }) => {
 
     try {
       const profileImageUrl = generateInitials(fullName);
-      
+
       const response = await axiosInstance.post(API_PATHS.AUTH.REGISTER, {
         name: fullName,
         email,

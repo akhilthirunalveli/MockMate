@@ -26,25 +26,25 @@ export const Card = ({ children, style = {}, ...props }) => (
 
 export const StatsCard = ({ value, label, subtitle, color }) => (
   <Card style={{ textAlign: "center" }}>
-    <div style={{ 
-      color, 
+    <div style={{
+      color,
       fontSize: "clamp(2rem, 6vw, 3rem)",
       fontWeight: "700",
       marginBottom: "0.5rem"
     }}>
       {value}
     </div>
-    <div style={{ 
-      color: "#ccc", 
-      fontSize: "clamp(0.9rem, 2.5vw, 1.1rem)", 
-      fontWeight: "500" 
+    <div style={{
+      color: "#ccc",
+      fontSize: "clamp(0.9rem, 2.5vw, 1.1rem)",
+      fontWeight: "500"
     }}>
       {label}
     </div>
-    <div style={{ 
-      color: "#888", 
-      fontSize: "clamp(0.8rem, 2vw, 0.9rem)", 
-      marginTop: "0.5rem" 
+    <div style={{
+      color: "#888",
+      fontSize: "clamp(0.8rem, 2vw, 0.9rem)",
+      marginTop: "0.5rem"
     }}>
       {subtitle}
     </div>
@@ -53,8 +53,8 @@ export const StatsCard = ({ value, label, subtitle, color }) => (
 
 export const ChartCard = ({ title, children, height = "clamp(250px, 40vw, 300px)" }) => (
   <Card>
-    <h3 style={{ 
-      color: "white", 
+    <h3 style={{
+      color: "white",
       marginBottom: "1rem",
       fontFamily: baseStyles.fontFamily,
       fontWeight: "500",
@@ -69,13 +69,13 @@ export const ChartCard = ({ title, children, height = "clamp(250px, 40vw, 300px)
   </Card>
 );
 
-export const Button = ({ 
-  children, 
-  onClick, 
-  variant = "primary", 
-  disabled = false, 
+export const Button = ({
+  children,
+  onClick,
+  variant = "primary",
+  disabled = false,
   style = {},
-  ...props 
+  ...props
 }) => {
   const variants = {
     primary: { backgroundColor: "#007bff", hoverColor: "#0056b3" },
@@ -119,10 +119,10 @@ export const Button = ({
 };
 
 export const SkeletonLoader = ({ height = "clamp(250px, 40vw, 300px)" }) => (
-  <div style={{ 
-    width: "100%", 
-    height, 
-    backgroundColor: "#2a2a2a", 
+  <div style={{
+    width: "100%",
+    height,
+    backgroundColor: "#2a2a2a",
     borderRadius: "clamp(6px, 2vw, 8px)",
     display: "flex",
     alignItems: "center",
@@ -147,12 +147,12 @@ export const CardSkeleton = () => (
       { height: "clamp(14px, 4vw, 18px)", width: "70%" },
       { height: "clamp(12px, 3.5vw, 16px)", width: "50%" }
     ].map((style, index) => (
-      <div 
+      <div
         key={index}
-        style={{ 
-          height: style.height, 
-          backgroundColor: "#333", 
-          borderRadius: "clamp(3px, 1vw, 4px)", 
+        style={{
+          height: style.height,
+          backgroundColor: "#333",
+          borderRadius: "clamp(3px, 1vw, 4px)",
           marginBottom: "clamp(0.4rem, 2vw, 0.6rem)",
           width: style.width
         }}
@@ -169,10 +169,10 @@ export const ConnectionStatus = ({ status, url }) => {
   };
   const config = statusConfig[status] || statusConfig.testing;
   return (
-    <div style={{ 
-      marginBottom: "clamp(0.6rem, 2vw, 0.8rem)", 
-      padding: "clamp(0.4rem, 2vw, 0.6rem) clamp(0.6rem, 2.5vw, 0.8rem)", 
-      borderRadius: "clamp(6px, 1.5vw, 10px)", 
+    <div style={{
+      marginBottom: "clamp(0.6rem, 2vw, 0.8rem)",
+      padding: "clamp(0.4rem, 2vw, 0.6rem) clamp(0.6rem, 2.5vw, 0.8rem)",
+      borderRadius: "clamp(6px, 1.5vw, 10px)",
       backgroundColor: config.color,
       color: "white",
       fontSize: "clamp(0.7rem, 2vw, 0.8rem)",
@@ -184,8 +184,8 @@ export const ConnectionStatus = ({ status, url }) => {
           Backend: {config.icon} {config.text}
         </div>
         {status === "connected" && url && (
-          <div style={{ 
-            fontSize: "clamp(0.6rem, 1.6vw, 0.7rem)", 
+          <div style={{
+            fontSize: "clamp(0.6rem, 1.6vw, 0.7rem)",
             opacity: "0.85",
             wordBreak: "break-all",
             fontWeight: "400",

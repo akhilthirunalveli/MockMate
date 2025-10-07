@@ -73,7 +73,7 @@ const QuestionCard = ({
 
             <button
               className="text-gray-400 hover:text-gray-500 cursor-pointer"
-              onClick={toggleExpand}
+              onClFick={toggleExpand}
             >
               <LuChevronDown
                 size={20}

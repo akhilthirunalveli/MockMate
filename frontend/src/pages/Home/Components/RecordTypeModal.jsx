@@ -1,6 +1,6 @@
 import React from "react";
 import { createPortal } from "react-dom";
-import { BsPerson, BsPeople } from "react-icons/bs";
+import { BsPerson, BsPeople, BsCast } from "react-icons/bs";
 
 const RecordTypeModal = ({ isOpen, onClose, onSelect }) => {
   if (!isOpen) return null;
@@ -118,6 +118,42 @@ const RecordTypeModal = ({ isOpen, onClose, onSelect }) => {
             >
               <BsPeople size={40} />
               <span>Session Interview</span>
+            </button>
+
+            <button
+              style={{
+                width: 160,
+                height: 160,
+                borderRadius: 12,
+                background: "transparent",
+                color: "#4c4c4c31",
+                fontWeight: 600,
+                fontSize: "1rem",
+                cursor: "pointer",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+                textAlign: "center",
+                padding: 20,
+                gap: 12
+              }}
+              onClick={() => onSelect("")}
+            >
+              <BsCast size={40} />
+              <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 4 }}>
+                <span>Live Interview</span>
+                <span style={{
+                  fontSize: "0.7rem",
+                  padding: "2px 8px",
+                  backgroundColor: "rgba(0, 0, 0, 0.6)",
+                  borderRadius: "12px",
+                  color: "#eaeaeaff",
+                  fontWeight: "500"
+                }}>
+                  Coming Soon
+                </span>
+              </div>
             </button>
           </div>
         </div>

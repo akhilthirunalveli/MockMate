@@ -81,16 +81,16 @@ const ProfileInfoCard = () => {
                 onError={() => setImageError(true)}
               />
             ) : (
-              <div 
+              <div
                 className="w-10 h-10 rounded-full mr-3 flex items-center justify-center text-white font-bold text-lg"
-                style={{ 
-                  backgroundColor: user?.name ? 
+                style={{
+                  backgroundColor: user?.name ?
                     ['#EF4444', '#F97316', '#F59E0B', '#84CC16', '#22C55E', '#10B981', '#06B6D4', '#3B82F6', '#8B5CF6', '#EC4899'][
-                      Math.abs(user.name.split('').reduce((a, b) => a + b.charCodeAt(0), 0)) % 10
+                    Math.abs(user.name.split('').reduce((a, b) => a + b.charCodeAt(0), 0)) % 10
                     ] : '#6B7280'
                 }}
               >
-                {user?.name ? 
+                {user?.name ?
                   (() => {
                     const words = user.name.trim().split(' ').filter(word => word.length > 0);
                     if (words.length === 0) return 'U';
@@ -145,16 +145,16 @@ const ProfileInfoCard = () => {
                     onError={() => setImageError(true)}
                   />
                 ) : (
-                  <div 
+                  <div
                     className="w-16 h-16 rounded-full flex items-center justify-center text-white font-bold text-2xl mb-4"
-                    style={{ 
-                      backgroundColor: user?.name ? 
+                    style={{
+                      backgroundColor: user?.name ?
                         ['#EF4444', '#F97316', '#F59E0B', '#84CC16', '#22C55E', '#10B981', '#06B6D4', '#3B82F6', '#8B5CF6', '#EC4899'][
-                          Math.abs(user.name.split('').reduce((a, b) => a + b.charCodeAt(0), 0)) % 10
+                        Math.abs(user.name.split('').reduce((a, b) => a + b.charCodeAt(0), 0)) % 10
                         ] : '#6B7280'
                     }}
                   >
-                    {user?.name ? 
+                    {user?.name ?
                       (() => {
                         const words = user.name.trim().split(' ').filter(word => word.length > 0);
                         if (words.length === 0) return 'U';

@@ -49,7 +49,7 @@ const SummaryCard = ({
       }}>
       <div className="pointer-events-none absolute inset-0 z-0 transition-all duration-300 group-hover:bg-white/10" style={{
         background: "linear-gradient(135deg,rgba(255, 255, 255, 0) 0%,rgba(255, 255, 255, 0) 100%)"
-      }}/>
+      }} />
       {onDelete && (
         <button
           className="absolute top-2 sm:top-3 right-2 sm:right-3 w-8 h-8 sm:w-7 sm:h-7 flex items-center justify-center rounded-full bg-red-900 hover:bg-red-600 text-white text-xs font-bold shadow transition z-20 opacity-0 group-hover:opacity-100"

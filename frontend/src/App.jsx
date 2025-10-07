@@ -41,7 +41,7 @@ class ErrorBoundary extends React.Component {
             <p style={{ marginBottom: "20px" }}>
               There was an error loading this page. Please try refreshing.
             </p>
-            <button 
+            <button
               onClick={() => window.location.reload()}
               style={{
                 padding: "12px 24px",
@@ -65,33 +65,33 @@ class ErrorBoundary extends React.Component {
 }
 
 // Lazy load components with proper error boundaries
-const Dashboard = React.lazy(() => 
+const Dashboard = React.lazy(() =>
   import("./pages/Home/Dashboard.jsx").catch(() => {
-    return { default: () => <div style={{padding: "20px", textAlign: "center"}}>Error loading Dashboard</div> };
+    return { default: () => <div style={{ padding: "20px", textAlign: "center" }}>Error loading Dashboard</div> };
   })
 );
 
-const InterviewPrep = React.lazy(() => 
+const InterviewPrep = React.lazy(() =>
   import("./pages/Preparation/InterviewPrep.jsx").catch(() => {
-    return { default: () => <div style={{padding: "20px", textAlign: "center"}}>Error loading Interview Prep</div> };
+    return { default: () => <div style={{ padding: "20px", textAlign: "center" }}>Error loading Interview Prep</div> };
   })
 );
 
-const Record = React.lazy(() => 
+const Record = React.lazy(() =>
   import("./pages/Interview/HRInterview/Record.jsx").catch(() => {
-    return { default: () => <div style={{padding: "20px", textAlign: "center"}}>Error loading Record</div> };
+    return { default: () => <div style={{ padding: "20px", textAlign: "center" }}>Error loading Record</div> };
   })
 );
 
-const Admin = React.lazy(() => 
+const Admin = React.lazy(() =>
   import("./pages/Admin/admin.jsx").catch(() => {
-    return { default: () => <div style={{padding: "20px", textAlign: "center"}}>Error loading Admin</div> };
+    return { default: () => <div style={{ padding: "20px", textAlign: "center" }}>Error loading Admin</div> };
   })
 );
 
-const SessionInterview = React.lazy(() => 
+const SessionInterview = React.lazy(() =>
   import("./pages/Interview/SessionInterview/SessionInterview.jsx").catch(() => {
-    return { default: () => <div style={{padding: "20px", textAlign: "center"}}>Error loading Session Interview</div> };
+    return { default: () => <div style={{ padding: "20px", textAlign: "center" }}>Error loading Session Interview</div> };
   })
 );
 
@@ -106,10 +106,10 @@ const App = () => {
                 <Route path="/" element={<LandingPage />} />
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/admin" element={<Admin />} />
-                <Route path="/interview-prep/:sessionId" element={<InterviewPrep />}/>
-                <Route path="/interview/hr/record" element={<Record />}/>
+                <Route path="/interview-prep/:sessionId" element={<InterviewPrep />} />
+                <Route path="/interview/hr/record" element={<Record />} />
                 <Route path="/interview/session-interview" element={<SessionInterview />} />
-                <Route path="/interview-prep/record" element={<Record />}/>
+                <Route path="/interview-prep/record" element={<Record />} />
                 <Route path="/resume-view" element={<ResumeViewPage />} />
                 <Route path="/interview-prep/session-interview" element={<SessionInterview />} />
               </Routes>
@@ -125,7 +125,7 @@ const App = () => {
             }}
           />
         </Router>
-        <Analytics/>
+        <Analytics />
       </UserProvider>
     </ErrorBoundary>
   );

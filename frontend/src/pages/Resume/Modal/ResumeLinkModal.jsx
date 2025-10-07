@@ -127,7 +127,7 @@ const ResumeLinkModal = ({ onClose, onSave }) => {
       </p>
         {user?.resumeLink && !isEditing ? (
           <div className="flex flex-col gap-3 mt-2">
-            <div className=" border border-gray-100 rounded-lg px-4 py-3 flex flex-col items-center">
+            <div className=" rounded-lg px-4 py-3 flex flex-col items-center">
               <span className="text-xs text-gray-600 mb-1">Current Resume Link:</span>
               <span className="text-black break-all font-medium text-base text-center">{user.resumeLink}</span>
             </div>

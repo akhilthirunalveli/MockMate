@@ -15,7 +15,7 @@ const QuestionsTab = ({ groupedQuestions, expandedGroups, toggleGroupExpansion }
     }}>
       Questions by User
     </h2>
-    <div style={{ 
+    <div style={{
       display: "flex",
       flexDirection: "column",
       gap: "1rem"

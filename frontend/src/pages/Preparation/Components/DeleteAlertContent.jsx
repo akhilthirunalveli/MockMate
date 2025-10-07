@@ -1,6 +1,6 @@
 import React from 'react'
 
-const DeleteAlertContent = ({content, onDelete}) => {
+const DeleteAlertContent = ({ content, onDelete }) => {
   return (
     <div className="p-5">
       <p className="text-[14px]">{content}</p>

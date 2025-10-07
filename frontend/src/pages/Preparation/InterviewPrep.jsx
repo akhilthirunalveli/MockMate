@@ -134,7 +134,7 @@ const InterviewPrep = () => {
       fetchSessionDetailsById();
     }
 
-    return () => {};
+    return () => { };
   }, []);
   return (
     <DashboardLayout>
@@ -156,9 +156,8 @@ const InterviewPrep = () => {
 
         <div className="grid grid-cols-12 gap-4 mt-5 mb-10">
           <div
-            className={`col-span-12 ${
-              openLeanMoreDrawer ? "md:col-span-7" : "md:col-span-8"
-            } `}
+            className={`col-span-12 ${openLeanMoreDrawer ? "md:col-span-7" : "md:col-span-8"
+              } `}
           >
             <AnimatePresence>
               {sessionData?.questions?.map((data, index) => {

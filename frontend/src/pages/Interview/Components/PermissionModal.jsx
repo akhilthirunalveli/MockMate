@@ -33,7 +33,7 @@ const PermissionModal = ({ permissionGranted, errorMessage, audioOnly, hasAttemp
               No camera detected. Your interview will be recorded with audio only.
             </p>
           </div>
-          
+
           <div className="text-left mb-6">
             <p className="text-gray-300 mb-3">What this means:</p>
             <ul className="text-sm text-gray-300 space-y-2">
@@ -63,16 +63,16 @@ const PermissionModal = ({ permissionGranted, errorMessage, audioOnly, hasAttemp
               </li>
             </ul>
           </div>
-          
+
           <div className="flex gap-3 justify-center">
-            <button 
-              onClick={handleContinueAudioOnly} 
+            <button
+              onClick={handleContinueAudioOnly}
               className="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition-colors"
             >
               Continue Audio-Only
             </button>
-            <button 
-              onClick={handleRetry} 
+            <button
+              onClick={handleRetry}
               className="bg-white text-black px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
             >
               Refresh Page
@@ -128,7 +128,7 @@ const PermissionModal = ({ permissionGranted, errorMessage, audioOnly, hasAttemp
               </p>
             )}
           </div>
-          
+
           <div className="text-left mb-6">
             <p className="text-gray-300 mb-3">To fix this issue:</p>
             <ul className="text-sm text-gray-300 space-y-2">
@@ -142,16 +142,16 @@ const PermissionModal = ({ permissionGranted, errorMessage, audioOnly, hasAttemp
               ))}
             </ul>
           </div>
-          
+
           <div className="flex gap-3 justify-center">
-            <button 
-              onClick={handleRetry} 
+            <button
+              onClick={handleRetry}
               className="bg-white text-black px-6 py-2 rounded-lg hover:bg-gray-200 transition-colors"
             >
               Try Again
             </button>
-            <button 
-              onClick={() => window.close()} 
+            <button
+              onClick={() => window.close()}
               className="bg-red-900 text-white px-6 py-2 rounded-lg hover:bg-gray-700 transition-colors"
             >
               Cancel

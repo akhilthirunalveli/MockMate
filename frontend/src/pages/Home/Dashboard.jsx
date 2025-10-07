@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext, lazy, Suspense } from "react";
 import { HashLoader } from 'react-spinners';
-import { LuPlus, LuLaptop  } from "react-icons/lu";
+import { LuPlus, LuLaptop } from "react-icons/lu";
 import { BsRecordCircle } from "react-icons/bs";
 import { IoDocumentTextOutline } from "react-icons/io5";
 import { CARD_BG } from "./Utils/data.js";
@@ -108,18 +108,20 @@ const Dashboard = () => {
         <div className="fixed bottom-6 sm:bottom-10 md:bottom-20 left-1/2 -translate-x-1/2 flex gap-2 sm:gap-4">
           <div className="bg-black/10 backdrop-blur-md p-2 rounded-full flex gap-2 sm:gap-3 border border-gray-200/50">
             <button
-              className="h-10 sm:h-12 flex items-center justify-center gap-2 bg-white text-xs sm:text-sm font-semibold text-black px-4 sm:px-5 py-2 rounded-full transition-colors cursor-pointer"
+              className="h-10 sm:h-12 flex items-center justify-center gap-2 bg-white text-black rounded-full transition-colors cursor-pointer px-4 sm:px-5 py-2 text-xs sm:text-sm font-semibold"
               onClick={() => setOpenCreateModal(true)}
+              title="Add Session"
             >
               <LuPlus className="text-lg sm:text-xl text-black" />
-              Add Session
+              <span className="hidden sm:inline">Add Session</span>
             </button>
             <button
-              className="h-10 sm:h-12 flex items-center justify-center gap-2 bg-white text-xs sm:text-sm font-semibold text-black px-4 sm:px-5 py-2 rounded-full transition-colors cursor-pointer"
+              className="h-10 sm:h-12 flex items-center justify-center gap-2 bg-white text-black rounded-full transition-colors cursor-pointer px-4 sm:px-5 py-2 text-xs sm:text-sm font-semibold"
               onClick={() => setOpenRecordTypeModal(true)}
+              title="Record"
             >
               <BsRecordCircle className="text-lg sm:text-xl text-black" />
-              Record
+              <span className="hidden sm:inline">Record</span>
             </button>
             <RecordTypeModal
               isOpen={openRecordTypeModal}
@@ -134,12 +136,12 @@ const Dashboard = () => {
               }}
             />
             <button
-              className="h-10 sm:h-12 flex items-center justify-center gap-2 bg-white text-xs sm:text-sm font-semibold text-black px-4 sm:px-5 py-2 rounded-full transition-colors cursor-pointer"
+              className="h-10 sm:h-12 flex items-center justify-center gap-2 bg-white text-black rounded-full transition-colors cursor-pointer px-4 sm:px-5 py-2 text-xs sm:text-sm font-semibold"
               onClick={handleResumeClick}
               title={user?.resumeLink ? "Manage Resume" : "Add Resume Link"}
             >
               <IoDocumentTextOutline className="text-lg sm:text-xl text-black" />
-              {user?.resumeLink ? "Resume" : "Add Resume"}
+              <span className="hidden sm:inline">{user?.resumeLink ? "Resume" : "Add Resume"}</span>
             </button>
           </div>
         </div>

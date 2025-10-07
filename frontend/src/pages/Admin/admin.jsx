@@ -207,14 +207,14 @@ const LoginPage = ({ onLogin }) => {
               padding: "1rem",
               fontSize: "clamp(1rem, 2.5vw, 1.1rem)",
               fontWeight: "600",
-              background: code.length === 4 
+              background: code.length === 4
                 ? "linear-gradient(135deg, rgba(0, 123, 255, 0.8), rgba(0, 86, 179, 0.8))"
                 : "rgba(255, 255, 255, 0.1)",
               backdropFilter: "blur(10px)",
               WebkitBackdropFilter: "blur(10px)",
               color: "white",
-              border: code.length === 4 
-                ? "1px solid rgba(0, 123, 255, 0.3)" 
+              border: code.length === 4
+                ? "1px solid rgba(0, 123, 255, 0.3)"
                 : "1px solid rgba(255, 255, 255, 0.2)",
               borderRadius: "12px",
               cursor: code.length === 4 ? "pointer" : "not-allowed",
@@ -314,7 +314,7 @@ const AdminDashboard = () => {
         headers: { 'Content-Type': 'application/json' },
         mode: 'cors'
       });
-      
+
       setConnectionStatus(response.ok ? "connected" : "failed");
       return response.ok;
     } catch (error) {
@@ -327,18 +327,18 @@ const AdminDashboard = () => {
   // Data fetching effect
   useEffect(() => {
     if (!isAuthenticated) return;
-    
+
     const fetchData = async () => {
       setLoading(true);
       setError("");
-      
+
       const isConnected = await testConnection();
       if (!isConnected) {
         setError("Cannot connect to backend server. Please check if the server is running.");
         setLoading(false);
         return;
       }
-      
+
       try {
         const token = localStorage.getItem("token");
         const headers = { "Content-Type": "application/json" };
@@ -391,7 +391,7 @@ const AdminDashboard = () => {
       const token = localStorage.getItem("token");
       const headers = { "Content-Type": "application/json" };
       if (token) headers.Authorization = `Bearer ${token}`;
-      
+
       const response = await fetch(`${BASE_URL}/api/auth/users/${userId}`, {
         method: "DELETE",
         headers,
@@ -401,7 +401,7 @@ const AdminDashboard = () => {
         const data = await response.json();
         throw new Error(data.message || "Failed to delete user");
       }
-      
+
       setUsers(users.filter(user => user._id !== userId));
       alert("User deleted successfully");
     } catch (error) {
@@ -431,10 +431,10 @@ const AdminDashboard = () => {
 
   // Data processing functions
   const getUsersByMonth = () => {
-    const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", 
-                       "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+      "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
     const monthCounts = {};
-    
+
     users.forEach(user => {
       if (user.createdAt) {
         const date = new Date(user.createdAt);
@@ -464,10 +464,10 @@ const AdminDashboard = () => {
   };
 
   const getQuestionsOverTime = () => {
-    const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", 
-                       "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+      "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
     const monthCounts = {};
-    
+
     questions.forEach(question => {
       if (question.createdAt) {
         const date = new Date(question.createdAt);
@@ -489,7 +489,7 @@ const AdminDashboard = () => {
     const userId = question.session?.user?._id || 'unknown';
     const userName = question.session?.user?.name || 'Unknown User';
     const userEmail = question.session?.user?.email || '';
-    
+
     if (!acc[userId]) {
       acc[userId] = {
         user: { name: userName, email: userEmail, _id: userId },
@@ -501,8 +501,8 @@ const AdminDashboard = () => {
   }, {});
 
   // Calculate stats
-  const getThisMonthCount = (data) => 
-    data.filter(item => new Date(item.createdAt) > new Date(Date.now() - 30*24*60*60*1000)).length;
+  const getThisMonthCount = (data) =>
+    data.filter(item => new Date(item.createdAt) > new Date(Date.now() - 30 * 24 * 60 * 60 * 1000)).length;
 
   // Show login if not authenticated
   if (!isAuthenticated) {
@@ -530,8 +530,8 @@ const AdminDashboard = () => {
       margin: "0",
       padding: "0"
     }}>
-      <div style={{ 
-        padding: "clamp(1.5rem, 2vw, 1.5rem)", 
+      <div style={{
+        padding: "clamp(1.5rem, 2vw, 1.5rem)",
         minHeight: "100vh",
         boxSizing: "border-box",
         maxWidth: "100vw",
@@ -546,8 +546,8 @@ const AdminDashboard = () => {
           flexWrap: "wrap",
           gap: "1rem"
         }}>
-          <h1 style={{ 
-            color: "white", 
+          <h1 style={{
+            color: "white",
             margin: "0",
             fontSize: "clamp(1.5rem, 3.5vw, 2.5rem)",
             fontWeight: "700",
@@ -561,7 +561,7 @@ const AdminDashboard = () => {
         </div>
 
         <ConnectionStatus status={connectionStatus} url={BASE_URL} />
-        <TabNavigation 
+        <TabNavigation
           activeTab={activeTab}
           setActiveTab={setActiveTab}
           setLoadedTabs={setLoadedTabs}
@@ -569,9 +569,9 @@ const AdminDashboard = () => {
         />
 
         {loading ? (
-          <div style={{ 
-            display: "grid", 
-            gap: "1rem", 
+          <div style={{
+            display: "grid",
+            gap: "1rem",
             gridTemplateColumns: "repeat(auto-fill, minmax(min(350px, 100%), 1fr))",
             marginBottom: "1.5rem"
           }}>
@@ -588,8 +588,8 @@ const AdminDashboard = () => {
             {/* Tab Content */}
             {activeTab === "analytics" && loadedTabs.has("analytics") && (
               <div>
-                <h2 style={{ 
-                  color: "white", 
+                <h2 style={{
+                  color: "white",
                   marginBottom: "1.5rem",
                   fontFamily: baseStyles.fontFamily,
                   fontWeight: "600",
@@ -597,33 +597,33 @@ const AdminDashboard = () => {
                 }}>
                   Analytics Dashboard
                 </h2>
-                
+
                 {/* Stats Cards */}
-                <div style={{ 
-                  display: "grid", 
-                  gap: "1rem", 
+                <div style={{
+                  display: "grid",
+                  gap: "1rem",
                   gridTemplateColumns: "repeat(auto-fit, minmax(min(250px, 100%), 1fr))",
                   marginBottom: "1.5rem"
                 }}>
-                  <StatsCard 
+                  <StatsCard
                     value={users.length}
                     label="Total Users"
                     subtitle={`+${getThisMonthCount(users)} this month`}
                     color="#007bff"
                   />
-                  <StatsCard 
+                  <StatsCard
                     value={sessions.length}
                     label="Total Sessions"
                     subtitle={`+${getThisMonthCount(sessions)} this month`}
                     color="#28a745"
                   />
-                  <StatsCard 
+                  <StatsCard
                     value={questions.length}
                     label="Total Questions"
                     subtitle={`+${getThisMonthCount(questions)} this month`}
                     color="#ffc107"
                   />
-                  <StatsCard 
+                  <StatsCard
                     value={sessions.length > 0 ? (questions.length / sessions.length).toFixed(1) : 0}
                     label="Avg Questions/Session"
                     subtitle="Platform efficiency"
@@ -655,7 +655,7 @@ const AdminDashboard = () => {
                               <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                             ))}
                           </Pie>
-                          <Tooltip 
+                          <Tooltip
                             contentStyle={{
                               backgroundColor: "#ffffffff",
                               border: "1px solid #555",
@@ -677,10 +677,10 @@ const AdminDashboard = () => {
                     {sessionData.length > 0 ? (
                       <ResponsiveContainer width="100%" height="100%" minHeight={250}>
                         <BarChart data={sessionData}>
-                          <CartesianGrid/>
+                          <CartesianGrid />
                           <XAxis dataKey="name" tick={{}} />
                           <YAxis tick={{}} />
-                          <Tooltip 
+                          <Tooltip
                             contentStyle={{
                               backgroundColor: "#000000ff",
                               border: "1px solid #555",
@@ -707,7 +707,7 @@ const AdminDashboard = () => {
                         <CartesianGrid strokeDasharray="3 3" stroke="#333" />
                         <XAxis dataKey="name" tick={{ fill: 'white' }} />
                         <YAxis tick={{ fill: 'white' }} />
-                        <Tooltip 
+                        <Tooltip
                           contentStyle={{
                             backgroundColor: "#2a2a2a",
                             border: "1px solid #555",
@@ -715,10 +715,10 @@ const AdminDashboard = () => {
                             color: "white"
                           }}
                         />
-                        <Line 
-                          type="monotone" 
-                          dataKey="questions" 
-                          stroke="#28a745" 
+                        <Line
+                          type="monotone"
+                          dataKey="questions"
+                          stroke="#28a745"
                           strokeWidth={3}
                           dot={{ fill: "#28a745", strokeWidth: 2, r: 4 }}
                         />
@@ -742,8 +742,8 @@ const AdminDashboard = () => {
             )}
 
             {activeTab === "questions" && loadedTabs.has("questions") && (
-              <QuestionsTab 
-                groupedQuestions={groupedQuestions} 
+              <QuestionsTab
+                groupedQuestions={groupedQuestions}
                 expandedGroups={expandedQuestionGroups}
                 toggleGroupExpansion={toggleQuestionGroupExpansion}
               />

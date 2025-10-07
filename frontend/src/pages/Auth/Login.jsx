@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { auth } from "../../config/firebase";
-import { SyncLoader} from 'react-spinners';
+import { SyncLoader } from 'react-spinners';
 import { useNavigate } from "react-router-dom";
 import Input from "../Home/Components/Input.jsx";
 import { validateEmail } from "../Home/Utils/helper.js";
@@ -61,36 +61,36 @@ const Login = ({ setCurrentPage }) => {
     }
   };
 
-  
-    // Handle Google login
-    const handleGoogleLogin = async () => {
-      setLoginLoading(true);
-      setError("");
-      const provider = new GoogleAuthProvider();
-      try {
-        const result = await signInWithPopup(auth, provider);
-        const user = result.user;
 
-        // Send user info to backend to create/find user
-        const backendRes = await axiosInstance.post(API_PATHS.AUTH.GOOGLE, {
-          email: user.email,
-          name: user.displayName,
-          profileImageUrl: user.photoURL,
-        });
-        const { token } = backendRes.data;
-        if (token) {
-          localStorage.setItem("token", token);
-          updateUser(backendRes.data);
-          navigate("/dashboard");
-        } else {
-          setError("Google login failed. No token returned.");
-        }
-      } catch (error) {
-        setError("Google login failed. Please try again.");
-      } finally {
-        setLoginLoading(false);
+  // Handle Google login
+  const handleGoogleLogin = async () => {
+    setLoginLoading(true);
+    setError("");
+    const provider = new GoogleAuthProvider();
+    try {
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+
+      // Send user info to backend to create/find user
+      const backendRes = await axiosInstance.post(API_PATHS.AUTH.GOOGLE, {
+        email: user.email,
+        name: user.displayName,
+        profileImageUrl: user.photoURL,
+      });
+      const { token } = backendRes.data;
+      if (token) {
+        localStorage.setItem("token", token);
+        updateUser(backendRes.data);
+        navigate("/dashboard");
+      } else {
+        setError("Google login failed. No token returned.");
       }
-    };
+    } catch (error) {
+      setError("Google login failed. Please try again.");
+    } finally {
+      setLoginLoading(false);
+    }
+  };
 
   return (
     <div
@@ -185,44 +185,42 @@ const Login = ({ setCurrentPage }) => {
             </button>
           </p>
         </form>
-          <div className="mt-3 flex items-center justify-center gap-3 w-full">
-            <span
-              className="font-medium text-sm bg-gradient-to-r from-amber-500 via-purple-500 to-pink-500 bg-clip-text text-transparent"
-            >
-              Wanna just explore MockMate. Use Demo Credentials
-            </span>
-            <label className="flex items-center cursor-pointer select-none">
-              <input
-            type="checkbox"
-            checked={email === "testemail@gmail.com" && password === "Test@123"}
-            onChange={e => {
-              if (e.target.checked) {
-                setEmail("testemail@gmail.com");
-                setPassword("Test@123");
-              } else {
-                setEmail("");
-                setPassword("");
-              }
-            }}
-            className="sr-only"
-              />
-              <span
-            className={`w-10 h-6 flex items-center bg-blue-200 rounded-full p-1 duration-300 ease-in-out ${
-              email === "testemail@gmail.com" && password === "Test@123"
-                ? "bg-blue-500"
-                : "bg-blue-200"
-            }`}
-              >
-            <span
-              className={`bg-white w-4 h-4 rounded-full shadow-md transform duration-300 ease-in-out ${
-                email === "testemail@gmail.com" && password === "Test@123"
-              ? "translate-x-4"
-              : ""
-              }`}
+        <div className="mt-3 flex items-center justify-center gap-3 w-full">
+          <span
+            className="font-medium text-sm bg-gradient-to-r from-amber-500 via-purple-500 to-pink-500 bg-clip-text text-transparent"
+          >
+            Wanna just explore MockMate. Use Demo Credentials
+          </span>
+          <label className="flex items-center cursor-pointer select-none">
+            <input
+              type="checkbox"
+              checked={email === "testemail@gmail.com" && password === "Test@123"}
+              onChange={e => {
+                if (e.target.checked) {
+                  setEmail("testemail@gmail.com");
+                  setPassword("Test@123");
+                } else {
+                  setEmail("");
+                  setPassword("");
+                }
+              }}
+              className="sr-only"
             />
-              </span>
-            </label>
-          </div>
+            <span
+              className={`w-10 h-6 flex items-center bg-blue-200 rounded-full p-1 duration-300 ease-in-out ${email === "testemail@gmail.com" && password === "Test@123"
+                  ? "bg-blue-500"
+                  : "bg-blue-200"
+                }`}
+            >
+              <span
+                className={`bg-white w-4 h-4 rounded-full shadow-md transform duration-300 ease-in-out ${email === "testemail@gmail.com" && password === "Test@123"
+                    ? "translate-x-4"
+                    : ""
+                  }`}
+              />
+            </span>
+          </label>
+        </div>
       </div>
     </div>
   );

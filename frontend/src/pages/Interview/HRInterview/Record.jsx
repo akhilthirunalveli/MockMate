@@ -83,7 +83,7 @@ const Record = () => {
   // Custom mic toggle that also handles speech recognition restart
   const handleMicToggleWithRestart = async () => {
     await handleMicToggle();
-    
+
     // If mic is being turned on and there are speech recognition errors, restart it
     if (!micOn && speechSupported) {
       setTimeout(() => {
@@ -111,10 +111,10 @@ const Record = () => {
         }}
       >
         <Navbar />
-        
+
         {/* Permission Request Modal - only show if user attempted access and there's an error */}
-        <PermissionModal 
-          permissionGranted={permissionGranted} 
+        <PermissionModal
+          permissionGranted={permissionGranted}
           errorMessage={errorMessage}
           audioOnly={audioOnly}
           hasAttemptedMediaAccess={hasAttemptedMediaAccess}
@@ -133,7 +133,7 @@ const Record = () => {
               Exit Session
             </button>
           </div>
-          
+
           {/* Main Row */}
           <div className="flex flex-col md:flex-row gap-6">
             {/* Video Player */}
@@ -149,7 +149,7 @@ const Record = () => {
               startRecording={startRecording}
               stopRecording={stopRecording}
             />
-            
+
             {/* Right Side: Question + Transcript */}
             <div className="flex flex-col flex-[0.9] gap-6 min-h-[350px]">
               {/* Question Panel */}
@@ -160,7 +160,7 @@ const Record = () => {
                 setInterimTranscript={setInterimTranscript}
                 questions={interviewQuestions}
               />
-              
+
               {/* Transcript Panel */}
               <TranscriptPanel
                 transcript={transcript}
@@ -180,7 +180,7 @@ const Record = () => {
               />
             </div>
           </div>
-          
+
           {/* Analysis Panel */}
           <AnalysisPanel
             recordedChunks={recordedChunks}

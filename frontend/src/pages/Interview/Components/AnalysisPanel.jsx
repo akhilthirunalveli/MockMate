@@ -1,9 +1,9 @@
 import React from 'react';
 import { HashLoader } from 'react-spinners';
 import InterviewDashboard from './InterviewDashboard';
-import { 
-  ExclamationTriangleIcon, 
-  ArrowPathIcon, 
+import {
+  ExclamationTriangleIcon,
+  ArrowPathIcon,
   CheckCircleIcon,
   LightBulbIcon,
   ChatBubbleLeftRightIcon,
@@ -12,14 +12,14 @@ import {
   ClockIcon
 } from '@heroicons/react/24/outline';
 
-const AnalysisPanel = ({ 
-  recordedChunks, 
-  currentQuestion, 
-  transcript, 
-  analysis, 
-  isAnalyzing, 
-  analysisError, 
-  onAnalyzeTranscript 
+const AnalysisPanel = ({
+  recordedChunks,
+  currentQuestion,
+  transcript,
+  analysis,
+  isAnalyzing,
+  analysisError,
+  onAnalyzeTranscript
 }) => {
   const canAnalyze = transcript && transcript.trim().length >= 10;
 
@@ -73,10 +73,10 @@ const AnalysisPanel = ({
         {/* AI Analysis Results - New Dashboard */}
         {analysis && !isAnalyzing && (
           <div className="overflow-hidden">
-            <InterviewDashboard 
-              analysis={analysis} 
-              currentQuestion={currentQuestion} 
-              transcript={transcript || ''} 
+            <InterviewDashboard
+              analysis={analysis}
+              currentQuestion={currentQuestion}
+              transcript={transcript || ''}
             />
             {/* Analyze Again Option */}
             <div className="mt-8 text-center">
@@ -103,7 +103,7 @@ const AnalysisPanel = ({
                 <CheckCircleIcon className="w-6 h-6 text-white" />
                 Recording Session Complete
               </h4>
-              
+
               {/* Current Question Section */}
               <div className="mb-6 p-4 bg-black rounded-lg border border-white/10">
                 <div className="flex items-start gap-3 mb-2">
@@ -122,13 +122,13 @@ const AnalysisPanel = ({
                   <div className="text-xs text-gray-400 mb-1">Video Recording</div>
                   <div className="text-white font-semibold text-sm">✓ Captured</div>
                 </div>
-                
+
                 <div className="bg-black border border-white/20 p-4 rounded-lg text-center">
                   <DocumentTextIcon className="w-6 h-6 text-white mx-auto mb-2" />
                   <div className="text-xs text-gray-400 mb-1">Transcript</div>
                   <div className="text-white font-semibold text-sm">{transcript.length} characters</div>
                 </div>
-                
+
                 <div className="bg-black border border-white/20 p-4 rounded-lg text-center">
                   <ClockIcon className="w-6 h-6 text-white mx-auto mb-2" />
                   <div className="text-xs text-gray-400 mb-1">Analysis Status</div>
@@ -145,7 +145,7 @@ const AnalysisPanel = ({
                   What's Next?
                 </h5>
                 <p className="text-gray-300 text-sm">
-                  {canAnalyze 
+                  {canAnalyze
                     ? "Your response is ready for AI analysis. Click the 'Analyze with AI' button above to get detailed feedback, scoring, and improvement suggestions."
                     : "Keep speaking to build a more substantial response (minimum 10 characters needed for analysis)."
                   }

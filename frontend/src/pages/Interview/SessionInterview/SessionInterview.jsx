@@ -122,7 +122,7 @@ const SessionInterview = () => {
   // Custom mic toggle that also handles speech recognition restart
   const handleMicToggleWithRestart = async () => {
     await handleMicToggle();
-    
+
     // If mic is being turned on and there are speech recognition errors, restart it
     if (!micOn && speechSupported) {
       setTimeout(() => {
@@ -151,25 +151,24 @@ const SessionInterview = () => {
       >
         <Navbar />
 
-  {/* Session Selector - now inside header row, left of title */}
+        {/* Session Selector - now inside header row, left of title */}
 
         {/* Permission Request Modal - only show if user attempted access and there's an error */}
-        <PermissionModal 
-          permissionGranted={permissionGranted} 
+        <PermissionModal
+          permissionGranted={permissionGranted}
           errorMessage={errorMessage}
           audioOnly={audioOnly}
           hasAttemptedMediaAccess={hasAttemptedMediaAccess}
           retryPermissions={retryPermissions}
         />
 
-  <div className="max-w-[90rem] mt-24 mx-auto flex flex-col gap-6 pb-8">
+        <div className="max-w-[90rem] mt-24 mx-auto flex flex-col gap-6 pb-8">
           {/* Header with Session Selector and Exit Button */}
           <div className="flex justify-between items-center mb-4">
             <div className="flex items-center gap-4">
               <div className="relative">
                 <div className="relative">
                   <label htmlFor="session-select" className="block text-white text-sm font-medium mb-2 ml-1">
-                    Choose Interview Session
                   </label>
                   <select
                     id="session-select"
@@ -187,8 +186,8 @@ const SessionInterview = () => {
                       Select a session to begin
                     </option>
                     {sessions.map(session => (
-                      <option 
-                        key={session._id} 
+                      <option
+                        key={session._id}
                         value={session._id}
                         className="bg-black text-white py-2"
                       >
@@ -197,9 +196,7 @@ const SessionInterview = () => {
                     ))}
                   </select>
                   {!selectedSession && (
-                    <p className="text-gray-400 text-xs mt-1 ml-1">
-                      Please select a session to start your interview
-                    </p>
+                    <p className="text-gray-400 text-xs mt-1 ml-1">                    </p>
                   )}
                 </div>
               </div>
