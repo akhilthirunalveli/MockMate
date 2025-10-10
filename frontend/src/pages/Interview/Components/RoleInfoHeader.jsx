@@ -39,7 +39,7 @@ const RoleInfoHeader = ({
             height: "100%",
             backgroundRepeat: "repeat",
             backgroundSize: "120px 3px",
-            opacity: 0.02,
+            opacity: 0.03,
             fontWeight: 700,
             fontSize: "0.80rem",
             letterSpacing: "0.15em",

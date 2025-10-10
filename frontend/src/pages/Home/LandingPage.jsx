@@ -299,7 +299,7 @@ function LandingPage() {
                         borderRadius: "90%",
                         marginRight: "0.9em",
                         backgroundColor: user?.name ?
-                          ['#EF4444', '#F97316', '#F59E0B', '#84CC16', '#22C55E', '#10B981', '#06B6D4', '#3B82F6', '#8B5CF6', '#EC4899'][
+                          ['#EF4444', '#F97316', '#F59E0B', '#10B981', '#06B6D4', '#3B82F6', '#8B5CF6', '#EC4899'][
                           Math.abs(user.name.split('').reduce((a, b) => a + b.charCodeAt(0), 0)) % 10
                           ] : '#6B7280',
                         display: 'flex',

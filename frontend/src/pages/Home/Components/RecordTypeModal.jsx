@@ -46,26 +46,28 @@ const RecordTypeModal = ({ isOpen, onClose, onSelect }) => {
         
         {/* Content with relative positioning */}
         <div style={{ position: "relative", zIndex: 1 }}>
+          {/* Close button with X icon */}
           <button
-            style={{
-              position: "absolute",
-              top: -10,
-              right: -10,
-              color: "#2d2d2dff",
-              width: 32,
-              height: 32,
-              fontSize: 28,
-              cursor: "pointer",
-              fontWeight: 700,
-              transition: "all 0.15s",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
+            type="button"
+            className="bg-transparent rounded-lg text-sm w-8 h-8 flex justify-center items-center absolute -top-2.5 -right-2.5 cursor-pointer transition-all duration-200 text-gray-500 hover:text-black"
             onClick={onClose}
             aria-label="Close"
           >
-            ×
+            <svg
+              className="w-3 h-3"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 14 14"
+            >
+              <path
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M1 1l6 6m0 0l6 6M7 7l6-6M7 7l-6 6"
+              />
+            </svg>
           </button>
 
           <h3 className="text-xl font-semibold text-black mb-3">Choose Interview Type</h3>

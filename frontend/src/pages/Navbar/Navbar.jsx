@@ -89,7 +89,7 @@ const Navbar = () => {
                           </p>
                         </div>
                       ),
-                      { position: 'bottom-left', duration: 3000 }
+                      { position: 'bottom-left', duration: 5000 }
                     );
 
                     // Second toast with delay
@@ -107,7 +107,7 @@ const Navbar = () => {
                             </p>
                           </div>
                         ),
-                        { position: 'bottom-left', duration: 3000 }
+                        { position: 'bottom-left', duration: 5000 }
                       );
                     }, 500);
 
@@ -125,7 +125,7 @@ const Navbar = () => {
                             </p>
                           </div>
                         ),
-                        { position: 'bottom-left', duration: 3000 }
+                        { position: 'bottom-left', duration: 5000 }
                       );
                     }, 1000);
                   }}
@@ -153,14 +153,14 @@ const Navbar = () => {
                         navigate("/");
                         setShowMobileMenu(false);
                       }}
-                      className="px-3 py-1.5 text-xs font-semibold text-white bg-gray-700 rounded-full shadow hover:bg-gray-600 transition-all"
+                      className="px-3 py-1.5 text-xs font-semibold text-black bg-yellow-500 rounded-full shadow hover:bg-yellow-400 transition-all cursor-pointer"
                     >
                       Home
                     </button>
 
                     <button
                       onClick={handleLogout}
-                      className="px-3 py-1.5 text-xs font-semibold text-white bg-red-500 rounded-full shadow hover:bg-red-400 transition-all"
+                      className="px-3 py-1.5 text-xs font-semibold text-white bg-red-700 rounded-full shadow hover:bg-red-400 transition-all cursor-pointer"
                     >
                       Logout
                     </button>

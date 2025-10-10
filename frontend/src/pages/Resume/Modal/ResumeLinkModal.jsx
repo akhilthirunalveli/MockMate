@@ -3,7 +3,6 @@ import { UserContext } from "../../../context/userContext.jsx";
 import axiosInstance from "../../../utils/axiosInstance.js";
 import { API_PATHS } from "../../../constants/apiPaths.js";
 import toast from "react-hot-toast";
-import { IoClose } from "react-icons/io5";
 import Input from "../../Home/Components/Input.jsx";
 import PdfViewModal from "./PdfViewModal.jsx";
 import { useNavigate } from "react-router-dom";
@@ -107,13 +106,31 @@ const ResumeLinkModal = ({ onClose, onSave }) => {
         zIndex: 0,
         pointerEvents: "none"
       }} />
+      
+      {/* Close button */}
       <button
+        type="button"
+        className="bg-transparent rounded-lg text-sm w-8 h-8 flex justify-center items-center absolute top-3.5 right-3.5 cursor-pointer transition-all duration-200 text-gray-500 hover:text-black z-20"
         onClick={onClose}
-        className="absolute top-4 right-4 z-20 p-2 rounded-full text-gray-500 transition-all duration-200 cursor-pointer"
         aria-label="Close"
       >
-        <IoClose className="w-6 h-6" />
+        <svg
+          className="w-3 h-3"
+          aria-hidden="true"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 14 14"
+        >
+          <path
+            stroke="currentColor"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
+            d="M1 1l6 6m0 0l6 6M7 7l6-6M7 7l-6 6"
+          />
+        </svg>
       </button>
+
       <div style={{ position: "relative", zIndex: 1 }}>
         <h3 className="text-lg font-semibold text-black">
           {!user?.resumeLink ? "Add Resume Link" : isEditing ? "Edit Resume Link" : "Resume Link"}

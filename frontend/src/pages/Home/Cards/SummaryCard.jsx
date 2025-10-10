@@ -90,9 +90,9 @@ const SummaryCard = ({
             <p className="text-xs sm:text-xs text-gray-300 mb-2 sm:mb-1 line-clamp-2 leading-relaxed" style={{ fontSize: '0.75rem sm:0.85rem' }}>{description}</p>
           </div>
         </div>
-        <div className="flex justify-end mt-auto pt-2">
+        <div className="flex justify-end mt-auto pt-3">
           <button
-            className="flex items-center gap-1 text-xs sm:text-xs font-semibold text-white bg-transparent border border-white px-3 sm:px-2 py-1.5 sm:py-1 rounded-full shadow transition cursor-pointer hover:bg-white/10 active:scale-95"
+            className="flex items-center gap-1 text-xs sm:text-xs font-semibold text-white bg-transparent border border-gray-500 px-3 sm:px-2 py-1.5 sm:py-1 rounded-full shadow transition cursor-pointer hover:bg-white/10 active:scale-95"
             onClick={onSelect}
             style={{ minHeight: '32px', minWidth: '80px', fontSize: '0.75rem' }}
           >

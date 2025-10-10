@@ -85,7 +85,7 @@ const ProfileInfoCard = () => {
                 className="w-10 h-10 rounded-full mr-3 flex items-center justify-center text-white font-bold text-lg"
                 style={{
                   backgroundColor: user?.name ?
-                    ['#EF4444', '#F97316', '#F59E0B', '#84CC16', '#22C55E', '#10B981', '#06B6D4', '#3B82F6', '#8B5CF6', '#EC4899'][
+                    ['#EF4444', '#F97316', '#F59E0B', '#06B6D4', '#3B82F6', '#8B5CF6', '#EC4899'][
                     Math.abs(user.name.split('').reduce((a, b) => a + b.charCodeAt(0), 0)) % 10
                     ] : '#6B7280'
                 }}
@@ -114,77 +114,18 @@ const ProfileInfoCard = () => {
         {isButtonsVisible && window.innerWidth >= 640 && (
           <div className="flex gap-2 items-center justify-center transition-all duration-200">
             <button
-              className="px-3 py-1 text-sm font-semibold text-white bg-gray-700 rounded-full shadow hover:bg-gray-600 transition-all"
+              className="px-3 py-1 text-sm font-semibold text-white bg-green-700 cursor-pointer rounded-full shadow hover:bg-green-500 transition-all"
               onClick={e => { e.stopPropagation(); handleHome(); }}
             >
               Home
             </button>
             <button
-              className="px-3 py-1 text-sm font-semibold text-white bg-red-500 rounded-full shadow hover:bg-red-400 transition-all"
+              className="px-3 py-1 text-sm font-semibold text-white bg-red-700 cursor-pointer rounded-full shadow hover:bg-red-500 transition-all"
               onClick={e => { e.stopPropagation(); handleLogout(); }}
             >
               Logout
             </button>
           </div>
-        )}
-        {/* Drawer for small screens only */}
-        {isOpen && window.innerWidth < 640 && (
-          <>
-            <div
-              className="fixed inset-0 z-40 bg-black/40"
-              onClick={() => setIsOpen(false)}
-            />
-            <div className="fixed top-20 right-6 h-full w-72 min-h-[300px] max-h-[350px] z-50 shadow-2xl backdrop-blur-5xl border border-gray-100/30 rounded-2xl transition-all bg-gradient-to-br from-gray-900 via-black to-gray-900">
-              <div className="flex flex-col items-center py-8 px-6">
-                {(user.profileImageUrl || user.photoURL) && !imageError ? (
-                  <img
-                    src={user.profileImageUrl || user.photoURL}
-                    alt={user.name}
-                    className="w-16 h-16 rounded-full object-cover mb-4"
-                    referrerPolicy="no-referrer"
-                    onError={() => setImageError(true)}
-                  />
-                ) : (
-                  <div
-                    className="w-16 h-16 rounded-full flex items-center justify-center text-white font-bold text-2xl mb-4"
-                    style={{
-                      backgroundColor: user?.name ?
-                        ['#EF4444', '#F97316', '#F59E0B', '#84CC16', '#22C55E', '#10B981', '#06B6D4', '#3B82F6', '#8B5CF6', '#EC4899'][
-                        Math.abs(user.name.split('').reduce((a, b) => a + b.charCodeAt(0), 0)) % 10
-                        ] : '#6B7280'
-                    }}
-                  >
-                    {user?.name ?
-                      (() => {
-                        const words = user.name.trim().split(' ').filter(word => word.length > 0);
-                        if (words.length === 0) return 'U';
-                        if (words.length === 1) return words[0][0].toUpperCase();
-                        return (words[0][0] + words[words.length - 1][0]).toUpperCase();
-                      })() : 'U'
-                    }
-                  </div>
-                )}
-                <div className="text-lg text-white font-bold mb-1">
-                  {user.name || ""}
-                </div>
-                <div className="text-grey-500 text-sm mb-6">
-                  {user.email || ""}
-                </div>
-                <button
-                  className="w-full text-left px-5 py-2 text-sm text-gray-200 cursor-pointer transition rounded-xl bg-gray-800 hover:bg-gray-700 mb-2"
-                  onClick={e => { e.stopPropagation(); handleHome(); setIsOpen(false); }}
-                >
-                  Home
-                </button>
-                <button
-                  className="w-full text-left px-5 py-2 text-sm text-red-400 cursor-pointer transition rounded-xl bg-gray-800 hover:bg-gray-700"
-                  onClick={e => { e.stopPropagation(); handleLogout(); setIsOpen(false); }}
-                >
-                  Logout
-                </button>
-              </div>
-            </div>
-          </>
         )}
       </div>
     )
