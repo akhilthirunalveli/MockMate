@@ -7,7 +7,7 @@ import { UserContext } from "../../context/userContext.jsx";
 import axiosInstance from "../../utils/axiosInstance.js";
 import { API_PATHS } from "../../constants/apiPaths.js";
 
-const SignUp = ({ setCurrentPage }) => {
+const SignUp = ({ setCurrentPage, isDark = false }) => {
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");

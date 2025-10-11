@@ -31,7 +31,7 @@ const LoadingSpinner = () => (
       alignItems: 'center'
     }}
   >
-    <HashLoader color="#ffffff" />
+    <HashLoader color="#2e2e2eff" />
   </div>
 );
 
@@ -83,7 +83,7 @@ const Dashboard = () => {
 
   return (
     <DashboardLayout>
-      <div className="container mx-auto pt-4 pb-4">
+      <div className="container mx-auto pt-4 pb-4 overflow-hidden">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 pt-1 pb-3 px-1 md:px-10 md:ml-10">
           {sessions?.map((data, index) => (
             <SummaryCard

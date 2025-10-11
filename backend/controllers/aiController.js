@@ -92,10 +92,24 @@ const generateInterviewQuestions = async (req, res) => {
       cleanedText = cleanedText.substring(0, jsonEndIndex + 1);
     }
 
+    // Remove control characters except for valid whitespace
+    cleanedText = cleanedText.replace(/[\u0000-\u001F\u007F-\u009F]/g, "");
+
     console.log("Cleaned text preview:", cleanedText.substring(0, 200) + "...");
     
     // Now safe to parse
-    const data = JSON.parse(cleanedText);
+    let data;
+    try {
+      data = JSON.parse(cleanedText);
+    } catch (err) {
+      console.error("Error parsing cleanedText:", cleanedText);
+      console.error("JSON.parse error:", err);
+      return res.status(500).json({
+        message: "Failed to parse AI response as JSON. Please try again or check the AI output formatting.",
+        error: err.message,
+        cleanedTextPreview: cleanedText.substring(0, 500)
+      });
+    }
 
     res.status(200).json(data);
   } catch (error) {
@@ -181,10 +195,24 @@ const generateConceptExplanation = async (req, res) => {
       cleanedText = cleanedText.substring(0, jsonEndIndex + 1);
     }
 
+    // Remove control characters except for valid whitespace
+    cleanedText = cleanedText.replace(/[\u0000-\u001F\u007F-\u009F]/g, "");
+
     console.log("Cleaned explanation text preview:", cleanedText.substring(0, 200) + "...");
 
     // Now safe to parse
-    const data = JSON.parse(cleanedText);
+    let data;
+    try {
+      data = JSON.parse(cleanedText);
+    } catch (err) {
+      console.error("Error parsing cleanedText:", cleanedText);
+      console.error("JSON.parse error:", err);
+      return res.status(500).json({
+        message: "Failed to parse AI explanation as JSON. Please try again or check the AI output formatting.",
+        error: err.message,
+        cleanedTextPreview: cleanedText.substring(0, 500)
+      });
+    }
 
     res.status(200).json(data);
   } catch (error) {

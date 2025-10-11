@@ -33,7 +33,7 @@ const AnalysisPanel = ({
         {canAnalyze && !isAnalyzing && !analysis && (
           <button
             onClick={() => onAnalyzeTranscript(currentQuestion, transcript)}
-            className="bg-white hover:bg-gray-100 text-black px-6 py-2.5 rounded-lg text-sm font-medium transition-all duration-300 shadow-lg hover:shadow-white/10 border border-gray-200"
+            className="bg-white hover:bg-gray-100 text-black px-6 py-2.5 rounded-lg text-sm font-medium transition-all duration-300 shadow-lg hover:shadow-white/10 border border-gray-200 cursor-pointer"
           >
             Analyze with AI
           </button>
@@ -62,7 +62,7 @@ const AnalysisPanel = ({
             {canAnalyze && (
               <button
                 onClick={() => onAnalyzeTranscript(currentQuestion, transcript)}
-                className="mt-4 text-red-200 hover:text-red-100 underline text-sm transition-colors"
+                className="mt-4 text-red-200 hover:text-red-100 underline text-sm transition-colors cursor-pointer"
               >
                 Try again
               </button>
@@ -82,7 +82,7 @@ const AnalysisPanel = ({
             <div className="mt-8 text-center">
               <button
                 onClick={() => onAnalyzeTranscript(currentQuestion, transcript)}
-                className="bg-white text-black px-5 py-2.5 rounded-lg text-sm transition-all duration-300 border border-gray-600 hover:border-gray-400 flex items-center gap-2 mx-auto"
+                className="bg-white text-black px-5 py-2.5 rounded-lg text-sm transition-all duration-300 border border-gray-600 hover:border-gray-400 flex items-center gap-2 mx-auto cursor-pointer"
               >
                 <ArrowPathIcon className="w-4 h-4" />
                 Re-analyze Response

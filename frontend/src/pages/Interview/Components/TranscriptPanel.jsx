@@ -118,7 +118,7 @@ const TranscriptPanel = ({
             <select
               value={language}
               onChange={(e) => changeLanguage(e.target.value)}
-              className="text-xs bg-black text-white px-2 py-1 rounded border border-gray-600"
+              className="text-xs bg-black text-white px-2 py-1 rounded border border-gray-600 cursor-pointer"
               disabled={isListening}
             >
               <option value="en-US">English (US)</option>
@@ -148,7 +148,7 @@ const TranscriptPanel = ({
               {speechError && (
                 <button
                   onClick={manualRestart}
-                  className="text-xs px-2 py-1 bg-red-600 text-white rounded hover:bg-red-700 transition-colors"
+                  className="text-xs px-2 py-1 bg-red-600 text-white rounded hover:bg-red-700 transition-colors cursor-pointer"
                   title="Restart speech recognition"
                 >
                   Restart
@@ -171,13 +171,13 @@ const TranscriptPanel = ({
             <div className="flex gap-2">
               <button
                 onClick={handleEditSave}
-                className="text-green-400 text-xs hover:text-green-300 transition px-3 py-1 rounded bg-green-900/20 border border-green-700"
+                className="text-green-400 text-xs hover:text-green-300 transition px-3 py-1 rounded bg-green-900/20 border border-green-700 cursor-pointer"
               >
                 Save Changes
               </button>
               <button
                 onClick={handleEditCancel}
-                className="text-gray-400 text-xs hover:text-white transition px-3 py-1 rounded bg-gray-800 border border-gray-600"
+                className="text-gray-400 text-xs hover:text-white transition px-3 py-1 rounded bg-gray-800 border border-gray-600 cursor-pointer"
               >
                 Cancel
               </button>
@@ -235,7 +235,7 @@ const TranscriptPanel = ({
       </div>
 
       {/* Transcript Controls */}
-      <div className="flex justify-between items-center mt-4 pt-4 border-t border-gray-700">
+      <div className="flex justify-between items-center mt-4 pt-4 border-t border-gray-500">
         <div className="text-xs text-gray-400">
           {transcript.length > 0 && `${transcript.length} characters`}
           {accuracy > 0 && transcript.length > 0 && (
@@ -255,20 +255,20 @@ const TranscriptPanel = ({
               </button>
               <button
                 onClick={handleEditStart}
-                className="text-purple-400 text-xs hover:text-purple-300 transition px-2 py-1 rounded bg-purple-900/20"
+                className="text-purple-400 text-xs hover:text-purple-300 transition px-2 py-1 rounded bg-purple-900/20 cursor-pointer"
                 title="Edit transcript manually"
               >
                 Edit
               </button>
               <button
                 onClick={() => downloadTranscript(currentQuestion)}
-                className="text-blue-400 text-xs hover:text-blue-300 transition px-2 py-1 rounded bg-blue-900/20"
+                className="text-blue-400 text-xs hover:text-blue-300 transition px-2 py-1 rounded bg-blue-900/20 cursor-pointer"
               >
                 Download
               </button>
               <button
                 onClick={clearTranscript}
-                className="text-gray-400 text-xs hover:text-white transition px-2 py-1 rounded bg-gray-800"
+                className="text-gray-400 text-xs hover:text-white transition px-2 py-1 rounded bg-gray-800 cursor-pointer"
               >
                 Clear
               </button>
@@ -280,14 +280,14 @@ const TranscriptPanel = ({
       {/* Cleanup Error */}
       {cleanupError && (
         <div className="mt-2 p-2 bg-red-900/20 border border-red-600 rounded text-xs">
-          <span className="text-red-400">❌ {cleanupError}</span>
+          <span className="text-red-400">{cleanupError}</span>
         </div>
       )}
 
       {/* Accuracy Tips */}
       {speechSupported && accuracy > 0 && accuracy < 70 && (
         <div className="mt-2 p-3 bg-yellow-900/20 border border-yellow-600 rounded text-xs">
-          <div className="text-yellow-400 font-semibold mb-1">💡 Tips to improve accuracy:</div>
+          <div className="text-yellow-400 font-semibold mb-1">Tips to improve accuracy:</div>
           <ul className="text-yellow-300 space-y-1">
             <li>• Speak clearly and at a moderate pace</li>
             <li>• Reduce background noise</li>

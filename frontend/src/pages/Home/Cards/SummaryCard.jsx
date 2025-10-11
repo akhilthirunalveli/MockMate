@@ -52,7 +52,7 @@ const SummaryCard = ({
       }} />
       {onDelete && (
         <button
-          className="absolute top-2 sm:top-3 right-2 sm:right-3 w-8 h-8 sm:w-7 sm:h-7 flex items-center justify-center rounded-full bg-red-900 hover:bg-red-600 text-white text-xs font-bold shadow transition z-20 opacity-0 group-hover:opacity-100"
+          className="absolute top-2 sm:top-3 right-2 sm:right-3 w-8 h-8 sm:w-7 sm:h-7 flex items-center justify-center rounded-full bg-red-900 hover:bg-red-600 text-white text-xs font-bold shadow transition z-20 opacity-0 group-hover:opacity-100 cursor-pointer"
           style={{ lineHeight: 1 }}
           onClick={e => {
             e.stopPropagation();

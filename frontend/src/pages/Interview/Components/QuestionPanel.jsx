@@ -17,7 +17,7 @@ const QuestionPanel = ({ currentQuestion, setCurrentQuestion, setTranscript, set
         <span className="text-white text-sm opacity-70">Current Question</span>
         <button
           onClick={handleNextQuestion}
-          className="text-white text-xs bg-green-500 hover:bg-green-600 px-3 py-1 rounded-full"
+          className="text-white text-xs bg-green-500 hover:bg-green-600 px-3 py-1 rounded-full cursor-pointer"
           disabled={!questions.length}
           style={{ opacity: !questions.length ? 0.5 : 1, cursor: !questions.length ? 'not-allowed' : 'pointer' }}
         >

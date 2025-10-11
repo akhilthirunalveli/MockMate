@@ -127,7 +127,7 @@ const Record = () => {
             <h1 className="text-white text-2xl font-bold">HR Mock Interview</h1>
             <button
               onClick={() => handleNavigation("/dashboard")}
-              className="flex items-center gap-2 px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-full transition-colors"
+              className="flex items-center gap-2 px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-full transition-colors cursor-pointer"
             >
               <MdHome size={20} />
               Exit Session

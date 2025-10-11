@@ -4,26 +4,27 @@ const questionAnswerPrompt = (
   topicsToFocus,
   numberOfQuestions
 ) => `
-    You are an AI trained to generate technical interview questions and answers.
+        You are an AI trained to generate technical interview questions and answers.
     
-    Task:
-    - Role: ${role}
-    - Candidate Experience: ${experience} years
-    - Focus Topics: ${topicsToFocus}
-    - Write ${numberOfQuestions} interview questions.
-    - For each question, generate a detailed but beginner-friendly answer.
-    - If the answer needs a code example, add a small code block inside.
-    - Keep formatting very clean.
-    - Return a pure JSON array like:
-    [
-      {
-        "question": "Question here?",
-        "answer": "Answer here."
-      },
-      ...
-    ]
-    Important: Do NOT add any extra text. Only return valid JSON.
-    `;
+        Task:
+        - Role: ${role}
+        - Candidate Experience: ${experience} years
+        - Focus Topics: ${topicsToFocus}
+        - Write ${numberOfQuestions} interview questions.
+        - For each question, generate a detailed but beginner-friendly answer.
+        - If the answer contains points or a list, start each point from a new line for clarity.
+        - If the answer needs a code example, add a small code block inside.
+        - Keep formatting very clean.
+        - Return a pure JSON array like:
+        [
+            {
+                "question": "Question here?",
+                "answer": "Answer here."
+            },
+            ...
+        ]
+        Important: Do NOT add any extra text. Only return valid JSON.
+        `;
 
 const conceptExplainPrompt = (question) => `
     You are an AI trained to generate explanations for a given interview question.
@@ -42,7 +43,7 @@ const conceptExplainPrompt = (question) => `
         "explanation": "Explanation here."
     }
     
-    Important: Do NOT add any extra text outside the JSON format. Only return valid JSON.
+    Important: Do NOT add any extra text outside the JSON format. Return only a valid JSON array of objects, with no trailing commas or comments.
     `;
 
 const transcriptAnalysisPrompt = (question, transcript) => `

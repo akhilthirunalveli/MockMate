@@ -396,14 +396,13 @@ function LandingPage() {
             width: "1.25em",
             marginRight: "0.3em",
             verticalAlign: "middle",
-            opacity: 0.45,
+            opacity: 0.65,
             filter: "grayscale(0.7)",
             transition: "filter 0.2s, opacity 0.2s",
             userSelect: "none",
             pointerEvents: "none"
           }}
-        />
-        akhilthirunalveli
+        />akhilthirunalveli
       </div>
       <style>
         {`
@@ -490,9 +489,19 @@ function LandingPage() {
               ></div>
             </div>
           }>
-            {currentPage === "login" && <Login setCurrentPage={setCurrentPage} onLoadingComplete={() => setIsLoading(false)} />}
+            {currentPage === "login" && (
+              <Login 
+                setCurrentPage={setCurrentPage} 
+                onClose={() => setOpenAuthModal(false)}
+                onLoadingComplete={() => setIsLoading(false)}
+              />
+            )}
             {currentPage === "signup" && (
-              <SignUp setCurrentPage={setCurrentPage} onLoadingComplete={() => setIsLoading(false)} />
+              <SignUp 
+                setCurrentPage={setCurrentPage} 
+                onClose={() => setOpenAuthModal(false)}
+                onLoadingComplete={() => setIsLoading(false)} 
+              />
             )}
           </Suspense>
         </div>

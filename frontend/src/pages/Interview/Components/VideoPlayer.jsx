@@ -27,7 +27,7 @@ const VideoPlayer = ({
       {/* Camera Off Placeholder */}
       {!cameraOn && (
         <div className="absolute inset-0 bg-black flex items-center justify-center rounded-2xl">
-          <div className="text-white text-center">
+          <div className="text-white text-center ">
             <MdVideocamOff size={48} className="mx-auto mb-2" />
             <p>Camera is off</p>
           </div>
@@ -48,7 +48,7 @@ const VideoPlayer = ({
           className={`w-12 h-12 flex items-center justify-center rounded-full border-2 ${micOn
               ? "border-white/50 bg-white/10 text-white hover:bg-white/20"
               : "border-red-500/50 bg-red-500/10 text-red-500 hover:bg-red-500/20"
-            } transition-all duration-200 hover:scale-105 hover:border-opacity-75`}
+            } cursor-pointer transition-all duration-200 hover:scale-105 hover:border-opacity-75`}
           title={micOn ? "Turn mic off" : "Turn mic on"}
         >
           {micOn ? (
@@ -64,7 +64,7 @@ const VideoPlayer = ({
           className={`w-12 h-12 flex items-center justify-center rounded-full border-2 ${cameraOn
               ? "border-white/50 bg-white/10 text-white hover:bg-white/20"
               : "border-red-500/50 bg-red-500/10 text-red-500 hover:bg-red-500/20"
-            } transition-all duration-200 hover:scale-105 hover:border-opacity-75`}
+            } cursor-pointer transition-all duration-200 hover:scale-105 hover:border-opacity-75`}
           title={cameraOn ? "Turn camera off" : "Turn camera on"}
         >
           {cameraOn ? (
@@ -80,7 +80,7 @@ const VideoPlayer = ({
           className={`w-12 h-12 flex items-center justify-center rounded-full border-2 ${isRecording
               ? "border-red-500 bg-red-500 text-white animate-pulse hover:bg-red-600"
               : "border-red-500 bg-white/10 text-red-500 hover:bg-white/20"
-            } transition-all duration-200 hover:scale-105 transform-gpu`}
+            } cursor-pointer transition-all duration-200 hover:scale-105 transform-gpu`}
           title={isRecording ? "Stop Recording" : "Start Recording"}
         >
           <div className={`${isRecording
@@ -92,7 +92,7 @@ const VideoPlayer = ({
         {/* Mirror Button */}
         <button
           onClick={() => setMirrored(prev => !prev)}
-          className={`w-12 h-12 flex items-center justify-center rounded-full border-2 
+          className={`w-12 h-12 flex items-center justify-center cursor-pointer rounded-full border-2 
             border-white/50 bg-white/10 text-white hover:bg-white/20
             transition-all duration-200 hover:scale-105 hover:border-opacity-75
             ${mirrored ? 'bg-white/20' : ''}`}

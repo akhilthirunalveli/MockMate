@@ -59,13 +59,7 @@ const SessionInterview = () => {
 
   // Custom hooks
   const {
-    videoRef,
-    micOn,
-    cameraOn,
-    permissionGranted,
-    errorMessage,
-    audioOnly,
-    hasAttemptedMediaAccess,
+    videoRef,micOn,cameraOn,permissionGranted,errorMessage,audioOnly,hasAttemptedMediaAccess,
     handleMicToggle,
     handleCameraToggle,
     stopAllMediaTracks,
@@ -203,7 +197,7 @@ const SessionInterview = () => {
             </div>
             <button
               onClick={() => handleNavigation("/dashboard")}
-              className="flex items-center gap-2 px-6 py-3 bg-red-600 text-white border border-red-500 rounded-full transition-all duration-300 font-semibold hover:bg-red-700 hover:border-red-600 active:scale-95"
+              className="flex items-center gap-2 px-6 py-3 bg-red-600 text-white border border-red-500 rounded-full transition-all duration-300 font-semibold hover:bg-red-700 hover:border-red-600 active:scale-95 cursor-pointer"
             >
               <MdHome size={20} color="#ffffff" />
               Exit Session

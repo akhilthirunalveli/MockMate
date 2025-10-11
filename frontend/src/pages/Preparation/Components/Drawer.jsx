@@ -19,7 +19,7 @@ const Drawer = ({ isOpen, onClose, title, children }) => {
     <div className="flex items-center justify-between mb-4">
       <h1
         id="drawer-right-label"
-        className="flex items-center text-base font-semibold text-white"
+        className="flex items-center text-xl font-semibold text-white"
       >
         {title}
       </h1>
@@ -27,7 +27,7 @@ const Drawer = ({ isOpen, onClose, title, children }) => {
       <button
         type="button"
         onClick={onClose}
-        className="text-white bg-transparent hover:text-red-900 rounded-lg text-sm w-8 h-8 inline-flex items-center justify-center"
+        className="text-gray-500 bg-transparent hover:text-white rounded-lg text-sm w-8 h-8 inline-flex items-center justify-center cursor-pointer"
       >
         <LuX className="text-lg" />
       </button>

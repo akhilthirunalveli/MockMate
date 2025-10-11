@@ -151,7 +151,7 @@ const InterviewPrep = () => {
         }
       />
 
-      <div className="container mx-auto pt-4 pb-4 px-4 md:px-0">
+      <div className="container mx-auto pt-4 pb-4 px-4 md:px-0 overflow-hidden">
         <h2 className="text-lg font-semibold color-black">Interview Q & A</h2>
 
         <div className="grid grid-cols-12 gap-4 mt-5 mb-10">
@@ -217,7 +217,11 @@ const InterviewPrep = () => {
           <Drawer
             isOpen={openLeanMoreDrawer}
             onClose={() => setOpenLeanMoreDrawer(false)}
-            title={!isLoading && explanation?.title}
+            title={
+              !isLoading && Array.isArray(explanation)
+                ? explanation[0]?.title
+                : explanation?.title
+            }
           >
             {errorMsg && (
               <p className="flex gap-2 text-sm text-amber-600 font-medium">
@@ -226,7 +230,13 @@ const InterviewPrep = () => {
             )}
             {isLoading && <SkeletonLoader />}
             {!isLoading && explanation && (
-              <AIResponsePreview content={explanation?.explanation} />
+              <AIResponsePreview
+                content={
+                  Array.isArray(explanation)
+                    ? explanation[0]?.explanation
+                    : explanation?.explanation
+                }
+              />
             )}
           </Drawer>
         </div>
