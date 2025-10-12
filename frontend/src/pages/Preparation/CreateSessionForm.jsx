@@ -78,7 +78,7 @@ const CreateSessionForm = () => {
       Start a New Interview Journey
     </h3>
     <p className="text-xs text-slate-700 mt-[5px] mb-3">
-      Fill out a few quick details and unlock your personalized set of
+      Fill out a few quick details for
       interview questions!
     </p>
 

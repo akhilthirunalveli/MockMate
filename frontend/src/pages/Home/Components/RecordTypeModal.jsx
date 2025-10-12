@@ -7,8 +7,7 @@ const RecordTypeModal = ({ isOpen, onClose, onSelect }) => {
 
   const modalContent = (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center w-full h-full"
-      style={{ backgroundColor: "rgba(0,0,0,0.3)", padding: "40px" }}
+      className="fixed inset-0 z-50 flex items-center justify-center w-full h-full bg-black/30 p-4 sm:p-8"
       onClick={onClose}
     >
       <style>{`
@@ -18,38 +17,20 @@ const RecordTypeModal = ({ isOpen, onClose, onSelect }) => {
           100% { background-position: 0% 50%; }
         }
       `}</style>
-
-      {/* Modal box with gradient background like Login.jsx */}
-      <div 
-        className="w-[80vw] md:w-[45vw] lg:w-[40vw] p-8 flex flex-col justify-center rounded-lg shadow"
+      <div
+        className="relative flex flex-col justify-center rounded-lg shadow-lg w-full max-w-[90vw] sm:max-w-[80vw] md:max-w-[45vw] lg:max-w-[40vw] min-h-[220px] p-4 sm:p-8 overflow-hidden"
         style={{
           background: "linear-gradient(120deg, #ff6a00, #ee0979, #00c3ff, rgb(0,74,25), rgb(0,98,80), #ff6a00)",
           backgroundSize: "300% 100%",
-          animation: "gradientBG 8s ease-in-out infinite",
-          boxShadow: "0 4px 32px 0 rgba(0,0,0,0.13)",
-          position: "relative",
-          overflow: "hidden",
-          maxWidth: "500px",
-          minHeight: "320px"
+          animation: "gradientBG 8s ease-in-out infinite"
         }}
         onClick={(e) => e.stopPropagation()}
       >
-        {/* White translucent overlay like Login.jsx */}
-        <div style={{
-          background: "rgba(255,255,255,0.90)",
-          borderRadius: "inherit",
-          position: "absolute",
-          inset: 0,
-          zIndex: 0,
-          pointerEvents: "none"
-        }} />
-        
-        {/* Content with relative positioning */}
-        <div style={{ position: "relative", zIndex: 1 }}>
-          {/* Close button with X icon */}
+        <div className="absolute inset-0 z-0 bg-white/90 rounded-lg pointer-events-none" />
+        <div className="relative z-10">
           <button
             type="button"
-            className="bg-transparent rounded-lg text-sm w-8 h-8 flex justify-center items-center absolute -top-2.5 -right-2.5 cursor-pointer transition-all duration-200 text-gray-500 hover:text-black"
+            className="bg-transparent rounded-lg text-sm w-8 h-8 flex justify-center items-center absolute -top-3 -right-3 cursor-pointer transition-all duration-200 text-gray-500 hover:text-black"
             onClick={onClose}
             aria-label="Close"
           >
@@ -69,92 +50,32 @@ const RecordTypeModal = ({ isOpen, onClose, onSelect }) => {
               />
             </svg>
           </button>
-
           <h3 className="text-xl font-semibold text-black mb-3">Choose Interview Type</h3>
-          <p className="text-sm text-slate-700 mt-[5px] mb-8">Select where you'd like to record the interview</p>
-
-          <div style={{ display: "flex", gap: 32, width: "100%", justifyContent: "center" }}>
+          <p className="text-sm text-slate-700 mt-1 mb-8">Select where you'd like to record the interview</p>
+          <div className="flex flex-col sm:flex-row gap-6 sm:gap-8 w-full justify-center items-center">
             <button
-              style={{
-                width: 160,
-                height: 160,
-                borderRadius: 12,
-                background: "transparent",
-                color: "#111",
-                fontWeight: 600,
-                fontSize: "1rem",
-                cursor: "pointer",
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                justifyContent: "center",
-                textAlign: "center",
-                padding: 20,
-                gap: 12
-              }}
+              className="w-36 h-36 rounded-xl bg-transparent text-[#111] font-semibold text-base flex flex-col items-center justify-center text-center p-5 gap-3 transition cursor-pointer"
               onClick={() => onSelect("hr")}
             >
               <BsPerson size={40} />
               <span>HR Interview</span>
             </button>
-
             <button
-              style={{
-                width: 160,
-                height: 160,
-                borderRadius: 12,
-                background: "transparent",
-                color: "#111",
-                fontWeight: 600,
-                fontSize: "1rem",
-                cursor: "pointer",
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                justifyContent: "center",
-                textAlign: "center",
-                padding: 20,
-                gap: 12
-              }}
+              className="w-36 h-36 rounded-xl bg-transparent text-[#111] font-semibold text-base flex flex-col items-center justify-center text-center p-5 gap-3 cursor-pointer transition"
               onClick={() => onSelect("session")}
             >
               <BsPeople size={40} />
               <span>Session Interview</span>
             </button>
-
             <button
-              style={{
-                width: 160,
-                height: 160,
-                borderRadius: 12,
-                background: "transparent",
-                color: "#4c4c4c31",
-                fontWeight: 600,
-                fontSize: "1rem",
-                cursor: "pointer",
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                justifyContent: "center",
-                textAlign: "center",
-                padding: 20,
-                gap: 12
-              }}
+              className="w-36 h-36 rounded-xl bg-transparent text-[#4c4c4c31] font-semibold text-base flex flex-col items-center justify-center text-center p-5 gap-3 cursor-not-allowed"
               onClick={() => onSelect("")}
+              disabled
             >
               <BsCast size={40} />
-              <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 4 }}>
+              <div className="flex flex-col items-center gap-1">
                 <span>Live Interview</span>
-                <span style={{
-                  fontSize: "0.7rem",
-                  padding: "2px 8px",
-                  backgroundColor: "rgba(0, 0, 0, 0.6)",
-                  borderRadius: "12px",
-                  color: "#eaeaeaff",
-                  fontWeight: "500"
-                }}>
-                  Coming Soon
-                </span>
+                <span className="text-xs px-2 py-0.5 bg-black/60 rounded-xl text-[#eaeaea] font-medium">Coming Soon</span>
               </div>
             </button>
           </div>

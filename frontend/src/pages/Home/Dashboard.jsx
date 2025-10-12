@@ -21,18 +21,7 @@ const DeleteAlertContent = lazy(() => import("../Preparation/Components/DeleteAl
 const ResumeLinkModal = lazy(() => import("../Resume/Modal/ResumeLinkModal.jsx"));
 
 const LoadingSpinner = () => (
-  <div
-    style={{
-      background: 'transparent',
-      minHeight: '100px',
-      width: '100%',
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center'
-    }}
-  >
-    <HashLoader color="#2e2e2eff" />
-  </div>
+  <HashLoader color="#0000004f" />
 );
 
 const Dashboard = () => {
@@ -179,7 +168,6 @@ const Dashboard = () => {
           <ResumeLinkModal
             onClose={() => setOpenResumeModal(false)}
             onSave={() => {
-              // Resume link saved, modal will close automatically
             }}
           />
         </Suspense>
