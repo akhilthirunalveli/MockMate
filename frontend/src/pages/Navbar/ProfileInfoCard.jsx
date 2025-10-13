@@ -119,6 +119,16 @@ const ProfileInfoCard = () => {
             >
               Home
             </button>
+
+            <button
+              onClick={() => {
+                navigate("/settings");
+                setShowMobileMenu(false);
+              }}
+              className="px-3 py-1 text-sm font-semibold text-white bg-blue-700 rounded-full shadow hover:bg-blue-500 transition-all cursor-pointer"
+            >
+              Settings
+            </button>
             <button
               className="px-3 py-1 text-sm font-semibold text-white bg-red-700 cursor-pointer rounded-full shadow hover:bg-red-500 transition-all"
               onClick={e => { e.stopPropagation(); handleLogout(); }}
