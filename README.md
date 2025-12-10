@@ -1,10 +1,9 @@
 
-<div align="center">
-  <img src="assets/Intro.gif" alt="MockMate Demo" width="100%" />
+<div align="Left">
   
-  <h1>MockMate</h1>
+  <h1>MockMate - AI-Powered Interview Preparation Platform</h1>
   
-  <p><strong>AI-Powered Interview Preparation Platform</strong></p>
+  <p><strong></strong></p>
 
   <p>
     <a href="#features">Features</a> •
@@ -12,13 +11,9 @@
     <a href="#system-architecture">Architecture</a> •
     <a href="#getting-started">Getting Started</a>
   </p>
-
-  ![GitHub stars](https://img.shields.io/github/stars/akhilthirunalveli/MockMate?style=social)
-  ![License](https://img.shields.io/badge/license-MIT-blue.svg)
-  ![Status](https://img.shields.io/badge/status-active-success.svg)
 </div>
+  <img src="Assets/Intro.gif" alt="MockMate Demo" width="100%" />
 
----
 
 ## 🚀 Overview
 
@@ -30,32 +25,25 @@ From generating tailored questions based on your resume and role to analyzing yo
 
 | Feature | Description | Preview |
 |:---:|---|:---:|
-| **Live AI Interview** | Real-time video interview simulation with AI-generated questions and immediate feedback. Uses media cleanup to ensure privacy. | <img src="assets/LiveInterview.png" width="300" /> |
-| **Interactive Dashboard** | Track your progress, view past session scores, and manage your interview schedule. | <img src="assets/Dashboard.png" width="300" /> |
-| **Resume Analysis** | Upload your resume to get custom-tailored questions that match your experience level. | <img src="assets/Resume.png" width="300" /> |
-| **Concept Drill** | Deep dive into specific topics with AI-driven explanations and code examples. | <img src="assets/InterviewPrep.png" width="300" /> |
+| **Live AI Interview** | Real-time video interview simulation with AI-generated questions and immediate feedback. Uses media cleanup to ensure privacy. | <img src="Assets/LiveInterview.png" width="1200" /> |
+| **Interactive Dashboard** | Track your progress, view past session scores, and manage your interview schedule. | <img src="Assets/Dashboard.png" width="1200" /> |
+| **Resume Analysis** | Upload your resume to get custom-tailored questions that match your experience level. | <img src="Assets/Resume.png" width="1200" /> |
+| **Concept Drill** | Deep dive into specific topics with AI-driven explanations and code examples. | <img src="Assets/InterviewPrep.png" width="1200" /> |
 
 <div align="center">
-  <img src="assets/LandingPage.png" width="45%" alt="Landing Page"/>
-  <img src="assets/LiveInterviewCodeGenerate.png" width="45%" alt="Code Generation"/>
+  <img src="Assets/LandingPage.png" alt="Landing Page"/>
 </div>
 
 ## 🛠 Tech Stack
-
-### Frontend
 ![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
 ![TailwindCSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
 ![Vite](https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white)
 ![Socket.io](https://img.shields.io/badge/Socket.io-010101?style=for-the-badge&logo=socket.io&logoColor=white)
 ![WebRTC](https://img.shields.io/badge/WebRTC-333333?style=for-the-badge&logo=webrtc&logoColor=white)
-
-### Backend
 ![Node.js](https://img.shields.io/badge/Node.js-43853D?style=for-the-badge&logo=node.js&logoColor=white)
 ![Express.js](https://img.shields.io/badge/Express.js-000000?style=for-the-badge&logo=express&logoColor=white)
 ![MongoDB](https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white)
 ![Socket.io](https://img.shields.io/badge/Socket.io-010101?style=for-the-badge&logo=socket.io&logoColor=white)
-
-### AI & APIs
 ![Gemini API](https://img.shields.io/badge/Google%20Gemini-8E75B2?style=for-the-badge&logo=googlebard&logoColor=white)
 ![Firebase](https://img.shields.io/badge/Firebase-FFCA28?style=for-the-badge&logo=firebase&logoColor=black)
 ![Cloudinary](https://img.shields.io/badge/Cloudinary-3448C5?style=for-the-badge&logo=cloudinary&logoColor=white)
