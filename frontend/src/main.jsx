@@ -1,3 +1,4 @@
+// Polyfill for libraries expecting Node's global object (for simple-peer)
 import React from 'react'
 import { createRoot } from 'react-dom/client'
 import App from './App.jsx'

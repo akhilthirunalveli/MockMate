@@ -1,14 +1,13 @@
-import React, { useState, useEffect, useContext, lazy, Suspense } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { HashLoader } from 'react-spinners';
+import { MoonLoader } from 'react-spinners';
 import Modal from "../Preparation/Components/Modal.jsx";
 import { UserContext } from "../../context/userContext.jsx";
 import GeminiLogo from "../../assets/gemini-color.svg";
 import GithubLogo from "../../assets/github.png";
 
-// Lazy load auth components
-const Login = lazy(() => import("../Auth/Login.jsx"));
-const SignUp = lazy(() => import("../Auth/SignUp.jsx"));
+import Login from "../Auth/Login.jsx";
+import SignUp from "../Auth/SignUp.jsx";
 
 const TYPEWRITER_TEXT = "MockMate";
 const TYPING_SPEED = 100; // smoother, slightly faster
@@ -105,7 +104,7 @@ function LandingPage() {
           <h1 style={{
             fontFamily: "'Montserrat', sans-serif",
             fontSize: "clamp(2rem, 7vw, 3rem)",
-            fontWeight: 700,
+            fontWeight: 500,
             marginBottom: "1rem",
             color: textColor,
             lineHeight: 1.1,
@@ -114,11 +113,11 @@ function LandingPage() {
             maxWidth: "95vw"
           }}>
             {displayedText}
-            {displayedText.length === TYPEWRITER_TEXT.length && (
+            {displayedText.length === TYPEWRITER_TEXT.length - 1 && (
               <span style={{ borderRight: "2px solid #333", animation: "blink 1s steps(1) infinite" }}>&nbsp;</span>
             )}
           </h1>
-          {displayedText.length === TYPEWRITER_TEXT.length && (
+          {displayedText.length === TYPEWRITER_TEXT.length - 1 && (
             <h2 style={{
               fontFamily: "'Montserrat', sans-serif",
               fontSize: "clamp(1.1rem, 4vw, 2rem)",
@@ -190,7 +189,7 @@ function LandingPage() {
           <h1 style={{
             fontFamily: "'Montserrat', sans-serif",
             fontSize: "clamp(2rem, 7vw, 3rem)",
-            fontWeight: 700,
+            fontWeight: 500,
             marginBottom: "1rem",
             color: textColor,
             lineHeight: 1.1,
@@ -474,30 +473,20 @@ function LandingPage() {
         isLoading={isLoading}
       >
         <div>
-          <Suspense fallback={
-            <div className="flex justify-center items-center" style={{
-              background: 'transparent',
-              minHeight: '200px',
-              width: '100%'
-            }}>
-              <HashLoader color="#454545ff" size={48} speedMultiplier={1.1} />
-            </div>
-          }>
-            {currentPage === "login" && (
-              <Login 
-                setCurrentPage={setCurrentPage} 
-                onClose={() => setOpenAuthModal(false)}
-                onLoadingComplete={() => setIsLoading(false)}
-              />
-            )}
-            {currentPage === "signup" && (
-              <SignUp 
-                setCurrentPage={setCurrentPage} 
-                onClose={() => setOpenAuthModal(false)}
-                onLoadingComplete={() => setIsLoading(false)} 
-              />
-            )}
-          </Suspense>
+          {currentPage === "login" && (
+            <Login 
+              setCurrentPage={setCurrentPage} 
+              onClose={() => setOpenAuthModal(false)}
+              onLoadingComplete={() => setIsLoading(false)}
+            />
+          )}
+          {currentPage === "signup" && (
+            <SignUp 
+              setCurrentPage={setCurrentPage} 
+              onClose={() => setOpenAuthModal(false)}
+              onLoadingComplete={() => setIsLoading(false)} 
+            />
+          )}
         </div>
       </Modal>
     </div>

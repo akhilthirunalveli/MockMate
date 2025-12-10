@@ -1,5 +1,5 @@
 import React from 'react'
-import { HashLoader } from 'react-spinners'
+import { MoonLoader } from 'react-spinners'
 
 const SpinnerLoader = ({ transparent = false, size = 40, color = 'black' }) => {
   // Determine color based on prop
@@ -17,14 +17,14 @@ const SpinnerLoader = ({ transparent = false, size = 40, color = 'black' }) => {
           alignItems: 'center'
         }}
       >
-        <HashLoader color={loaderColor} size={size} />
+      <MoonLoader color={loaderColor || '#ffffff'} size={size} />
       </div>
     );
   }
 
   return (
     <div role="status" className="flex justify-center items-center">
-      <HashLoader color={loaderColor} size={size} />
+  <MoonLoader color={loaderColor || '#ffffff'} size={size} />
       <span className="sr-only">Loading...</span>
     </div>
   )

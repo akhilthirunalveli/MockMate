@@ -28,12 +28,15 @@
     "react-dom": "^18.3.1",
     "react-hot-toast": "^2.5.2",
     "react-icons": "^5.5.0",
+    "react-loading-indicators": "^1.0.1",
     "react-markdown": "^10.1.0",
     "react-router-dom": "^7.5.3",
     "react-spinners": "^0.17.0",
     "react-syntax-highlighter": "^15.6.1",
     "recharts": "^3.1.2",
     "remark-gfm": "^4.0.1",
+    "simple-peer": "^9.11.1",
+    "socket.io-client": "^4.8.1",
     "tailwindcss": "^4.1.5"
   },
   "devDependencies": {
@@ -46,6 +49,7 @@
     "eslint-plugin-react-refresh": "^0.4.19",
     "globals": "^16.0.0",
     "terser": "^5.43.1",
-    "vite": "^6.3.5"
+    "vite": "^6.3.5",
+    "vite-plugin-node-polyfills": "^0.24.0"
   }
 }

@@ -49,3 +49,6 @@ backend/firebaseServiceAccountKey.json
 frontend/node_modules
 frontend/.env
 frontend/firebaseServiceAccountKey.json
+
+
+.vscode

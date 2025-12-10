@@ -68,15 +68,12 @@ const RecordTypeModal = ({ isOpen, onClose, onSelect }) => {
               <span>Session Interview</span>
             </button>
             <button
-              className="w-36 h-36 rounded-xl bg-transparent text-[#4c4c4c31] font-semibold text-base flex flex-col items-center justify-center text-center p-5 gap-3 cursor-not-allowed"
-              onClick={() => onSelect("")}
-              disabled
+              className="w-36 h-36 rounded-xl bg-transparent text-[#111] font-semibold text-base flex flex-col items-center justify-center text-center p-5 gap-3 cursor-pointer transition"
+              onClick={() => onSelect("live")}
             >
-              <BsCast size={40} />
-              <div className="flex flex-col items-center gap-1">
-                <span>Live Interview</span>
-                <span className="text-xs px-2 py-0.5 bg-black/60 rounded-xl text-[#eaeaea] font-medium">Coming Soon</span>
-              </div>
+
+              <BsCast size={45} />
+              <span>Live Interview <span className="text-xs font-bold bg-linear-to-r from-red-400 via-red-500 to-red-600 text-transparent bg-clip-text">New</span></span>
             </button>
           </div>
         </div>

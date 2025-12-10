@@ -1,5 +1,5 @@
-import React, { useEffect, useState, useContext, lazy, Suspense } from "react";
-import { HashLoader } from 'react-spinners';
+import React, { useEffect, useState, useContext } from "react";
+import { MoonLoader } from 'react-spinners';
 import { LuPlus, LuLaptop } from "react-icons/lu";
 import { BsChat, BsChatDots, BsChatDotsFill, BsChatHeartFill, BsChatLeft, BsRecordCircle } from "react-icons/bs";
 import { IoDocumentTextOutline } from "react-icons/io5";
@@ -14,14 +14,12 @@ import moment from "moment";
 import Modal from "../Preparation/Components/Modal.jsx";
 import RecordTypeModal from "./Components/RecordTypeModal.jsx";
 import { UserContext } from "../../context/userContext.jsx";
-
-// Lazy load modal components
-const CreateSessionForm = lazy(() => import("../Preparation/CreateSessionForm.jsx"));
-const DeleteAlertContent = lazy(() => import("../Preparation/Components/DeleteAlertContent.jsx"));
-const ResumeLinkModal = lazy(() => import("../Resume/Modal/ResumeLinkModal.jsx"));
+import CreateSessionForm from "../Preparation/CreateSessionForm.jsx";
+import DeleteAlertContent from "../Preparation/Components/DeleteAlertContent.jsx";
+import ResumeLinkModal from "../Resume/Modal/ResumeLinkModal.jsx";
 
 const LoadingSpinner = () => (
-  <HashLoader color="#0000004f" />
+  <MoonLoader color="#ffffff" />
 );
 
 const Dashboard = () => {
@@ -121,6 +119,8 @@ const Dashboard = () => {
                   navigate("/interview/hr/record");
                 } else if (type === "session") {
                   navigate("/interview/session-interview");
+                } else if (type === "live") {
+                  navigate("/interview/live");
                 }
               }}
             />
@@ -131,12 +131,6 @@ const Dashboard = () => {
             >
               <IoDocumentTextOutline className="text-lg sm:text-xl text-black" />
               <span className="hidden sm:inline">{user?.resumeLink ? "Resume" : "Add Resume"}</span>
-            </button>
-
-            <button
-              className="h-10 sm:h-12 flex items-center justify-center gap-2 bg-white text-black rounded-full transition-colors cursor-pointer px-4 sm:px-5 py-2 text-xs sm:text-sm font-semibold"
-            >
-              <BsChatDots className="text-lg sm:text-xl text-black" />
             </button>
           </div>
         </div>
@@ -150,9 +144,7 @@ const Dashboard = () => {
         hideHeader
       >
         <div>
-          <Suspense fallback={<LoadingSpinner />}>
-            <CreateSessionForm />
-          </Suspense>
+          <CreateSessionForm />
         </div>
       </Modal>
 
@@ -164,13 +156,11 @@ const Dashboard = () => {
         hideHeader
         isDark={true}
       >
-        <Suspense fallback={<LoadingSpinner />}>
-          <ResumeLinkModal
-            onClose={() => setOpenResumeModal(false)}
-            onSave={() => {
-            }}
-          />
-        </Suspense>
+        <ResumeLinkModal
+          onClose={() => setOpenResumeModal(false)}
+          onSave={() => {
+          }}
+        />
       </Modal>
 
       <Modal
@@ -181,12 +171,10 @@ const Dashboard = () => {
         title="Delete Alert"
       >
         <div className="w-[30vw]">
-          <Suspense fallback={<LoadingSpinner />}>
-            <DeleteAlertContent
-              content="Are you sure you want to delete this session detail?"
-              onDelete={() => deleteSession(openDeleteAlert.data)}
-            />
-          </Suspense>
+          <DeleteAlertContent
+            content="Are you sure you want to delete this session detail?"
+            onDelete={() => deleteSession(openDeleteAlert.data)}
+          />
         </div>
       </Modal>
     </DashboardLayout>

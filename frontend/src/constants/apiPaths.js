@@ -1,16 +1,12 @@
-export const BASE_URL = import.meta.env.VITE_BASE_URL || "https://mockmate-backend-r0jk.onrender.com";
+export const BASE_URL = import.meta.env.VITE_BASE_URL;
 
 export const API_PATHS = {
   AUTH: {
-    REGISTER: "/api/auth/register", // Signup
-    LOGIN: "/api/auth/login", // Authenticate user & return JWT token
-    GET_PROFILE: "/api/auth/profile", // Get logged-in user details
-    UPDATE_RESUME_LINK: "/api/auth/resume-link", // Update resume link
-    GOOGLE: "/api/auth/google", // Google login/registration
-  },
-
-  IMAGE: {
-    UPLOAD_IMAGE: "/api/auth/upload-image", // Upload profile picture
+    REGISTER: "/api/auth/register",
+    LOGIN: "/api/auth/login",
+    GET_PROFILE: "/api/auth/profile",
+    UPDATE_RESUME_LINK: "/api/auth/resume-link",
+    GOOGLE: "/api/auth/google",
   },
 
   AI: {
@@ -22,15 +18,15 @@ export const API_PATHS = {
   },
 
   SESSION: {
-    CREATE: "/api/sessions/create", // Create a new interview session with questions
-    GET_ALL: "/api/sessions/my-sessions", //  Get all user sessions
-    GET_ONE: (id) => `/api/sessions/${id}`, // Get session details with questions
-    DELETE: (id) => `/api/sessions/${id}`, // Delete a session
+    CREATE: "/api/sessions/create",
+    GET_ALL: "/api/sessions/my-sessions",
+    GET_ONE: (id) => `/api/sessions/${id}`,
+    DELETE: (id) => `/api/sessions/${id}`,
   },
 
   QUESTION: {
-    ADD_TO_SESSION: "/api/questions/add", // Add more questions to a session
-    PIN: (id) => `/api/questions/${id}/pin`, // Pin or Unpin a question
-    UPDATE_NOTE: (id) => `/api/questions/${id}/note`, // Update/Add a note to a question
+    ADD_TO_SESSION: "/api/questions/add",
+    PIN: (id) => `/api/questions/${id}/pin`,
+    UPDATE_NOTE: (id) => `/api/questions/${id}/note`,
   },
 };

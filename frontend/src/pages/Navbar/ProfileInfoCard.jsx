@@ -114,21 +114,12 @@ const ProfileInfoCard = () => {
         {isButtonsVisible && window.innerWidth >= 640 && (
           <div className="flex gap-2 items-center justify-center transition-all duration-200">
             <button
-              className="px-3 py-1 text-sm font-semibold text-white bg-green-700 cursor-pointer rounded-full shadow hover:bg-green-500 transition-all"
+              className="px-3 py-1 text-sm font-semibold text-black bg-gray-100 cursor-pointer rounded-full shadow hover:bg-gray-200 hover:text-black transition-all"
               onClick={e => { e.stopPropagation(); handleHome(); }}
             >
               Home
             </button>
 
-            <button
-              onClick={() => {
-                navigate("/settings");
-                setShowMobileMenu(false);
-              }}
-              className="px-3 py-1 text-sm font-semibold text-white bg-blue-700 rounded-full shadow hover:bg-blue-500 transition-all cursor-pointer"
-            >
-              Settings
-            </button>
             <button
               className="px-3 py-1 text-sm font-semibold text-white bg-red-700 cursor-pointer rounded-full shadow hover:bg-red-500 transition-all"
               onClick={e => { e.stopPropagation(); handleLogout(); }}

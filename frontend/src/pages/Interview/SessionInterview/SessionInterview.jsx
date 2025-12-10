@@ -59,7 +59,7 @@ const SessionInterview = () => {
 
   // Custom hooks
   const {
-    videoRef,micOn,cameraOn,permissionGranted,errorMessage,audioOnly,hasAttemptedMediaAccess,
+    videoRef, micOn, cameraOn, permissionGranted, errorMessage, audioOnly, hasAttemptedMediaAccess,
     handleMicToggle,
     handleCameraToggle,
     stopAllMediaTracks,

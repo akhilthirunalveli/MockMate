@@ -1,5 +1,5 @@
 import React from 'react';
-import { HashLoader } from 'react-spinners';
+import { MoonLoader } from 'react-spinners';
 import InterviewDashboard from './InterviewDashboard';
 import {
   ExclamationTriangleIcon,
@@ -44,7 +44,7 @@ const AnalysisPanel = ({
         {/* Loading state */}
         {isAnalyzing && (
           <div className="flex flex-col items-center justify-center py-12">
-            <HashLoader color="#ffffff" />
+            <MoonLoader color="#ffffff" />
             <div className="mt-6 text-center">
               <div className="text-white font-medium text-base">Analyzing your response...</div>
               <div className="text-gray-400 text-sm mt-2">Our AI is reviewing your answer for insights</div>

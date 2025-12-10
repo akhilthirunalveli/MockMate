@@ -44,7 +44,7 @@ const ResumeLinkModal = ({ onClose, onSave }) => {
       console.error("Error saving resume link:", error);
       console.error("Error response:", error.response?.data);
       console.error("Error status:", error.response?.status);
-      
+
       const errorMessage = error.response?.data?.message || error.message || "Failed to save resume link";
       toast.error(errorMessage);
     } finally {
@@ -80,14 +80,6 @@ const ResumeLinkModal = ({ onClose, onSave }) => {
   return (
     <div
       className="w-[90vw] md:w-[35vw] p-7 flex flex-col justify-center relative rounded-lg shadow"
-      style={{
-        background: "linear-gradient(120deg, #ff6a00, #ee0979, #00c3ff, rgb(0,74,25), rgb(0,98,80), #ff6a00)",
-        backgroundSize: "300% 100%",
-        animation: "gradientBG 8s ease-in-out infinite",
-        boxShadow: "0 4px 32px 0 rgba(0,0,0,0.13)",
-        position: "relative",
-        overflow: "hidden",
-      }}
     >
       <style>
         {`
@@ -99,14 +91,14 @@ const ResumeLinkModal = ({ onClose, onSave }) => {
         `}
       </style>
       <div style={{
-        background: "rgba(255, 255, 255, 0.9)",
+        background: "rgba(255, 255, 255, 1)",
         borderRadius: "inherit",
         position: "absolute",
         inset: 0,
         zIndex: 0,
         pointerEvents: "none"
       }} />
-      
+
       {/* Close button */}
       <button
         type="button"
@@ -136,12 +128,12 @@ const ResumeLinkModal = ({ onClose, onSave }) => {
           {!user?.resumeLink ? "Add Resume Link" : isEditing ? "Edit Resume Link" : "Resume Link"}
         </h3>
         <p className="text-xs text-slate-700 mt-[5px] mb-3">
-        {user?.resumeLink && !isEditing
-          ? "You can view your resume or edit the link below"
-          : !user?.resumeLink
-          ? "Add a link to your resume for easy access"
-          : "Update your resume link"}
-      </p>
+          {user?.resumeLink && !isEditing
+            ? "You can view your resume or edit the link below"
+            : !user?.resumeLink
+              ? "Add a link to your resume for easy access"
+              : "Update your resume link"}
+        </p>
         {user?.resumeLink && !isEditing ? (
           <div className="flex flex-col gap-3 mt-2">
             <div className=" rounded-lg px-4 py-3 flex flex-col items-center">

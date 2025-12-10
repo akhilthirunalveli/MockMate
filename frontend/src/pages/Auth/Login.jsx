@@ -109,9 +109,8 @@ const Login = ({ setCurrentPage, onClose, isDark = false }) => {
       {/* Add close button */}
       <button
         type="button"
-        className={`${
-          isDark ? 'text-gray-300 hover:bg-white/10 hover:text-white' : 'text-gray-400 hover:bg-grey-100 hover:text-gray-900'
-        } bg-transparent rounded-lg text-sm w-8 h-8 flex justify-center items-center absolute top-3.5 right-3.5 cursor-pointer transition-all duration-200 z-10`}
+        className={`${isDark ? 'text-gray-300 hover:bg-white/10 hover:text-white' : 'text-gray-400 hover:bg-grey-100 hover:text-gray-900'
+          } bg-transparent rounded-lg text-sm w-8 h-8 flex justify-center items-center absolute top-3.5 right-3.5 cursor-pointer transition-all duration-200 z-10`}
         onClick={onClose}
       >
         <svg
@@ -178,7 +177,7 @@ const Login = ({ setCurrentPage, onClose, isDark = false }) => {
               {loginLoading ? (
                 <BeatLoader color="white" size={8} speedMultiplier={0.8} />
               ) : (
-                "LOGIN"
+                "Log In"
               )}
             </div>
           </button>
@@ -195,10 +194,10 @@ const Login = ({ setCurrentPage, onClose, isDark = false }) => {
             type="button"
             className="btn-primary w-full mt-2"
             onClick={handleGoogleLogin}
-            style={{ marginBottom: "8px"}}
+            style={{ marginBottom: "8px" }}
           >
             <FaGoogle className="mr-2" size={18} color="white" />
-            Sign up with Google
+            Continue with Google
           </button>
 
           <p className="text-[13px] text-slate-800 mt-3">
@@ -236,14 +235,14 @@ const Login = ({ setCurrentPage, onClose, isDark = false }) => {
             />
             <span
               className={`w-10 h-6 flex items-center bg-blue-200 rounded-full p-1 duration-300 ease-in-out ${email === "testemail@gmail.com" && password === "Test@123"
-                  ? "bg-blue-500"
-                  : "bg-blue-200"
+                ? "bg-blue-500"
+                : "bg-blue-200"
                 }`}
             >
               <span
                 className={`bg-white w-4 h-4 rounded-full shadow-md transform duration-300 ease-in-out ${email === "testemail@gmail.com" && password === "Test@123"
-                    ? "translate-x-4"
-                    : ""
+                  ? "translate-x-4"
+                  : ""
                   }`}
               />
             </span>

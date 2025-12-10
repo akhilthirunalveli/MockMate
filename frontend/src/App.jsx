@@ -1,14 +1,12 @@
-import React, { Suspense } from "react";
+import React from "react";
 import { Analytics } from "@vercel/analytics/react"
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
-
 import LandingPage from "./pages/Home/LandingPage.jsx";
 import UserProvider from "./context/userContext.jsx";
 import SpinnerLoader from "./pages/Preparation/Loader/SpinnerLoader.jsx";
 import ResumeViewPage from "./pages/Resume/ResumeViewPage.jsx";
 
-// Error Boundary Component
 class ErrorBoundary extends React.Component {
   constructor(props) {
     super(props);
@@ -64,36 +62,12 @@ class ErrorBoundary extends React.Component {
   }
 }
 
-// Lazy load components with proper error boundaries
-const Dashboard = React.lazy(() =>
-  import("./pages/Home/Dashboard.jsx").catch(() => {
-    return { default: () => <div style={{ padding: "20px", textAlign: "center" }}>Error loading Dashboard</div> };
-  })
-);
-
-const InterviewPrep = React.lazy(() =>
-  import("./pages/Preparation/InterviewPrep.jsx").catch(() => {
-    return { default: () => <div style={{ padding: "20px", textAlign: "center" }}>Error loading Interview Prep</div> };
-  })
-);
-
-const Record = React.lazy(() =>
-  import("./pages/Interview/HRInterview/Record.jsx").catch(() => {
-    return { default: () => <div style={{ padding: "20px", textAlign: "center" }}>Error loading Record</div> };
-  })
-);
-
-const Admin = React.lazy(() =>
-  import("./pages/Admin/admin.jsx").catch(() => {
-    return { default: () => <div style={{ padding: "20px", textAlign: "center" }}>Error loading Admin</div> };
-  })
-);
-
-const SessionInterview = React.lazy(() =>
-  import("./pages/Interview/SessionInterview/SessionInterview.jsx").catch(() => {
-    return { default: () => <div style={{ padding: "20px", textAlign: "center" }}>Error loading Session Interview</div> };
-  })
-);
+import Dashboard from "./pages/Home/Dashboard.jsx";
+import InterviewPrep from "./pages/Preparation/InterviewPrep.jsx";
+import Record from "./pages/Interview/HRInterview/Record.jsx";
+import Admin from "./pages/Admin/admin.jsx";
+import SessionInterview from "./pages/Interview/SessionInterview/SessionInterview.jsx";
+import LiveInterview from "./pages/Interview/LiveInterview/index.jsx";
 
 const App = () => {
   return (
@@ -101,19 +75,18 @@ const App = () => {
       <UserProvider>
         <Router>
           <ErrorBoundary>
-            <Suspense fallback={<SpinnerLoader transparent />}>
-              <Routes>
-                <Route path="/" element={<LandingPage />} />
-                <Route path="/dashboard" element={<Dashboard />} />
-                <Route path="/admin" element={<Admin />} />
-                <Route path="/interview-prep/:sessionId" element={<InterviewPrep />} />
-                <Route path="/interview/hr/record" element={<Record />} />
-                <Route path="/interview/session-interview" element={<SessionInterview />} />
-                <Route path="/interview-prep/record" element={<Record />} />
-                <Route path="/resume-view" element={<ResumeViewPage />} />
-                <Route path="/interview-prep/session-interview" element={<SessionInterview />} />
-              </Routes>
-            </Suspense>
+            <Routes>
+              <Route path="/" element={<LandingPage />} />
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/admin" element={<Admin />} />
+              <Route path="/interview-prep/:sessionId" element={<InterviewPrep />} />
+              <Route path="/interview/hr/record" element={<Record />} />
+              <Route path="/interview/session-interview" element={<SessionInterview />} />
+              <Route path="/interview-prep/record" element={<Record />} />
+              <Route path="/resume-view" element={<ResumeViewPage />} />
+              <Route path="/interview-prep/session-interview" element={<SessionInterview />} />
+              <Route path="/interview/live" element={<LiveInterview />} />
+            </Routes>
           </ErrorBoundary>
 
           <Toaster
