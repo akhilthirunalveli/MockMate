@@ -1,7 +1,7 @@
 
 <div align="Left">
   
-  <h1>MockMate - AI-Powered Interview Preparation Platform</h1>
+  <h1>MockMate v1.3 - AI-Powered Interview Preparation Platform</h1>
   
   <p><strong></strong></p>
 
