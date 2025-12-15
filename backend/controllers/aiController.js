@@ -1,10 +1,30 @@
 const { GoogleGenerativeAI } = require("@google/generative-ai");
+const fs = require('fs');
+const path = require('path');
 const {
   conceptExplainPrompt,
   questionAnswerPrompt,
   transcriptAnalysisPrompt,
   transcriptCleanupPrompt,
 } = require("../utils/prompts");
+
+// Helper function for exponential backoff retry
+const generateContentWithRetry = async (model, prompt, retries = 3, delay = 1000) => {
+  try {
+    return await model.generateContent(prompt);
+  } catch (error) {
+    if (retries > 0 && (error.status === 429 || error.message?.includes('429'))) {
+      const msg = `[${new Date().toISOString()}] Hit rate limit. Retrying in ${delay}ms... (${retries} retries left)\n`;
+      fs.appendFileSync(path.join(__dirname, '../error_log.txt'), msg);
+      console.log(msg.trim());
+      await new Promise(resolve => setTimeout(resolve, delay));
+      return generateContentWithRetry(model, prompt, retries - 1, delay * 2);
+    }
+    const msg = `[${new Date().toISOString()}] API Error: ${error.message}\nStack: ${error.stack}\n`;
+    fs.appendFileSync(path.join(__dirname, '../error_log.txt'), msg);
+    throw error;
+  }
+};
 
 // @desc    Generate interview questions and answers using Gemini
 // @route   POST /api/ai/generate-questions
@@ -27,18 +47,18 @@ const generateInterviewQuestions = async (req, res) => {
     );
 
     console.log("About to call Gemini API with prompt:", prompt.substring(0, 100) + "...");
-    
+
     // Create a new instance for each request to avoid any caching issues
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-    const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
+    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
-    // Generate content with error handling
-    const result = await model.generateContent(prompt);
-    
+    // Generate content with error handling and retry logic
+    const result = await generateContentWithRetry(model, prompt);
+
     if (!result || !result.response) {
       throw new Error("Invalid response from Gemini API");
     }
-    
+
     const response = result.response;
     let rawText = response.text();
 
@@ -56,25 +76,25 @@ const generateInterviewQuestions = async (req, res) => {
     let bracketCount = 0;
     let inString = false;
     let escapeNext = false;
-    
+
     for (let i = 0; i < cleanedText.length; i++) {
       const char = cleanedText[i];
-      
+
       if (escapeNext) {
         escapeNext = false;
         continue;
       }
-      
+
       if (char === '\\') {
         escapeNext = true;
         continue;
       }
-      
+
       if (char === '"') {
         inString = !inString;
         continue;
       }
-      
+
       if (!inString) {
         if (char === '[' || char === '{') {
           bracketCount++;
@@ -87,7 +107,7 @@ const generateInterviewQuestions = async (req, res) => {
         }
       }
     }
-    
+
     if (jsonEndIndex > -1) {
       cleanedText = cleanedText.substring(0, jsonEndIndex + 1);
     }
@@ -96,7 +116,7 @@ const generateInterviewQuestions = async (req, res) => {
     cleanedText = cleanedText.replace(/[\u0000-\u001F\u007F-\u009F]/g, "");
 
     console.log("Cleaned text preview:", cleanedText.substring(0, 200) + "...");
-    
+
     // Now safe to parse
     let data;
     try {
@@ -138,10 +158,10 @@ const generateConceptExplanation = async (req, res) => {
 
     // Create a new instance for each request to avoid any caching issues
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-    const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
+    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
-    // Generate content
-    const result = await model.generateContent(prompt);
+    // Generate content with retry logic
+    const result = await generateContentWithRetry(model, prompt);
     const response = result.response;
     let rawText = response.text();
 
@@ -159,25 +179,25 @@ const generateConceptExplanation = async (req, res) => {
     let bracketCount = 0;
     let inString = false;
     let escapeNext = false;
-    
+
     for (let i = 0; i < cleanedText.length; i++) {
       const char = cleanedText[i];
-      
+
       if (escapeNext) {
         escapeNext = false;
         continue;
       }
-      
+
       if (char === '\\') {
         escapeNext = true;
         continue;
       }
-      
+
       if (char === '"') {
         inString = !inString;
         continue;
       }
-      
+
       if (!inString) {
         if (char === '[' || char === '{') {
           bracketCount++;
@@ -190,7 +210,7 @@ const generateConceptExplanation = async (req, res) => {
         }
       }
     }
-    
+
     if (jsonEndIndex > -1) {
       cleanedText = cleanedText.substring(0, jsonEndIndex + 1);
     }
@@ -244,18 +264,18 @@ const analyzeTranscript = async (req, res) => {
     const prompt = transcriptAnalysisPrompt(question, transcript);
 
     console.log("About to call Gemini API for transcript analysis...");
-    
+
     // Create a new instance for each request to avoid any caching issues
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-    const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
+    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
-    // Generate content with error handling
-    const result = await model.generateContent(prompt);
-    
+    // Generate content with error handling and retry logic
+    const result = await generateContentWithRetry(model, prompt);
+
     if (!result || !result.response) {
       throw new Error("Invalid response from Gemini API");
     }
-    
+
     const response = result.response;
     let rawText = response.text();
 
@@ -273,25 +293,25 @@ const analyzeTranscript = async (req, res) => {
     let bracketCount = 0;
     let inString = false;
     let escapeNext = false;
-    
+
     for (let i = 0; i < cleanedText.length; i++) {
       const char = cleanedText[i];
-      
+
       if (escapeNext) {
         escapeNext = false;
         continue;
       }
-      
+
       if (char === '\\') {
         escapeNext = true;
         continue;
       }
-      
+
       if (char === '"') {
         inString = !inString;
         continue;
       }
-      
+
       if (!inString) {
         if (char === '[' || char === '{') {
           bracketCount++;
@@ -304,13 +324,13 @@ const analyzeTranscript = async (req, res) => {
         }
       }
     }
-    
+
     if (jsonEndIndex > -1) {
       cleanedText = cleanedText.substring(0, jsonEndIndex + 1);
     }
 
     console.log("Cleaned transcript analysis text preview:", cleanedText.substring(0, 200) + "...");
-    
+
     // Now safe to parse
     const data = JSON.parse(cleanedText);
 
@@ -346,18 +366,18 @@ const cleanupTranscript = async (req, res) => {
     const prompt = transcriptCleanupPrompt(transcript);
 
     console.log("About to call Gemini API for transcript cleanup...");
-    
+
     // Create a new instance for each request to avoid any caching issues
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-    const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
+    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
-    // Generate content with error handling
-    const result = await model.generateContent(prompt);
-    
+    // Generate content with error handling and retry logic
+    const result = await generateContentWithRetry(model, prompt);
+
     if (!result || !result.response) {
       throw new Error("Invalid response from Gemini API");
     }
-    
+
     const response = result.response;
     let rawText = response.text();
 
@@ -375,25 +395,25 @@ const cleanupTranscript = async (req, res) => {
     let bracketCount = 0;
     let inString = false;
     let escapeNext = false;
-    
+
     for (let i = 0; i < cleanedText.length; i++) {
       const char = cleanedText[i];
-      
+
       if (escapeNext) {
         escapeNext = false;
         continue;
       }
-      
+
       if (char === '\\') {
         escapeNext = true;
         continue;
       }
-      
+
       if (char === '"') {
         inString = !inString;
         continue;
       }
-      
+
       if (!inString) {
         if (char === '[' || char === '{') {
           bracketCount++;
@@ -406,13 +426,13 @@ const cleanupTranscript = async (req, res) => {
         }
       }
     }
-    
+
     if (jsonEndIndex > -1) {
       cleanedText = cleanedText.substring(0, jsonEndIndex + 1);
     }
 
     console.log("Cleaned transcript cleanup text preview:", cleanedText.substring(0, 200) + "...");
-    
+
     // Now safe to parse
     const data = JSON.parse(cleanedText);
 

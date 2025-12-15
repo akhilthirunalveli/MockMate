@@ -43,12 +43,12 @@ const generateToken = (userId) => {
 // Helper function to generate initials from full name
 const generateInitials = (name) => {
   if (!name) return "U"; // Default fallback
-  
+
   const words = name.trim().split(" ");
   if (words.length === 1) {
     return words[0].charAt(0).toUpperCase();
   }
-  
+
   // Take first letter of first name and first letter of last name
   return (words[0].charAt(0) + words[words.length - 1].charAt(0)).toUpperCase();
 };
@@ -99,7 +99,7 @@ const loginUser = async (req, res) => {
     const { email, password } = req.body;
 
     const user = await User.findOne({ email }).select('+password').lean();
-    
+
     if (!user) {
       return res.status(401).json({ message: "Invalid email or password" });
     }
@@ -110,7 +110,7 @@ const loginUser = async (req, res) => {
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
-    
+
     if (!isMatch) {
       return res.status(401).json({ message: "Invalid email or password" });
     }
@@ -182,7 +182,7 @@ const deleteUser = async (req, res) => {
 
     // Check if user exists
     const user = await User.findById(userId);
-    
+
     if (!user) {
       console.log("User not found:", userId);
       return res.status(404).json({ message: "User not found" });
@@ -192,25 +192,34 @@ const deleteUser = async (req, res) => {
 
     // Find all sessions belonging to this user
     const userSessions = await Session.find({ user: userId });
-    console.log("Found sessions to delete:", userSessions.length);
+    const sessionIds = userSessions.map(session => session._id);
 
-    // Delete all questions associated with the user's sessions
-    for (const session of userSessions) {
-      await Question.deleteMany({ session: session._id });
+    console.log(`Found ${userSessions.length} sessions to delete for user ${userId}`);
+
+    // Delete all questions associated with the user's sessions in parallel
+    if (sessionIds.length > 0) {
+      const deleteQuestionsResult = await Question.deleteMany({ session: { $in: sessionIds } });
+      console.log(`Deleted ${deleteQuestionsResult.deletedCount} questions`);
     }
 
     // Delete all sessions belonging to this user
-    await Session.deleteMany({ user: userId });
+    const deleteSessionsResult = await Session.deleteMany({ user: userId });
+    console.log(`Deleted ${deleteSessionsResult.deletedCount} sessions`);
 
     // Finally, delete the user
-    await User.findByIdAndDelete(userId);
+    const deletedUser = await User.findByIdAndDelete(userId);
+
+    if (!deletedUser) {
+      // Fallback in case findById check passed but delete failed (rare race condition)
+      return res.status(404).json({ message: "User not found during deletion" });
+    }
 
     console.log("Successfully deleted user and related data");
     res.status(200).json({ message: "User and all related data deleted successfully" });
   } catch (error) {
     console.error("Error deleting user:", error);
-    res.status(500).json({ 
-      message: "Failed to delete user", 
+    res.status(500).json({
+      message: "Failed to delete user",
       error: error.message,
       details: error.toString()
     });
