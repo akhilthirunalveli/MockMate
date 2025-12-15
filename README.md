@@ -1,6 +1,6 @@
 
 <div align="center">
-  <img src="assets/Intro.gif" alt="MockMate Demo" width="100%" />
+  <img src="Assets/Intro.gif" alt="MockMate Demo" width="100%" />
   
   <h1>MockMate</h1>
   
@@ -30,14 +30,14 @@ From generating tailored questions based on your resume and role to analyzing yo
 
 | Feature | Description | Preview |
 |:---:|---|:---:|
-| **Live AI Interview** | Real-time video interview simulation with AI-generated questions and immediate feedback. Uses media cleanup to ensure privacy. | <img src="assets/LiveInterview.png" width="300" /> |
-| **Interactive Dashboard** | Track your progress, view past session scores, and manage your interview schedule. | <img src="assets/Dashboard.png" width="300" /> |
-| **Resume Analysis** | Upload your resume to get custom-tailored questions that match your experience level. | <img src="assets/Resume.png" width="300" /> |
-| **Concept Drill** | Deep dive into specific topics with AI-driven explanations and code examples. | <img src="assets/InterviewPrep.png" width="300" /> |
+| **Live AI Interview** | Real-time video interview simulation with AI-generated questions and immediate feedback. Uses media cleanup to ensure privacy. | <img src="Assets/LiveInterview.png" width="300" /> |
+| **Interactive Dashboard** | Track your progress, view past session scores, and manage your interview schedule. | <img src="Assets/Dashboard.png" width="300" /> |
+| **Resume Analysis** | Upload your resume to get custom-tailored questions that match your experience level. | <img src="Assets/Resume.png" width="300" /> |
+| **Concept Drill** | Deep dive into specific topics with AI-driven explanations and code examples. | <img src="Assets/InterviewPrep.png" width="300" /> |
 
 <div align="center">
-  <img src="assets/LandingPage.png" width="45%" alt="Landing Page"/>
-  <img src="assets/LiveInterviewCodeGenerate.png" width="45%" alt="Code Generation"/>
+  <img src="Assets/LandingPage.png" width="45%" alt="Landing Page"/>
+  <img src="Assets/LiveInterviewCodeGenerate.png" width="45%" alt="Code Generation"/>
 </div>
 
 ## 🛠 Tech Stack
