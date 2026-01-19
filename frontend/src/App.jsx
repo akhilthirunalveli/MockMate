@@ -69,6 +69,7 @@ import Record from "./pages/Interview/HRInterview/Record.jsx";
 import Admin from "./pages/Admin/admin.jsx";
 import SessionInterview from "./pages/Interview/SessionInterview/SessionInterview.jsx";
 import LiveInterview from "./pages/Interview/LiveInterview/index.jsx";
+import Docs from "./pages/Docs/Docs.jsx";
 
 const App = () => {
   return (
@@ -78,6 +79,7 @@ const App = () => {
           <ErrorBoundary>
             <Routes>
               <Route path="/" element={<LandingPage />} />
+              <Route path="/docs" element={<Docs />} />
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/admin" element={<Admin />} />
               <Route path="/interview-prep/:sessionId" element={<InterviewPrep />} />

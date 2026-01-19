@@ -54,8 +54,6 @@ const Navbar = () => {
         className="fixed top-0 left-0 right-0 z-50 px-4 sm:px-3 md:px-6 lg:px-9 pt-6 pb-4 sm:py-3 md:py-4 lg:py-6"
         style={{
           opacity: 1,
-          backgroundImage: "radial-gradient(#ffffff 0.5px,rgba(0, 0, 0, 0) 0.5px)",
-          backgroundSize: "21px 21px",
         }}>
         <div className="max-w-8xl mx-auto">
           <div className="bg-transparent text-white backdrop-blur-xl rounded-[20px] sm:rounded-[25px] md:rounded-[30px] shadow-lg shadow-black/[0.03] border border-gray-200/50">

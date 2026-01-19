@@ -119,6 +119,12 @@ const ProfileInfoCard = () => {
             >
               Home
             </button>
+            <button
+              className="px-3 py-1 text-sm font-semibold bg-amber-600 cursor-pointer rounded-full shadow hover:bg-amber-500 text-white transition-all"
+              onClick={e => { e.stopPropagation(); navigate("/docs"); }}
+            >
+              Docs
+            </button>
 
             <button
               className="px-3 py-1 text-sm font-semibold text-white bg-red-700 cursor-pointer rounded-full shadow hover:bg-red-500 transition-all"
