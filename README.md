@@ -44,7 +44,7 @@ An advanced Applicant Tracking System (ATS) simulation tool designed to optimize
 
 <div align="center">
   <img src="Assets/ATS.png" width="45%" alt="ATS"/>
-  <img src="Assets/ATSreport.png" width="45%" alt="ATS Report"/>
+  <img src="Assets/ATSReport.png" width="45%" alt="ATS Report"/>
 </div>
 
 <div align="center">
