@@ -6,6 +6,7 @@ import LandingPage from "./pages/Home/LandingPage.jsx";
 import UserProvider from "./context/userContext.jsx";
 import SpinnerLoader from "./pages/Preparation/Loader/SpinnerLoader.jsx";
 import ResumeViewPage from "./pages/Resume/ResumeViewPage.jsx";
+import ATSCheckerPage from "./pages/Resume/ATSCheckerPage.jsx";
 
 class ErrorBoundary extends React.Component {
   constructor(props) {
@@ -84,6 +85,7 @@ const App = () => {
               <Route path="/interview/session-interview" element={<SessionInterview />} />
               <Route path="/interview-prep/record" element={<Record />} />
               <Route path="/resume-view" element={<ResumeViewPage />} />
+              <Route path="/resume/ats-check" element={<ATSCheckerPage />} />
               <Route path="/interview-prep/session-interview" element={<SessionInterview />} />
               <Route path="/interview/live" element={<LiveInterview />} />
             </Routes>

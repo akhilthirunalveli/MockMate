@@ -116,7 +116,53 @@
   .animate-blob3 {
     animation: blob3 12s ease-in-out infinite;
   }
+
+  /* Animations for LandingPage */
+  @keyframes blink {
+
+    0%,
+    100% {
+      border-color: transparent
+    }
+
+    50% {
+      border-color: #333
+    }
+  }
+
+  .animate-blink {
+    animation: blink 1s steps(1) infinite;
+  }
+
+  @keyframes shine {
+    0% {
+      background-position: 200% 0;
+    }
+
+    100% {
+      background-position: -200% 0;
+    }
+  }
+
+  .animate-shine {
+    animation: shine 2s linear infinite;
+  }
 }
+
+@layer components {
+  .colorful-gradient-btn {
+    background: linear-gradient(90deg, #ff6a00, #ee0979, #00c3ff, rgb(0, 74, 25), rgb(0, 98, 80), #ff6a00);
+    background-size: 300% 100%;
+    background-position: 0% 0%;
+    transition: background-position 0.5s, box-shadow 0.3s, color 0.3s, transform 0.18s cubic-bezier(0.4, 0.2, 0.2, 1);
+  }
+
+  .colorful-gradient-btn:hover,
+  .colorful-gradient-btn:focus {
+    background-position: 100% 0;
+  }
+}
+
 
 .input-box {
   @apply w-full flex justify-between gap-3 text-sm text-black bg-gray-50/20 rounded px-4 py-4 mb-3 mt-3 border border-gray-100/50 outline-none;

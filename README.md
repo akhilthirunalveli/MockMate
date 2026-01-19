@@ -35,6 +35,18 @@ From generating tailored questions based on your resume and role to analyzing yo
 | **Resume Analysis** | Upload your resume to get custom-tailored questions that match your experience level. | <img src="Assets/Resume.png" width="300" /> |
 | **Concept Drill** | Deep dive into specific topics with AI-driven explanations and code examples. | <img src="Assets/InterviewPrep.png" width="300" /> |
 
+### 📄 ATS Resume Checker
+An advanced Applicant Tracking System (ATS) simulation tool designed to optimize resumes for maximum visibility.
+- **Twin-Panel Interface**: A sleek split-screen layout allowing side-by-side comparison of your resume and job description.
+- **Instant Analysis**: Real-time parsing of PDF/DOCX files to extract text and analyze content against job requirements.
+- **Detailed Scoring**: Provides a match score, missing keywords, hard/soft skills analysis, and actionable formatting feedback.
+- **Smart Recommendations**: Suggests improvements for readability, experience impact, and contact information completeness.
+
+<div align="center">
+  <img src="Assets/ATS.png" width="45%" alt="ATS"/>
+  <img src="Assets/ATSreport.png" width="45%" alt="ATS Report"/>
+</div>
+
 <div align="center">
   <img src="Assets/LandingPage.png" width="45%" alt="Landing Page"/>
   <img src="Assets/LiveInterviewCodeGenerate.png" width="45%" alt="Code Generation"/>
