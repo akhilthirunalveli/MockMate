@@ -195,17 +195,6 @@ function LandingPage() {
         </>
       )}
 
-      {/* Credit bar */}
-      <div className="fixed right-[1.5vw] bottom-[1.2vw] flex items-center gap-[0.5em] bg-black/12 text-[#b6b6b6] text-[1.05em] font-normal rounded-full pt-[0.35em] pr-[1.1em] pb-[0.35em] pl-[0.7em] z-[99] opacity-45 shadow-[0_2px_12px_0_rgba(0,0,0,0.08)] transition-[opacity,background,color] duration-200 select-none hover:opacity-100 hover:bg-black/38 hover:text-white group">
-        Developed By
-        <img
-          src={GithubLogo}
-          alt="GitHub"
-          className="h-[1.25em] w-[1.25em] mr-[0.3em] align-middle opacity-65 grayscale-[0.7] transition-[filter,opacity] duration-200 select-none pointer-events-none group-hover:filter-none group-hover:opacity-100"
-        />
-        akhilthirunalveli
-      </div>
-
       <Modal
         isOpen={openAuthModal}
         onClose={() => {
