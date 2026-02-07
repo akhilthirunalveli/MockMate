@@ -19,9 +19,11 @@ import {
 import { Card, StatsCard, ChartCard, Button, SkeletonLoader, CardSkeleton, ConnectionStatus, TabNavigation, baseStyles } from "./Components/AdminUI.jsx";
 import UsersTab from "./Components/UsersTab.jsx";
 import SessionsTab from "./Components/SessionsTab.jsx";
-import QuestionsTab from "./Components/QuestionsTab.jsx";
+import BroadcastTab from "./Components/BroadcastTab.jsx";
+import AdminSidebar from "./Components/AdminSidebar.jsx";
 
 const ADMIN_CODE = "1110";
+// Premium Solid Colors (No Gradients)
 const COLORS = ['#007bff', '#28a745', '#ffc107', '#dc3545', '#6f42c1', '#fd7e14', '#20c997', '#6c757d'];
 
 // Utility function to load Google Fonts
@@ -35,250 +37,313 @@ const loadGoogleFonts = () => {
 };
 loadGoogleFonts();
 
-// LoginPage component remains here for now
 const LoginPage = ({ onLogin }) => {
   const [code, setCode] = useState("");
   const [error, setError] = useState("");
-  const [isShaking, setIsShaking] = useState(false);
+  const [isWarping, setIsWarping] = useState(false);
+  const canvasRef = React.useRef(null);
+  const mouseRef = React.useRef({ x: -9999, y: -9999 });
+
+  // Handle Input
   const handleSubmit = (e) => {
     e.preventDefault();
     if (code === ADMIN_CODE) {
-      onLogin();
+      // Trigger Warp Animation
+      setIsWarping(true);
       setError("");
+      setTimeout(() => {
+        onLogin();
+      }, 1500); // Wait for animation
     } else {
-      setError("Invalid access code. Please try again.");
-      setIsShaking(true);
-      setTimeout(() => setIsShaking(false), 500);
+      setError("ACCESS DENIED");
       setCode("");
     }
   };
+
+  // Canvas Animation Logic
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    let animationFrameId;
+    let particles = [];
+
+    // Configuration
+    const GRID_SPACING = 30; // Distance between dots
+    const DOT_SIZE = 1.5;
+    const MOUSE_RADIUS = 150;
+    const RETURN_SPEED = 0.05; // How fast dots return to origin
+    const WARP_SPEED_MULTIPLIER = 0.2; // Acceleration during warp
+
+    // Resize Handler
+    const resizeCanvas = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      initParticles();
+    };
+
+    // Initialize Grid Particles
+    const initParticles = () => {
+      particles = [];
+      const cols = Math.ceil(canvas.width / GRID_SPACING);
+      const rows = Math.ceil(canvas.height / GRID_SPACING);
+
+      for (let i = 0; i < cols; i++) {
+        for (let j = 0; j < rows; j++) {
+          particles.push({
+            x: i * GRID_SPACING,
+            y: j * GRID_SPACING,
+            originX: i * GRID_SPACING,
+            originY: j * GRID_SPACING,
+            vx: 0,
+            vy: 0,
+            size: DOT_SIZE,
+            color: 'rgba(50, 50, 50, 0.3)' // Initial dim color
+          });
+        }
+      }
+    };
+
+    // Animation Loop
+    const animate = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Update & Draw Particles
+      particles.forEach(p => {
+        let dx = mouseRef.current.x - p.x;
+        let dy = mouseRef.current.y - p.y;
+        let distance = Math.sqrt(dx * dx + dy * dy);
+
+        // Interaction Logic
+        if (isWarping) {
+          // WARP MODE: All dots suck into center
+          const centerX = canvas.width / 2;
+          const centerY = canvas.height / 2;
+          let dxWarp = centerX - p.x;
+          let dyWarp = centerY - p.y;
+          p.x += dxWarp * WARP_SPEED_MULTIPLIER;
+          p.y += dyWarp * WARP_SPEED_MULTIPLIER;
+          p.color = `rgba(255, 255, 255, ${Math.random()})`; // Flicker white
+        } else {
+          // NORMAL MODE: Mouse Repulsion/Attraction
+          if (distance < MOUSE_RADIUS) {
+            const angle = Math.atan2(dy, dx);
+            const force = (MOUSE_RADIUS - distance) / MOUSE_RADIUS;
+            const pushX = Math.cos(angle) * force * 5; // Push strength
+            const pushY = Math.sin(angle) * force * 5;
+
+            // Move dot away from mouse
+            p.vx -= pushX;
+            p.vy -= pushY;
+
+            // Highlight near mouse
+            p.color = `rgba(255, 255, 255, ${force + 0.2})`;
+          } else {
+            p.color = 'rgba(60, 60, 60, 0.4)'; // Reset to subtle grey
+          }
+
+          // Physics: Spring back to origin
+          p.vx += (p.originX - p.x) * RETURN_SPEED;
+          p.vy += (p.originY - p.y) * RETURN_SPEED;
+
+          // Dampening (Friction)
+          p.vx *= 0.90;
+          p.vy *= 0.90;
+
+          p.x += p.vx;
+          p.y += p.vy;
+        }
+
+        // Draw Dot
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fillStyle = p.color;
+        ctx.fill();
+      });
+
+      animationFrameId = requestAnimationFrame(animate);
+    };
+
+    // Mouse Listeners
+    const handleMouseMove = (e) => {
+      if (!isWarping) {
+        mouseRef.current = { x: e.clientX, y: e.clientY };
+      }
+    };
+    const handleMouseLeave = () => {
+      mouseRef.current = { x: -9999, y: -9999 };
+    };
+
+    window.addEventListener('resize', resizeCanvas);
+    window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('mouseleave', handleMouseLeave); // Reset on exit
+
+    resizeCanvas();
+    animate();
+
+    return () => {
+      window.removeEventListener('resize', resizeCanvas);
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('mouseleave', handleMouseLeave);
+      cancelAnimationFrame(animationFrameId);
+    };
+  }, [isWarping]);
+
   return (
     <div style={{
-      minHeight: "100vh",
-      width: "100vw",
-      display: "flex",
-      flexDirection: "column",
-      justifyContent: "flex-start",
-      alignItems: "center",
-      backgroundColor: "#000000",
-      backgroundImage: "radial-gradient(#222 1px, #000000 1px)",
-      backgroundSize: "20px 20px",
-      fontFamily: baseStyles.fontFamily,
       position: "relative",
-      paddingTop: "clamp(30vh, 31vh, 32vh)",
-      paddingBottom: "2rem",
-      boxSizing: "border-box"
+      height: "100vh",
+      width: "100vw",
+      overflow: "hidden",
+      backgroundColor: "#000",
+      fontFamily: "'Montserrat', sans-serif" // Ensure premium font
     }}>
-      {/* ...existing code... */}
+      {/* 1. Canvas Background */}
+      <canvas
+        ref={canvasRef}
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          zIndex: 0
+        }}
+      />
+
+      {/* 2. Login Container (Centered) */}
       <div style={{
-        position: "absolute",
-        top: "20%",
-        left: "20%",
-        width: "200px",
-        height: "200px",
-        background: "linear-gradient(45deg, rgba(0, 123, 255, 0.3), rgba(40, 167, 69, 0.3))",
-        borderRadius: "50%",
-        filter: "blur(60px)",
-        animation: "float1 6s ease-in-out infinite"
-      }} />
-      <div style={{
-        position: "absolute",
-        top: "60%",
-        right: "15%",
-        width: "150px",
-        height: "150px",
-        background: "linear-gradient(45deg, rgba(255, 193, 7, 0.3), rgba(220, 53, 69, 0.3))",
-        borderRadius: "50%",
-        filter: "blur(50px)",
-        animation: "float2 8s ease-in-out infinite"
-      }} />
-      <div style={{
-        ...baseStyles.glassMorphism,
-        padding: "3rem 2.5rem",
-        maxWidth: "400px",
-        width: "90%",
-        textAlign: "center",
-        boxShadow: "0 25px 50px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.05)",
-        animation: isShaking ? "shake 0.5s ease-in-out" : "none",
         position: "relative",
-        zIndex: 10
+        zIndex: 10,
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+        opacity: isWarping ? 0 : 1, // Fade out on success
+        transition: "opacity 0.8s ease-out",
+        pointerEvents: isWarping ? "none" : "auto"
       }}>
-        <h1 style={{
-          color: "rgba(255, 255, 255, 0.95)",
-          marginBottom: "0.5rem",
-          fontSize: "clamp(1.8rem, 4vw, 2.5rem)",
-          fontWeight: "700",
-          fontFamily: baseStyles.fontFamily,
-          textShadow: "0 2px 10px rgba(0, 0, 0, 0.3)"
+
+        {/* Glass Card */}
+        <div style={{
+          background: "rgba(0, 0, 0, 1)", // Very dark glass
+          backdropFilter: "blur(20px)",
+          WebkitBackdropFilter: "blur(20px)",
+          padding: "3rem 4rem",
+          borderRadius: "24px",
+          border: "1px solid rgba(255, 255, 255, 0.08)",
+          boxShadow: "0 25px 50px rgba(0,0,0,0.5)", // Deep shadow
+          textAlign: "center",
+          transform: "translateY(0)",
+          transition: "all 0.3s ease",
+          maxWidth: "400px",
+          width: "90%"
         }}>
-          Admin Access
-        </h1>
-        <p style={{
-          color: "rgba(255, 255, 255, 0.7)",
-          marginBottom: "2rem",
-          fontSize: "clamp(0.9rem, 2.5vw, 1rem)"
-        }}>
-          Enter 4-digit access code
-        </p>
-        <form onSubmit={handleSubmit}>
-          <div style={{
-            display: "flex",
-            justifyContent: "center",
-            gap: "0.75rem",
-            marginBottom: "2rem"
-          }}>
-            {[0, 1, 2, 3].map((index) => (
-              <input
-                key={index}
-                type="tel"
-                inputMode="numeric"
-                pattern="[0-9]*"
-                value={code[index] || ""}
-                onChange={(e) => {
-                  const value = e.target.value.replace(/\D/g, "");
-                  if (value.length <= 1) {
-                    const newCode = code.split("");
-                    newCode[index] = value;
-                    const updatedCode = newCode.join("").slice(0, 4);
-                    setCode(updatedCode);
-                    if (error) setError("");
-                    if (value && index < 3) {
-                      const nextInput = e.target.parentElement.children[index + 1];
-                      if (nextInput) nextInput.focus();
-                    }
-                  }
-                }}
-                onKeyDown={(e) => {
-                  if (e.key === "Backspace" && !code[index] && index > 0) {
-                    const prevInput = e.target.parentElement.children[index - 1];
-                    if (prevInput) prevInput.focus();
-                  }
-                }}
-                placeholder="•"
-                style={{
-                  width: "3rem",
-                  height: "3rem",
-                  padding: "0",
-                  fontSize: "clamp(1.2rem, 3vw, 1.5rem)",
-                  textAlign: "center",
-                  background: "#000000",
-                  backdropFilter: "blur(10px)",
-                  WebkitBackdropFilter: "blur(10px)",
-                  border: "2px solid #353535ff",
-                  borderRadius: "12px",
-                  color: "white",
-                  fontFamily: baseStyles.fontFamily,
-                  outline: "none",
-                  transition: "all 0.3s ease"
-                }}
-                onFocus={(e) => {
-                  e.target.style.borderColor = "rgba(255, 255, 255, 1)";
-                  e.target.style.boxShadow = "0 0 20px rgba(43, 43, 43, 0.5)";
-                }}
-                onBlur={(e) => {
-                  e.target.style.borderColor = "#ffffff";
-                  e.target.style.boxShadow = "none";
-                }}
-                maxLength="1"
-                autoFocus={index === 0}
-              />
+
+          {/* Header */}
+          <div style={{ marginBottom: "2.5rem" }}>
+            <h1 style={{
+              color: "#fff",
+              fontSize: "2rem",
+              fontWeight: 700,
+              letterSpacing: "-0.5px",
+              marginBottom: "0.5rem",
+            }}>
+              System Access
+            </h1>
+            <p style={{ color: "#666", fontSize: "0.9rem", fontWeight: 500 }}>
+              SECURE ENVIRONMENT
+            </p>
+          </div>
+
+          {/* Input Field (Hidden visually, functionality preserved for mobile keyboard) */}
+          {/* We use a custom visualizer for the code */}
+          <div style={{ display: "flex", justifyContent: "center", gap: "1rem", marginBottom: "2.5rem" }}>
+            {[0, 1, 2, 3].map((idx) => (
+              <div key={idx} style={{
+                width: "50px",
+                height: "50px",
+                borderRadius: "12px",
+                border: code[idx]
+                  ? "1px solid rgba(255, 255, 255, 0.23)"  // Filled state
+                  : "1px solid rgba(255, 255, 255, 0.1)", // Empty state
+                backgroundColor: code[idx]
+                  ? "rgba(255, 255, 255, 0.04)"
+                  : "transparent",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                fontSize: "2rem",
+                color: "#fff",
+                transition: "all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94)",
+              }}>
+                {code[idx] ? "•" : ""}
+              </div>
             ))}
           </div>
-          {error && (
-            <div style={{
-              color: "rgba(220, 53, 69, 0.9)",
-              fontSize: "0.9rem",
-              marginBottom: "1rem",
-              padding: "0.5rem",
-              background: "rgba(220, 53, 69, 0.1)",
-              backdropFilter: "blur(10px)",
-              WebkitBackdropFilter: "blur(10px)",
-              border: "1px solid rgba(220, 53, 69, 0.3)",
-              borderRadius: "8px"
-            }}>
-              {error}
-            </div>
-          )}
+
+          {/* Hidden Input to Capture Keystrokes */}
+          <input
+            type="tel" // Use tel for numeric keypad on mobile
+            inputMode="numeric"
+            autoFocus
+            value={code}
+            onChange={(e) => {
+              const val = e.target.value.replace(/\D/g, '').slice(0, 4);
+              setCode(val);
+              if (error) setError("");
+            }}
+            style={{
+              position: "absolute",
+              opacity: 0,
+              top: 0,
+              left: 0,
+              height: "100%",
+              width: "100%",
+              cursor: "default"
+            }}
+          />
+
+          {/* Error Message */}
+          <div style={{
+            height: "20px",
+            color: "#ff4444",
+            fontSize: "0.85rem",
+            fontWeight: 600,
+            letterSpacing: "1px",
+            opacity: error ? 1 : 0,
+            transition: "opacity 0.2s"
+          }}>
+            {error}
+          </div>
+
+          {/* Action Button */}
           <button
-            type="submit"
+            onClick={handleSubmit}
             disabled={code.length !== 4}
             style={{
+              marginTop: "2rem",
               width: "100%",
               padding: "1rem",
-              fontSize: "clamp(1rem, 2.5vw, 1.1rem)",
-              fontWeight: "600",
-              background: code.length === 4
-                ? "linear-gradient(135deg, rgba(0, 123, 255, 0.8), rgba(0, 86, 179, 0.8))"
-                : "rgba(255, 255, 255, 0.1)",
-              backdropFilter: "blur(10px)",
-              WebkitBackdropFilter: "blur(10px)",
-              color: "white",
-              border: code.length === 4
-                ? "1px solid rgba(0, 123, 255, 0.3)"
-                : "1px solid rgba(255, 255, 255, 0.2)",
               borderRadius: "12px",
+              border: "none",
+              background: code.length === 4
+                ? "#fff"
+                : "rgba(255,255,255,0.05)",
+              color: code.length === 4 ? "#000" : "rgba(255,255,255,0.3)",
+              fontWeight: 600,
+              fontSize: "1rem",
               cursor: code.length === 4 ? "pointer" : "not-allowed",
-              fontFamily: baseStyles.fontFamily,
               transition: "all 0.3s ease",
-              opacity: code.length === 4 ? 1 : 0.6,
-              boxShadow: code.length === 4 ? "0 8px 25px rgba(0, 123, 255, 0.2)" : "none"
-            }}
-            onMouseEnter={(e) => {
-              if (code.length === 4) {
-                e.target.style.transform = "translateY(-2px)";
-                e.target.style.boxShadow = "0 12px 35px rgba(0, 123, 255, 0.3)";
-              }
-            }}
-            onMouseLeave={(e) => {
-              if (code.length === 4) {
-                e.target.style.transform = "translateY(0px)";
-                e.target.style.boxShadow = "0 8px 25px rgba(0, 123, 255, 0.2)";
-              }
+              transform: code.length === 4 ? "scale(1)" : "scale(0.98)"
             }}
           >
-            Access Dashboard
+            {isWarping ? "AUTHENTICATING..." : "ENTER DASHBOARD"}
           </button>
-        </form>
+
+        </div>
+
       </div>
-      <style>{`
-        @keyframes pulse {
-          0%, 100% { opacity: 0.6; }
-          50% { opacity: 0.9; }
-        }
-        @keyframes shake {
-          0%, 100% { transform: translateX(0); }
-          10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
-          20%, 40%, 60%, 80% { transform: translateX(5px); }
-        }
-        @keyframes float1 {
-          0%, 100% { transform: translate(0, 0) rotate(0deg); }
-          33% { transform: translate(30px, -30px) rotate(120deg); }
-          66% { transform: translate(-20px, 20px) rotate(240deg); }
-        }
-        @keyframes float2 {
-          0%, 100% { transform: translate(0, 0) rotate(0deg); }
-          33% { transform: translate(-25px, -20px) rotate(-120deg); }
-          66% { transform: translate(25px, 25px) rotate(-240deg); }
-        }
-        div[style*="overflowX: auto"]::-webkit-scrollbar {
-          height: 4px;
-        }
-        div[style*="overflowX: auto"]::-webkit-scrollbar-track {
-          background: rgba(255, 255, 255, 0.1);
-          border-radius: 2px;
-        }
-        div[style*="overflowX: auto"]::-webkit-scrollbar-thumb {
-          background: rgba(255, 255, 255, 0.3);
-          border-radius: 2px;
-        }
-        div[style*="overflowX: auto"]::-webkit-scrollbar-thumb:hover {
-          background: rgba(255, 255, 255, 0.5);
-        }
-        div[style*="overflowX: auto"] {
-          scrollbar-color: rgba(255, 255, 255, 0.3) rgba(255, 255, 255, 0.1);
-        }
-      `}</style>
-    </div>
+    </div >
   );
 };
 
@@ -290,11 +355,12 @@ const AdminDashboard = () => {
   const [users, setUsers] = useState([]);
   const [sessions, setSessions] = useState([]);
   const [questions, setQuestions] = useState([]);
+  const [advancedAnalytics, setAdvancedAnalytics] = useState(null); // New state for advanced analytics
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [activeTab, setActiveTab] = useState("analytics");
   const [expandedUsers, setExpandedUsers] = useState(new Set());
-  const [expandedQuestionGroups, setExpandedQuestionGroups] = useState(new Set());
+  // Removed expandedQuestionGroups state as QuestionsTab is removed
   const [connectionStatus, setConnectionStatus] = useState("testing");
   const [loadedTabs, setLoadedTabs] = useState(new Set(["analytics"]));
 
@@ -345,22 +411,25 @@ const AdminDashboard = () => {
         if (token) headers.Authorization = `Bearer ${token}`;
 
         // Fetch all data in parallel
-        const [usersResponse, sessionsResponse, questionsResponse] = await Promise.all([
+        const [usersResponse, sessionsResponse, questionsResponse, analyticsResponse] = await Promise.all([
           fetch(`${BASE_URL}/api/auth/users`, { headers }),
           fetch(`${BASE_URL}/api/sessions/all`, { headers }),
-          fetch(`${BASE_URL}/api/questions/all`, { headers })
+          fetch(`${BASE_URL}/api/questions/all`, { headers }),
+          fetch(`${BASE_URL}/api/admin/analytics`, { headers }) // Fetch new analytics
         ]);
 
         // Process responses
-        const [usersData, sessionsData, questionsData] = await Promise.all([
+        const [usersData, sessionsData, questionsData, analyticsData] = await Promise.all([
           usersResponse.json(),
           sessionsResponse.json(),
-          questionsResponse.json()
+          questionsResponse.json(),
+          analyticsResponse.json()
         ]);
 
         setUsers(Array.isArray(usersData) ? usersData : []);
         setSessions(Array.isArray(sessionsData) ? sessionsData : []);
         setQuestions(Array.isArray(questionsData) ? questionsData : []);
+        setAdvancedAnalytics(analyticsData);
 
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -406,6 +475,29 @@ const AdminDashboard = () => {
       alert("User deleted successfully");
     } catch (error) {
       alert("Failed to delete user: " + error.message);
+    }
+  };
+
+  const handleBanUser = async (userId) => {
+    try {
+      const token = localStorage.getItem("token");
+      const headers = { "Content-Type": "application/json" };
+      if (token) headers.Authorization = `Bearer ${token}`;
+
+      const response = await fetch(`${BASE_URL}/api/admin/users/${userId}/ban`, {
+        method: "POST",
+        headers,
+      });
+
+      if (!response.ok) throw new Error("Failed to update ban status");
+
+      const data = await response.json();
+
+      setUsers(users.map(user =>
+        user._id === userId ? { ...user, isBanned: data.isBanned } : user
+      ));
+    } catch (error) {
+      alert("Failed to ban/unban user: " + error.message);
     }
   };
 
@@ -517,7 +609,7 @@ const AdminDashboard = () => {
     { key: "analytics", label: "Analytics" },
     { key: "users", label: "Users", count: users.length },
     { key: "sessions", label: "Sessions", count: sessions.length },
-    { key: "questions", label: "Questions", count: questions.length }
+    { key: "broadcast", label: "Broadcast" }
   ];
 
   return (
@@ -527,46 +619,26 @@ const AdminDashboard = () => {
       backgroundImage: "radial-gradient(#222 1px, #000000 1px)",
       backgroundSize: "20px 20px",
       fontFamily: baseStyles.fontFamily,
-      margin: "0",
-      padding: "0"
+      display: "flex"
     }}>
+      {/* Sidebar */}
+      <AdminSidebar activeTab={activeTab} setActiveTab={(tab) => {
+        setActiveTab(tab);
+        setLoadedTabs(prev => new Set([...prev, tab]));
+      }} onLogout={handleLogout} connectionStatus={connectionStatus} />
+
+      {/* Main Content */}
       <div style={{
-        padding: "clamp(1.5rem, 2vw, 1.5rem)",
+        flex: 1,
+        marginLeft: "80px", // Collapsed Sidebar width
+        padding: "clamp(2rem, 3vw, 3rem)", // More padding for professional feel
         minHeight: "100vh",
         boxSizing: "border-box",
-        maxWidth: "100vw",
-        overflow: "hidden"
+        maxWidth: "calc(100vw - 80px)",
+        overflow: "hidden",
+        backgroundColor: "#000000" // Ensure background is solid black
       }}>
-        {/* Header */}
-        <div style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          marginBottom: "clamp(0.75rem, 2vw, 1rem)",
-          flexWrap: "wrap",
-          gap: "1rem"
-        }}>
-          <h1 style={{
-            color: "white",
-            margin: "0",
-            fontSize: "clamp(1.5rem, 3.5vw, 2.5rem)",
-            fontWeight: "700",
-            fontFamily: baseStyles.fontFamily
-          }}>
-            Dashboard
-          </h1>
-          <Button variant="danger" onClick={handleLogout}>
-            Logout
-          </Button>
-        </div>
-
-        <ConnectionStatus status={connectionStatus} url={BASE_URL} />
-        <TabNavigation
-          activeTab={activeTab}
-          setActiveTab={setActiveTab}
-          setLoadedTabs={setLoadedTabs}
-          tabs={tabs}
-        />
+        {/* Connection Status removed from here as it is now in Sidebar */}
 
         {loading ? (
           <div style={{
@@ -631,6 +703,26 @@ const AdminDashboard = () => {
                   />
                 </div>
 
+                {advancedAnalytics && advancedAnalytics.popularTopics && (
+                  <div style={{ marginBottom: "1.5rem" }}>
+                    <h3 style={{ color: "white", marginBottom: "1rem", fontFamily: baseStyles.fontFamily }}>Popular Topics</h3>
+                    <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>
+                      {advancedAnalytics.popularTopics.map((topic, index) => (
+                        <span key={index} style={{
+                          backgroundColor: "#222",
+                          color: "#fff",
+                          padding: "0.5rem 1rem",
+                          borderRadius: "20px",
+                          fontSize: "0.9rem",
+                          border: "1px solid #333"
+                        }}>
+                          {topic._id} <span style={{ color: "#888", marginLeft: "0.5rem" }}>({topic.count})</span>
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
                 {/* Charts */}
                 <div style={{
                   display: "grid",
@@ -657,8 +749,8 @@ const AdminDashboard = () => {
                           </Pie>
                           <Tooltip
                             contentStyle={{
-                              backgroundColor: "#ffffffff",
-                              border: "1px solid #555",
+                              backgroundColor: "#000",
+                              border: "1px solid #333",
                               borderRadius: "8px",
                               color: "white"
                             }}
@@ -682,8 +774,8 @@ const AdminDashboard = () => {
                           <YAxis tick={{}} />
                           <Tooltip
                             contentStyle={{
-                              backgroundColor: "#000000ff",
-                              border: "1px solid #555",
+                              backgroundColor: "#000",
+                              border: "1px solid #333",
                               borderRadius: "8px",
                               color: "white"
                             }}
@@ -709,8 +801,8 @@ const AdminDashboard = () => {
                         <YAxis tick={{ fill: 'white' }} />
                         <Tooltip
                           contentStyle={{
-                            backgroundColor: "#2a2a2a",
-                            border: "1px solid #555",
+                            backgroundColor: "#000",
+                            border: "1px solid #333",
                             borderRadius: "8px",
                             color: "white"
                           }}
@@ -734,19 +826,21 @@ const AdminDashboard = () => {
             )}
 
             {activeTab === "users" && loadedTabs.has("users") && (
-              <UsersTab users={users} handleDeleteUser={handleDeleteUser} />
+              <UsersTab
+                users={users}
+                handleDeleteUser={handleDeleteUser}
+                handleBanUser={handleBanUser}
+                sessions={sessions}
+                questions={questions}
+              />
             )}
 
             {activeTab === "sessions" && loadedTabs.has("sessions") && (
               <SessionsTab sessions={sessions} />
             )}
 
-            {activeTab === "questions" && loadedTabs.has("questions") && (
-              <QuestionsTab
-                groupedQuestions={groupedQuestions}
-                expandedGroups={expandedQuestionGroups}
-                toggleGroupExpansion={toggleQuestionGroupExpansion}
-              />
+            {activeTab === "broadcast" && (
+              <BroadcastTab />
             )}
 
           </>
