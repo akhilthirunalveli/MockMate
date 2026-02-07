@@ -3,6 +3,12 @@ import ProfileInfoCard from "./ProfileInfoCard.jsx";
 import { Link, useNavigate } from "react-router-dom";
 import { UserContext } from "../../context/userContext.jsx";
 import toast from "react-hot-toast";
+import { AnimatePresence, motion } from "framer-motion";
+import { Mail01Icon, Delete02Icon, Cancel01Icon } from 'hugeicons-react';
+import axiosInstance from "../../utils/axiosInstance.js";
+import moment from "moment";
+
+
 
 const Navbar = () => {
   useEffect(() => {
@@ -36,6 +42,49 @@ const Navbar = () => {
   const { user, clearUser } = useContext(UserContext);
   const navigate = useNavigate();
   const [showMobileMenu, setShowMobileMenu] = useState(false);
+
+  // Notification State
+  const [showNotifications, setShowNotifications] = useState(false);
+  const [notifications, setNotifications] = useState([]);
+  const [unreadCount, setUnreadCount] = useState(0);
+
+  const fetchNotifications = async () => {
+    try {
+      if (!user) return; // Don't fetch if no user
+      const response = await axiosInstance.get('/api/notifications');
+      console.log("[NAVBAR] Notifications fetched:", response.data);
+      setNotifications(response.data);
+      setUnreadCount(response.data.filter(n => !n.isRead).length);
+    } catch (err) {
+      console.error("Failed to fetch notifications", err);
+    }
+  };
+
+  const markRead = async (id) => {
+    try {
+      await axiosInstance.put(`/api/notifications/${id}/read`);
+      setNotifications(prev => prev.map(n => n._id === id ? { ...n, isRead: true } : n));
+      setUnreadCount(prev => Math.max(0, prev - 1));
+    } catch (err) {
+      console.error("Failed to mark read");
+    }
+  };
+
+  const clearAllNotifications = async () => {
+    try {
+      await axiosInstance.delete('/api/notifications/clear-all');
+      setNotifications([]);
+      setUnreadCount(0);
+      toast.success("All notifications cleared");
+    } catch (err) {
+      console.error("Failed to clear notifications", err);
+      toast.error("Failed to clear notifications");
+    }
+  };
+
+  useEffect(() => {
+    fetchNotifications();
+  }, [user]);
 
   const handleLogout = () => {
     localStorage.clear();
@@ -134,6 +183,94 @@ const Navbar = () => {
               <div className="flex-1"></div>
 
               <div className="flex items-center gap-2 sm:gap-3 md:gap-4">
+                {/* Magic Pill Notification */}
+                <div className="relative">
+                  <button
+                    onClick={() => setShowNotifications(!showNotifications)}
+                    className="relative p-2 rounded-full hover:bg-white/10 transition-colors focus:outline-none"
+                  >
+                    <Mail01Icon className="text-gray-300 hover:text-white transition-colors" size={20} />
+                    {unreadCount > 0 && (
+                      <span className="absolute top-1.5 right-2 w-2 h-2 bg-red-500 rounded-full border border-black shadow-[0_0_8px_rgba(239,68,68,0.6)]"></span>
+                    )}
+                  </button>
+
+                  <AnimatePresence>
+                    {showNotifications && (
+                      <>
+                        <div
+                          className="fixed inset-0 z-40"
+                          onClick={() => setShowNotifications(false)}
+                        />
+                        <motion.div
+                          initial={{ opacity: 0, y: -20, scaleY: 0.8 }}
+                          animate={{ opacity: 1, y: 0, scaleY: 1 }}
+                          exit={{ opacity: 0, y: -20, scaleY: 0.8 }}
+                          transition={{ type: "spring", stiffness: 300, damping: 25 }}
+                          style={{ originY: 0 }}
+                          className="absolute top-14 right-[-20px] w-80 bg-[#000000] border border-white/10 rounded-2xl shadow-2xl overflow-hidden z-50"
+                        >
+                          <div className="p-4 border-b border-white/5 flex justify-between items-center bg-white/[0.02]">
+                            <h3 className="text-white font-semibold text-sm">
+                              Notifications
+                            </h3>
+                            {unreadCount > 0 && (
+                              <span className="text-[10px] bg-red-900 text-white px-2 py-0.5 rounded-full border border-red-500/20">
+                                {unreadCount} new
+                              </span>
+                            )}
+                            {notifications.length > 0 && (
+                              <button
+                                onClick={clearAllNotifications}
+                                className="ml-auto text-gray-400 hover:text-red-500 transition-colors p-1 rounded-md hover:bg-white/5"
+                                title="Clear all"
+                              >
+                                <Delete02Icon size={14} />
+                              </button>
+                            )}
+                          </div>
+                          <div className="max-h-[320px] overflow-y-auto custom-scrollbar">
+                            {notifications.length === 0 ? (
+                              <div className="flex flex-col items-center justify-center py-10 text-gray-500">
+                                <Mail01Icon className="mb-2 opacity-20" size={24} />
+                                <p className="text-xs">No notifications</p>
+                              </div>
+                            ) : (
+                              notifications.map(note => (
+                                <div
+                                  key={note._id}
+                                  className={`p-4 border-b border-white/5 hover:bg-white/5 transition-colors cursor-pointer group ${!note.isRead ? 'bg-white/[0.02]' : ''}`}
+                                  onClick={() => {
+                                    markRead(note._id);
+                                  }}
+                                >
+                                  <div className="flex justify-between items-start gap-3 mb-1">
+                                    <h4 className={`text-sm leading-tight ${!note.isRead ? 'text-white font-medium' : 'text-gray-400'}`}>
+                                      {note.title}
+                                    </h4>
+                                    <span className="text-[10px] text-gray-600 whitespace-nowrap pt-0.5 group-hover:text-gray-500 transition-colors">
+                                      {moment(note.createdAt).fromNow(true)}
+                                    </span>
+                                  </div>
+                                  <p className="text-xs text-gray-500 line-clamp-2 leading-relaxed group-hover:text-gray-400 transition-colors">
+                                    {note.message}
+                                  </p>
+                                  {!note.isRead && (
+                                    <div className="mt-2 flex items-center gap-1.5">
+                                      <div className="w-1.5 h-1.5 rounded-full bg-blue-500"></div>
+                                      <span className="text-[10px] text-blue-500 font-medium">Unread</span>
+                                    </div>
+                                  )}
+                                </div>
+                              ))
+                            )}
+                          </div>
+                        </motion.div>
+                      </>
+                    )}
+                  </AnimatePresence>
+                </div>
+
                 <div className="hidden sm:block">
                   <ProfileInfoCard />
                 </div>
