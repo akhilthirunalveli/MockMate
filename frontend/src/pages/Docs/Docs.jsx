@@ -1,254 +1,128 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import Navbar from '../Navbar/Navbar.jsx';
+import {
+    UserCircleIcon,
+    DashboardSquare01Icon,
+    File02Icon,
+    VideoReplayIcon,
+    UserGroupIcon,
+    ArrowLeft01Icon,
+    Rocket01Icon,
+    BulbIcon
+} from 'hugeicons-react';
 import { useNavigate } from 'react-router-dom';
 
 const Docs = () => {
     const navigate = useNavigate();
-    const [activeSection, setActiveSection] = useState('introduction');
 
-    const sections = [
-        { id: 'introduction', title: 'Introduction' },
-        { id: 'authentication', title: 'Authentication' },
-        { id: 'dashboard', title: 'Dashboard' },
-        { id: 'resume-checker', title: 'ATS Resume Checker' },
-        { id: 'interview-prep', title: 'Interview Preparation' },
-        { id: 'live-interview', title: 'Live Interview' },
-        { id: 'admin', title: 'Admin Controls' },
-    ];
+    const Section = ({ title, children, icon }) => (
+        <div className="mb-16">
+            <div className="flex items-center gap-3 mb-6">
+                <div className="p-2 rounded-lg bg-neutral-900 border border-neutral-800 text-white">
+                    {icon}
+                </div>
+                <h2 className="text-2xl font-bold text-white">{title}</h2>
+            </div>
+            <div className="text-neutral-400 leading-relaxed text-lg space-y-4">
+                {children}
+            </div>
+        </div>
+    );
 
-    const scrollToSection = (id) => {
-        const element = document.getElementById(id);
-        if (element) {
-            element.scrollIntoView({ behavior: 'smooth' });
-            setActiveSection(id);
-        }
-    };
-
-    // Handle scroll spy to update active section
-    useEffect(() => {
-        const handleScroll = () => {
-            const scrollPosition = window.scrollY + 150;
-
-            for (const section of sections) {
-                const element = document.getElementById(section.id);
-                if (element && element.offsetTop <= scrollPosition && (element.offsetTop + element.offsetHeight) > scrollPosition) {
-                    setActiveSection(section.id);
-                }
-            }
-        };
-
-        window.addEventListener('scroll', handleScroll);
-        return () => window.removeEventListener('scroll', handleScroll);
-    }, []);
-
-    const PathBadge = ({ path }) => (
-        <code className="bg-[#1a1a1a] text-xs text-gray-400 px-2 py-1 rounded border border-[#333] font-mono ml-3">
-            {path}
-        </code>
+    const FeatureCard = ({ title, description }) => (
+        <div className="bg-neutral-900/50 backdrop-blur-sm border border-neutral-800 p-6 rounded-xl hover:border-neutral-700 transition-all group">
+            <h3 className="text-lg font-semibold text-white mb-2 group-hover:text-primary transition-colors">{title}</h3>
+            <p className="text-neutral-400 text-sm leading-relaxed">{description}</p>
+        </div>
     );
 
     return (
-        <div className="min-h-screen bg-black text-gray-300 font-['Nunito'] selection:bg-white/20">
+        <div className="min-h-screen bg-dots-dark font-['Nunito'] selection:bg-white/20">
             <Navbar />
 
-            <div className="pt-28 max-w-7xl mx-auto flex">
-                {/* Sidebar Navigation */}
-                <aside className="fixed w-64 h-[calc(100vh-7rem)] overflow-y-auto hidden md:block border-r border-[#1a1a1a] pr-6 custom-scrollbar">
-                    <div className="mb-8 pl-4">
-                        <h3 className="text-sm font-bold text-gray-100 mb-4 tracking-wider uppercase opacity-50">Content</h3>
-                        <nav className="space-y-0.5">
-                            {sections.map((section) => (
-                                <button
-                                    key={section.id}
-                                    onClick={() => scrollToSection(section.id)}
-                                    className={`block w-full text-left px-4 py-2 rounded text-sm transition-all duration-200 ${activeSection === section.id
-                                        ? 'bg-[#151515] text-white font-semibold'
-                                        : 'text-gray-500 hover:text-gray-300 hover:bg-[#0a0a0a]'
-                                        }`}
-                                >
-                                    {section.title}
-                                </button>
-                            ))}
-                        </nav>
+            <div className="max-w-4xl mx-auto pt-32 pb-20 px-6">
+
+                {/* Header */}
+                <div className="text-center mb-20">
+                    <h1 className="text-5xl md:text-6xl font-bold text-white mb-6 tracking-tight">
+                        How it works.
+                    </h1>
+                    <p className="text-xl text-neutral-400 max-w-2xl mx-auto">
+                        Everything you need to know about using MockMate to crush your next interview. Simple, powerful, and AI-driven.
+                    </p>
+                </div>
+
+                {/* Content */}
+                <div className="space-y-20">
+
+                    {/* Intro */}
+                    <Section title="Welcome to MockMate" icon={<Rocket01Icon size={20} />}>
+                        <p>
+                            MockMate is your personal AI interview coach. We've designed it to be as simple as possible: you practice, we analyze, and you get better. No complex setups, no confusing metrics—just straight feedback to help you improve.
+                        </p>
+                    </Section>
+
+                    {/* Features Grid */}
+                    <div className="grid md:grid-cols-2 gap-4 mb-20">
+                        <FeatureCard
+                            title="Mock Interviews"
+                            description="Take realistic interviews customized to your job role. Our AI acts as the interviewer, asking relevant questions and listening to your answers."
+                        />
+                        <FeatureCard
+                            title="Resume Optimizer"
+                            description="Upload your resume and let our ATS-checker scan it. We'll tell you exactly what keywords are missing and how to format it for machines."
+                        />
+                        <FeatureCard
+                            title="Peer Connect"
+                            description="Practice with real people. Connect with peers for live coding sessions and behavioral practice using video and collaborative code editors."
+                        />
+                        <FeatureCard
+                            title="Dashboard"
+                            description="Track your progress over time. See your scores improve, review past feedback, and manage your recordings all in one place."
+                        />
                     </div>
-                </aside>
 
-                {/* Main Content */}
-                <main className="flex-1 md:pl-80 px-8 pb-32">
-                    <div className="max-w-4xl mx-auto space-y-24">
+                    {/* Getting Started */}
+                    <Section title="Getting Started" icon={<UserCircleIcon size={20} />}>
+                        <p>
+                            Starting is easy. If you haven't already, <span className="text-white font-medium">Create an Account</span>. We support Google Login for one-click access.
+                        </p>
+                        <p>
+                            Once you're in, head to the <strong>Dashboard</strong>. From there, you can start a new interview session immediately or upload your resume for a quick check.
+                        </p>
+                    </Section>
 
-                        {/* Introduction */}
-                        <section id="introduction" className="scroll-mt-32">
-                            <h1 className="text-4xl font-bold text-white mb-6 tracking-tight">
-                                MockMate Documentation
-                            </h1>
-                            <p className="text-base text-gray-400 leading-7 font-light">
-                                Comprehensive guide to the MockMate platform. Learn how to leverage our AI-driven tools to master your interview preparation, optimize your resume, and collaborate with peers.
-                            </p>
-                        </section>
+                    {/* Pro Tips */}
+                    <Section title="Pro Tips" icon={<BulbIcon size={20} />}>
+                        <ul className="space-y-4 list-none">
+                            <li className="flex gap-3">
+                                <span className="text-yellow-500 font-bold">•</span>
+                                <span>Use headphones for the best audio experience during AI interviews.</span>
+                            </li>
+                            <li className="flex gap-3">
+                                <span className="text-yellow-500 font-bold">•</span>
+                                <span>Speak clearly and at a normal pace. Our AI is good, but clarity helps it give better feedback.</span>
+                            </li>
+                            <li className="flex gap-3">
+                                <span className="text-yellow-500 font-bold">•</span>
+                                <span>Review your resume feedback carefully. Small changes in formatting can make a huge difference to ATS parsers.</span>
+                            </li>
+                        </ul>
+                    </Section>
 
-                        <hr className="border-[#1a1a1a]" />
+                </div>
 
-                        {/* Authentication */}
-                        <section id="authentication" className="scroll-mt-32">
-                            <div className="flex items-center mb-6">
-                                <h2 className="text-2xl font-bold text-white">Authentication</h2>
-                                <PathBadge path="/" />
-                            </div>
-                            <p className="text-sm text-gray-400 mb-6 leading-6">
-                                Secure access to the platform via Google OAuth or Email/Password credentials. Authentication is handled via specific modals on the landing page.
-                            </p>
+                {/* Footer */}
+                <div className="mt-20 pt-10 border-t border-neutral-900 text-center">
+                    <p className="text-neutral-600 mb-6">Ready to practice?</p>
+                    <button
+                        onClick={() => navigate('/dashboard')}
+                        className="bg-white text-black px-8 py-3 rounded-full font-bold hover:bg-neutral-200 transition-colors inline-flex items-center gap-2"
+                    >
+                        Go to Dashboard <ArrowLeft01Icon className="rotate-180" size={18} />
+                    </button>
+                </div>
 
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div className="p-5 bg-[#0a0a0a] border border-[#1a1a1a] rounded-lg">
-                                    <h3 className="text-sm font-semibold text-white mb-2">Login Flow</h3>
-                                    <p className="text-xs text-gray-500 leading-5">
-                                        Users can log in using their existing credentials. The system verifies the token and retrieves the user profile from the database context.
-                                    </p>
-                                </div>
-                                <div className="p-5 bg-[#0a0a0a] border border-[#1a1a1a] rounded-lg">
-                                    <h3 className="text-sm font-semibold text-white mb-2">Sign Up Flow</h3>
-                                    <p className="text-xs text-gray-500 leading-5">
-                                        New users are registered with a default profile image and basic information. Data is persisted in specific collections.
-                                    </p>
-                                </div>
-                            </div>
-                        </section>
-
-                        {/* Dashboard */}
-                        <section id="dashboard" className="scroll-mt-32">
-                            <div className="flex items-center mb-6">
-                                <h2 className="text-2xl font-bold text-white">Dashboard</h2>
-                                <PathBadge path="/dashboard" />
-                            </div>
-                            <p className="text-sm text-gray-400 mb-6 leading-6">
-                                The central hub for managing interview sessions and accessing quick actions. Displays a grid of past sessions with summary analytics.
-                            </p>
-
-                            <div className="border border-[#1a1a1a] rounded-lg overflow-hidden">
-                                <div className="bg-[#0f0f0f] px-4 py-2 border-b border-[#1a1a1a] text-xs font-mono text-gray-500">
-                                    Feature Overview
-                                </div>
-                                <div className="p-6 bg-[#050505] space-y-6">
-                                    <div>
-                                        <h4 className="text-sm font-semibold text-white mb-1">Create Session</h4>
-                                        <p className="text-xs text-gray-500">
-                                            Initiate a new interview session by selecting the <span className="text-white">Job Role</span>, <span className="text-white">Experience Level</span>, and <span className="text-white">Focus Topics</span>.
-                                        </p>
-                                    </div>
-                                    <div>
-                                        <h4 className="text-sm font-semibold text-white mb-1">Quick Record</h4>
-                                        <p className="text-xs text-gray-500">
-                                            Access the recording module directly for unprompted practice. Supported modes: <span className="font-mono text-[10px] bg-[#1a1a1a] px-1 rounded">HR</span>, <span className="font-mono text-[10px] bg-[#1a1a1a] px-1 rounded">Session</span>, <span className="font-mono text-[10px] bg-[#1a1a1a] px-1 rounded">Live</span>.
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                        </section>
-
-                        {/* Resume Checker */}
-                        <section id="resume-checker" className="scroll-mt-32">
-                            <div className="flex items-center mb-6">
-                                <h2 className="text-2xl font-bold text-white">ATS Resume Checker</h2>
-                                <PathBadge path="/resume/ats-check" />
-                            </div>
-                            <p className="text-sm text-gray-400 mb-6 leading-6">
-                                Analyze resume PDFs against Applicant Tracking System (ATS) algorithms. Provides a score and detailed feedback on missing keywords and formatting.
-                            </p>
-
-                            <div className="space-y-3">
-                                <div className="flex items-start gap-4 p-4 rounded-lg bg-[#0a0a0a] border border-[#1a1a1a]">
-                                    <div className="w-1 h-full bg-blue-500 rounded-full"></div>
-                                    <div>
-                                        <h4 className="text-sm font-semibold text-white">Parser</h4>
-                                        <p className="text-xs text-gray-500 mt-1">Extracts text content using OCR-like mechanisms to identify readable sections versus unreadable graphics.</p>
-                                    </div>
-                                </div>
-                                <div className="flex items-start gap-4 p-4 rounded-lg bg-[#0a0a0a] border border-[#1a1a1a]">
-                                    <div className="w-1 h-full bg-green-500 rounded-full"></div>
-                                    <div>
-                                        <h4 className="text-sm font-semibold text-white">Scoring Engine</h4>
-                                        <p className="text-xs text-gray-500 mt-1">Calculates a match percentage based on the job description provided and the extracted resume keywords.</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </section>
-
-                        {/* Interview Prep */}
-                        <section id="interview-prep" className="scroll-mt-32">
-                            <div className="flex items-center mb-6">
-                                <h2 className="text-2xl font-bold text-white">Interview Preparation</h2>
-                                <PathBadge path="/interview-prep/:sessionId" />
-                            </div>
-                            <p className="text-sm text-gray-400 mb-6 leading-6">
-                                Examples of the core simulation interface. Conducts audio-visual interview sessions with AI feedback.
-                            </p>
-
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div className="bg-[#050505] p-5 rounded border border-[#1a1a1a]">
-                                    <h4 className="text-sm font-bold text-white mb-2">Session Interview</h4>
-                                    <PathBadge path="/interview/session-interview" />
-                                    <p className="text-xs text-gray-500 mt-3 leading-5">
-                                        Standard AI mock interview. The AI asks questions based on the session configuration. User responses are recorded and transcribed.
-                                    </p>
-                                </div>
-                                <div className="bg-[#050505] p-5 rounded border border-[#1a1a1a]">
-                                    <h4 className="text-sm font-bold text-white mb-2">HR Round</h4>
-                                    <PathBadge path="/interview/hr/record" />
-                                    <p className="text-xs text-gray-500 mt-3 leading-5">
-                                        Specific module for behavioral and HR-related questions. Focuses on soft skills, communication clarity, and situational responses.
-                                    </p>
-                                </div>
-                            </div>
-                        </section>
-
-                        {/* Live Interview */}
-                        <section id="live-interview" className="scroll-mt-32">
-                            <div className="flex items-center mb-6">
-                                <h2 className="text-2xl font-bold text-white">Live Interview</h2>
-                                <PathBadge path="/interview/live" />
-                            </div>
-                            <p className="text-sm text-gray-400 mb-6 leading-6">
-                                Peer-to-peer interview mode. Allows two users to connect via WebRTC for a live video and coding session.
-                            </p>
-
-                            <div className="p-6 bg-[#080808] border border-[#1a1a1a] rounded flex flex-col gap-4">
-                                <div className="flex justify-between items-center border-b border-[#1a1a1a] pb-4">
-                                    <span className="text-sm text-gray-300">Feature</span>
-                                    <span className="text-sm text-gray-300">Technology</span>
-                                </div>
-                                <div className="flex justify-between items-center">
-                                    <span className="text-xs text-gray-500">Video Sync</span>
-                                    <span className="text-xs text-gray-600 font-mono">WebRTC / Peerjs</span>
-                                </div>
-                                <div className="flex justify-between items-center">
-                                    <span className="text-xs text-gray-500">Code Editor</span>
-                                    <span className="text-xs text-gray-600 font-mono">Monaco Editor</span>
-                                </div>
-                                <div className="flex justify-between items-center">
-                                    <span className="text-xs text-gray-500">State Management</span>
-                                    <span className="text-xs text-gray-600 font-mono">Socket.io</span>
-                                </div>
-                            </div>
-                        </section>
-
-                        {/* Admin */}
-                        <section id="admin" className="scroll-mt-32">
-                            <div className="flex items-center mb-6">
-                                <h2 className="text-2xl font-bold text-white">Admin Controls</h2>
-                                <PathBadge path="/admin" />
-                            </div>
-                            <p className="text-sm text-gray-400 mb-4 leading-6">
-                                Restricted area for platform administration. Managing user roles, viewing global analytics, and system configurations.
-                            </p>
-                            <div className="flex items-center gap-2">
-                                <span className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
-                                <span className="text-xs text-red-500">Restricted Access</span>
-                            </div>
-                        </section>
-
-                    </div>
-                </main>
             </div>
         </div>
     );
