@@ -2,15 +2,15 @@ import React from 'react';
 import { MoonLoader } from 'react-spinners';
 import InterviewDashboard from './InterviewDashboard';
 import {
-  ExclamationTriangleIcon,
-  ArrowPathIcon,
-  CheckCircleIcon,
-  LightBulbIcon,
-  ChatBubbleLeftRightIcon,
-  VideoCameraIcon,
-  DocumentTextIcon,
-  ClockIcon
-} from '@heroicons/react/24/outline';
+  Alert02Icon,
+  RefreshIcon,
+  CheckmarkCircle02Icon,
+  BulbIcon,
+  Comment01Icon,
+  Video01Icon,
+  File02Icon,
+  Clock01Icon
+} from 'hugeicons-react';
 
 const AnalysisPanel = ({
   recordedChunks,
@@ -56,7 +56,7 @@ const AnalysisPanel = ({
         {analysisError && (
           <div className="bg-red-950/50 border border-red-400/50 rounded-xl p-5">
             <p className="text-red-300 flex items-center gap-3 font-medium">
-              <ExclamationTriangleIcon className="w-5 h-5 text-red-400" />
+              <Alert02Icon className="w-5 h-5 text-red-400" />
               {analysisError}
             </p>
             {canAnalyze && (
@@ -84,7 +84,7 @@ const AnalysisPanel = ({
                 onClick={() => onAnalyzeTranscript(currentQuestion, transcript)}
                 className="bg-white text-black px-5 py-2.5 rounded-lg text-sm transition-all duration-300 border border-gray-600 hover:border-gray-400 flex items-center gap-2 mx-auto cursor-pointer"
               >
-                <ArrowPathIcon className="w-4 h-4" />
+                <RefreshIcon className="w-4 h-4" />
                 Re-analyze Response
               </button>
             </div>
@@ -95,19 +95,19 @@ const AnalysisPanel = ({
         {recordedChunks.length > 0 && !analysis && !isAnalyzing && (
           <div className="space-y-5">
             <div className="flex items-center gap-3 mb-4">
-              <CheckCircleIcon className="w-6 h-6 text-emerald-400" />
+              <CheckmarkCircle02Icon className="w-6 h-6 text-emerald-400" />
               <p className="text-emerald-300 font-medium">Recording completed successfully!</p>
             </div>
             <div className="bg-black border-2 border-white/20 p-6 rounded-xl shadow-lg">
               <h4 className="font-semibold mb-6 text-white flex items-center gap-3 text-lg">
-                <CheckCircleIcon className="w-6 h-6 text-white" />
+                <CheckmarkCircle02Icon className="w-6 h-6 text-white" />
                 Recording Session Complete
               </h4>
 
               {/* Current Question Section */}
               <div className="mb-6 p-4 bg-black rounded-lg border border-white/10">
                 <div className="flex items-start gap-3 mb-2">
-                  <ChatBubbleLeftRightIcon className="w-5 h-5 text-white mt-0.5" />
+                  <Comment01Icon className="w-5 h-5 text-white mt-0.5" />
                   <div className="flex-1">
                     <h5 className="text-white font-medium text-sm mb-1">Interview Question</h5>
                     <p className="text-gray-300 text-sm leading-relaxed">{currentQuestion}</p>
@@ -118,19 +118,19 @@ const AnalysisPanel = ({
               {/* Session Stats Grid */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
                 <div className="bg-black border border-white/20 p-4 rounded-lg text-center">
-                  <VideoCameraIcon className="w-6 h-6 text-white mx-auto mb-2" />
+                  <Video01Icon className="w-6 h-6 text-white mx-auto mb-2" />
                   <div className="text-xs text-gray-400 mb-1">Video Recording</div>
                   <div className="text-white font-semibold text-sm">✓ Captured</div>
                 </div>
 
                 <div className="bg-black border border-white/20 p-4 rounded-lg text-center">
-                  <DocumentTextIcon className="w-6 h-6 text-white mx-auto mb-2" />
+                  <File02Icon className="w-6 h-6 text-white mx-auto mb-2" />
                   <div className="text-xs text-gray-400 mb-1">Transcript</div>
                   <div className="text-white font-semibold text-sm">{transcript.length} characters</div>
                 </div>
 
                 <div className="bg-black border border-white/20 p-4 rounded-lg text-center">
-                  <ClockIcon className="w-6 h-6 text-white mx-auto mb-2" />
+                  <Clock01Icon className="w-6 h-6 text-white mx-auto mb-2" />
                   <div className="text-xs text-gray-400 mb-1">Analysis Status</div>
                   <div className={`font-semibold text-sm ${canAnalyze ? 'text-white' : 'text-gray-400'}`}>
                     {canAnalyze ? '✓ Ready' : 'Need more content'}
@@ -141,7 +141,7 @@ const AnalysisPanel = ({
               {/* What's Next Section */}
               <div className="bg-black rounded-lg p-4">
                 <h5 className="text-white font-medium text-sm mb-2 flex items-center gap-2">
-                  <LightBulbIcon className="w-4 h-4 text-white" />
+                  <BulbIcon className="w-4 h-4 text-white" />
                   What's Next?
                 </h5>
                 <p className="text-gray-300 text-sm">
@@ -154,7 +154,7 @@ const AnalysisPanel = ({
             </div>
             {canAnalyze && (
               <div className="bg-black border-2 border-white/20 rounded-xl p-5 flex items-center gap-4 shadow-lg">
-                <LightBulbIcon className="w-6 h-6 text-white flex-shrink-0" />
+                <BulbIcon className="w-6 h-6 text-white flex-shrink-0" />
                 <div>
                   <p className="text-white font-medium">Ready for AI Analysis</p>
                   <p className="text-gray-300 text-sm mt-1">Click "Analyze with AI" to get detailed feedback and insights on your response</p>

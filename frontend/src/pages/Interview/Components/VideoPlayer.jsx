@@ -1,5 +1,5 @@
 import React from 'react';
-import { MdMic, MdMicOff, MdVideocam, MdVideocamOff, MdFlipCameraAndroid } from "react-icons/md";
+import { Mic01Icon, MicOff01Icon, Camera01Icon, CameraOff01Icon, RefreshIcon } from 'hugeicons-react';
 
 const VideoPlayer = ({
   videoRef,
@@ -28,7 +28,7 @@ const VideoPlayer = ({
       {!cameraOn && (
         <div className="absolute inset-0 bg-black flex items-center justify-center rounded-2xl">
           <div className="text-white text-center ">
-            <MdVideocamOff size={48} className="mx-auto mb-2" />
+            <CameraOff01Icon size={48} className="mx-auto mb-2" />
             <p>Camera is off</p>
           </div>
         </div>
@@ -36,69 +36,68 @@ const VideoPlayer = ({
 
       {/* Control Dock */}
       <div
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 flex items-center gap-6 bg-black/80 backdrop-blur-md border border-white/20 rounded-full px-8 py-4 "
+        className="absolute bottom-4 right-4 flex items-center gap-3 bg-black/60 backdrop-blur-md border border-white/10 rounded-full px-4 py-2"
         style={{
-          minWidth: "3px",
-          boxShadow: "0 8px 32px -4px rgba(0,0,0,0.5)"
+          boxShadow: "0 4px 16px rgba(0,0,0,0.3)"
         }}
       >
         {/* MIC Button */}
         <button
           onClick={handleMicToggle}
-          className={`w-12 h-12 flex items-center justify-center rounded-full border-2 ${micOn
-              ? "border-white/50 bg-white/10 text-white hover:bg-white/20"
-              : "border-red-500/50 bg-red-500/10 text-red-500 hover:bg-red-500/20"
-            } cursor-pointer transition-all duration-200 hover:scale-105 hover:border-opacity-75`}
+          className={`w-10 h-10 flex items-center justify-center rounded-full border ${micOn
+            ? "border-white/30 bg-white/5 text-white hover:bg-white/10"
+            : "border-red-500/50 bg-red-500/10 text-red-500 hover:bg-red-500/20"
+            } cursor-pointer transition-all duration-200 hover:scale-105`}
           title={micOn ? "Turn mic off" : "Turn mic on"}
         >
           {micOn ? (
-            <MdMic size={26} />
+            <Mic01Icon size={20} />
           ) : (
-            <MdMicOff size={26} />
+            <MicOff01Icon size={20} />
           )}
         </button>
 
         {/* Camera Button */}
         <button
           onClick={handleCameraToggle}
-          className={`w-12 h-12 flex items-center justify-center rounded-full border-2 ${cameraOn
-              ? "border-white/50 bg-white/10 text-white hover:bg-white/20"
-              : "border-red-500/50 bg-red-500/10 text-red-500 hover:bg-red-500/20"
-            } cursor-pointer transition-all duration-200 hover:scale-105 hover:border-opacity-75`}
+          className={`w-10 h-10 flex items-center justify-center rounded-full border ${cameraOn
+            ? "border-white/30 bg-white/5 text-white hover:bg-white/10"
+            : "border-red-500/50 bg-red-500/10 text-red-500 hover:bg-red-500/20"
+            } cursor-pointer transition-all duration-200 hover:scale-105`}
           title={cameraOn ? "Turn camera off" : "Turn camera on"}
         >
           {cameraOn ? (
-            <MdVideocam size={26} />
+            <Camera01Icon size={20} />
           ) : (
-            <MdVideocamOff size={26} />
+            <CameraOff01Icon size={20} />
           )}
         </button>
 
         {/* Record Button */}
         <button
           onClick={isRecording ? stopRecording : startRecording}
-          className={`w-12 h-12 flex items-center justify-center rounded-full border-2 ${isRecording
-              ? "border-red-500 bg-red-500 text-white animate-pulse hover:bg-red-600"
-              : "border-red-500 bg-white/10 text-red-500 hover:bg-white/20"
-            } cursor-pointer transition-all duration-200 hover:scale-105 transform-gpu`}
+          className={`w-10 h-10 flex items-center justify-center rounded-full border ${isRecording
+            ? "border-red-500 bg-red-500 text-white animate-pulse hover:bg-red-600"
+            : "border-red-500/80 bg-red-500/10 text-red-500 hover:bg-red-500/20"
+            } cursor-pointer transition-all duration-200 hover:scale-105`}
           title={isRecording ? "Stop Recording" : "Start Recording"}
         >
           <div className={`${isRecording
-              ? 'w-5 h-5 bg-white rounded-sm'
-              : 'w-5 h-5 bg-red-500 rounded-full'
+            ? 'w-4 h-4 bg-white rounded-sm'
+            : 'w-4 h-4 bg-red-500 rounded-full'
             } transition-all duration-200`} />
         </button>
 
         {/* Mirror Button */}
         <button
           onClick={() => setMirrored(prev => !prev)}
-          className={`w-12 h-12 flex items-center justify-center cursor-pointer rounded-full border-2 
-            border-white/50 bg-white/10 text-white hover:bg-white/20
-            transition-all duration-200 hover:scale-105 hover:border-opacity-75
-            ${mirrored ? 'bg-white/20' : ''}`}
+          className={`w-10 h-10 flex items-center justify-center cursor-pointer rounded-full border 
+            border-white/30 bg-white/5 text-white hover:bg-white/10
+            transition-all duration-200 hover:scale-105
+            ${mirrored ? 'bg-white/10' : ''}`}
           title="Flip Camera View"
         >
-          <MdFlipCameraAndroid size={26} />
+          <RefreshIcon size={20} />
         </button>
       </div>
 
