@@ -32,18 +32,23 @@ const generateContentWithRetry = async (model, prompt, retries = 3, delay = 1000
 const generateInterviewQuestions = async (req, res) => {
   try {
     console.log("Generate questions request received:", req.body);
-    const { role, experience, topicsToFocus, numberOfQuestions } = req.body;
+    const { role, experience, topicsToFocus, numberOfQuestions, resumeText } = req.body;
 
-    if (!role || !experience || !topicsToFocus || !numberOfQuestions) {
-      console.log("Missing required fields:", { role, experience, topicsToFocus, numberOfQuestions });
-      return res.status(400).json({ message: "Missing required fields" });
+    if ((!role || !experience || !topicsToFocus) && !resumeText) {
+      console.log("Missing required fields (and no resume):", { role, experience, topicsToFocus, numberOfQuestions });
+      return res.status(400).json({ message: "Missing required fields. Provide Role, Experience, and Topics OR a Resume." });
+    }
+
+    if (!numberOfQuestions) {
+      return res.status(400).json({ message: "Missing numberOfQuestions" });
     }
 
     const prompt = questionAnswerPrompt(
       role,
       experience,
       topicsToFocus,
-      numberOfQuestions
+      numberOfQuestions,
+      resumeText
     );
 
     console.log("About to call Gemini API with prompt:", prompt.substring(0, 100) + "...");

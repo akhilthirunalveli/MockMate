@@ -1,15 +1,17 @@
 const questionAnswerPrompt = (
-  role,
-  experience,
-  topicsToFocus,
-  numberOfQuestions
+    role,
+    experience,
+    topicsToFocus,
+    numberOfQuestions,
+    resumeText = ""
 ) => `
         You are an AI trained to generate technical interview questions and answers.
     
         Task:
-        - Role: ${role}
-        - Candidate Experience: ${experience} years
-        - Focus Topics: ${topicsToFocus}
+        ${role ? `- Role: ${role}` : "- Role: (Infer from resume)"}
+        ${experience ? `- Candidate Experience: ${experience} years` : "- Candidate Experience: (Infer from resume)"}
+        ${topicsToFocus ? `- Focus Topics: ${topicsToFocus}` : "- Focus Topics: (Infer from resume)"}
+        ${resumeText ? `- Resume Context: The candidate has provided their resume. Use the following resume content to tailor the questions to their specific experience and projects. If Role/Experience/Topics are not provided above, infer them from this resume:\n"""${resumeText}"""\n` : ""}
         - Write ${numberOfQuestions} interview questions.
         - For each question, generate a detailed but beginner-friendly answer.
         - If the answer contains points or a list, start each point from a new line for clarity.

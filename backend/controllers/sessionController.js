@@ -6,7 +6,7 @@ const Question = require("../models/Question");
 // @access  Private
 exports.createSession = async (req, res) => {
   try {
-    const { role, experience, topicsToFocus, description, questions } =
+    const { role, experience, topicsToFocus, description, questions, isResumeSession } =
       req.body;
     const userId = req.user._id; // Assuming you have a middleware setting req.user
 
@@ -16,6 +16,7 @@ exports.createSession = async (req, res) => {
       experience,
       topicsToFocus,
       description,
+      isResumeSession,
     });
 
     const questionDocs = await Promise.all(
