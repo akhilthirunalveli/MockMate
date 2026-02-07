@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { FaArrowRight, FaTrashAlt } from "react-icons/fa";
+import { ArrowRight01Icon, Delete02Icon } from 'hugeicons-react';
 import { getInitials } from "../Utils/helper";
 const gradients = [
   "from-gray-900 via-black to-black",
@@ -60,7 +60,7 @@ const SummaryCard = ({
           }}
           title="Delete"
         >
-          <FaTrashAlt size={13} />
+          <Delete02Icon size={13} />
         </button>
       )}
       <div className="relative z-10 flex flex-col h-full px-3 sm:px-4 pt-4 sm:pt-6 pb-3 sm:pb-4">
@@ -98,7 +98,7 @@ const SummaryCard = ({
           >
             <span className="text-xs">Explore</span>
             <span className="inline-flex items-center justify-center w-3 h-3 bg-transparent rounded-full ml-1">
-              <FaArrowRight className="text-white" size={9} />
+              <ArrowRight01Icon className="text-white" size={9} />
             </span>
           </button>
         </div>

@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useContext } from "react";
 import { MoonLoader } from 'react-spinners';
-import { LuPlus, LuLaptop } from "react-icons/lu";
-import { BsChat, BsChatDots, BsChatDotsFill, BsChatHeartFill, BsChatLeft, BsRecordCircle } from "react-icons/bs";
+import { LuPlus } from "react-icons/lu";
+import { BsRecordCircle } from "react-icons/bs";
 import { IoDocumentTextOutline } from "react-icons/io5";
 import { CARD_BG } from "./Utils/data.js";
 import toast from "react-hot-toast";
@@ -22,6 +22,8 @@ const LoadingSpinner = () => (
   <MoonLoader color="#ffffff" />
 );
 
+
+
 const Dashboard = () => {
   const navigate = useNavigate();
   const { user } = useContext(UserContext);
@@ -34,6 +36,8 @@ const Dashboard = () => {
     data: null,
   });
   const [openRecordTypeModal, setOpenRecordTypeModal] = useState(false);
+
+
 
   const handleResumeClick = () => {
     // Always open the modal first to show edit options
@@ -70,7 +74,7 @@ const Dashboard = () => {
 
   return (
     <DashboardLayout>
-      <div className="container mx-auto pt-4 pb-4 overflow-hidden">
+      <div className="container mx-auto pt-4 pb-4 overflow-hidden relative">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 pt-1 pb-3 px-1 md:px-10 md:ml-10">
           {sessions?.map((data, index) => (
             <SummaryCard

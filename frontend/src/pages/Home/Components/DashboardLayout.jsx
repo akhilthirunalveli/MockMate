@@ -6,11 +6,9 @@ const DashboardLayout = ({ children }) => {
   const { user } = useContext(UserContext);
   return (
     <div
-      className="min-h-screen"
+      className="min-h-screen bg-dots-dark"
       style={{
         opacity: 1,
-        backgroundImage: "radial-gradient(#e5e5e5 0.5px,#030202 0.5px)",
-        backgroundSize: "21px 21px",
       }}
     >
       <Navbar />
