@@ -1,147 +1,138 @@
-import React from "react";
+import React, { useState } from "react";
 import { Card, baseStyles } from "./AdminUI";
 
-import { useState } from "react";
-
-const iconStyle = {
-  display: "inline-block",
-  width: "1.2em",
-  textAlign: "center",
-  marginRight: "0.4em"
-};
-
-const SessionsTab = ({ sessions }) => {
+const SessionsTab = ({ sessions = [] }) => {
   const [expanded, setExpanded] = useState({});
   const toggleExpand = (id) => setExpanded(e => ({ ...e, [id]: !e[id] }));
 
-  const getStatus = (session) => {
-    if (session.endTime) return "Completed";
-    return "Ongoing";
-  };
-
   return (
-    <div>
-      <h2 style={{
-        color: "#fff",
-        marginBottom: "1.5rem",
-        fontFamily: baseStyles.fontFamily,
-        fontWeight: 600,
-        fontSize: "clamp(1.5rem, 4vw, 2.2rem)",
-        letterSpacing: "-1px",
-        borderBottom: "2px solid #222",
-        paddingBottom: "0.5rem"
-      }}>
-        All Interview Sessions
-      </h2>
-      <div style={{
-        display: "grid",
-        gap: "1.5rem",
-        gridTemplateColumns: "repeat(auto-fill, minmax(min(350px, 100%), 1fr))"
-      }}>
-        {sessions.map((session) => {
-          const status = getStatus(session);
-          return (
-            <Card
-              key={session._id}
-              style={{
-                backgroundColor: "#111",
-                color: "#fff",
-                border: "1.5px solid #333",
-                boxShadow: "0 2px 12px 0 #0006",
-                transition: "box-shadow 0.2s, border 0.2s, background 0.2s",
-                position: "relative",
-                overflow: "hidden",
-                cursor: "pointer"
-              }}
-              onClick={() => toggleExpand(session._id)}
-              onMouseEnter={e => {
-                e.currentTarget.style.backgroundColor = "#181818";
-                e.currentTarget.style.border = "1.5px solid #555";
-                e.currentTarget.style.boxShadow = "0 4px 18px 0 #000a";
-              }}
-              onMouseLeave={e => {
-                e.currentTarget.style.backgroundColor = "#111";
-                e.currentTarget.style.border = "1.5px solid #333";
-                e.currentTarget.style.boxShadow = "0 2px 12px 0 #0006";
-              }}
-            >
-              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "1rem" }}>
-                <div style={{ display: "flex", alignItems: "center", gap: "0.7em" }}>
-                  <span style={{ fontWeight: 600, fontSize: "clamp(1.1rem, 3vw, 1.3rem)", color: "#fff" }}>{session.role || 'Unknown Role'}</span>
-                </div>
-                <div style={{ display: "flex", alignItems: "center", gap: "0.7em" }}>
-                  <span style={{ color: status === "Completed" ? "#fff" : "#bbb", fontWeight: 500 }}>{status}</span>
-                </div>
-              </div>
-              <div style={{ display: "flex", gap: "0.7em", marginBottom: "0.7rem", flexWrap: "wrap" }}>
-                <span style={{
-                  background: "#222",
-                  color: "#fff",
-                  borderRadius: "10px",
-                  padding: "0.22rem 0.7rem",
-                  fontSize: "clamp(0.8rem, 2vw, 0.95rem)",
-                  fontWeight: 500,
-                  display: "flex",
-                  alignItems: "center"
-                }}>
-                  Experience: {session.experience || 'Unknown'}
-                </span>
-                <span style={{
-                  background: "#222",
-                  color: "#fff",
-                  borderRadius: "10px",
-                  padding: "0.22rem 0.7rem",
-                  fontSize: "clamp(0.8rem, 2vw, 0.95rem)",
-                  fontWeight: 500,
-                  display: "flex",
-                  alignItems: "center"
-                }}>
-                  Difficulty: {session.difficulty || 'Unknown'}
-                </span>
-              </div>
-              {session.user && (
-                <div style={{ marginBottom: "0.7rem", color: "#bbb", fontSize: "clamp(0.9rem, 2.5vw, 1rem)" }}>
-                  <strong>User:</strong> {session.user.name || 'Unknown'}
-                </div>
-              )}
-              {/* Timeline/progress bar */}
-              <div style={{ width: "100%", height: 6, background: "#222", borderRadius: 4, margin: "0.7rem 0 1rem 0", overflow: "hidden" }}>
+    <>
+      <div>
+        <h2 style={{
+          color: "#fff",
+          marginBottom: "2rem",
+          fontFamily: baseStyles.fontFamily,
+          fontWeight: 500,
+          fontSize: "1.75rem",
+          letterSpacing: "-0.5px",
+          borderBottom: "1px solid #222",
+          paddingBottom: "1rem"
+        }}>
+          All Sessions <span style={{ color: "#444", marginLeft: "0.5rem", fontSize: "1rem" }}>{sessions.length} total</span>
+        </h2>
+
+        {sessions.length === 0 ? (
+          <div style={{ color: "#444", fontStyle: "italic", padding: "2rem", border: "1px dashed #222", borderRadius: "12px" }}>
+            No sessions found.
+          </div>
+        ) : (
+          <div style={{
+            display: "grid",
+            gap: "1rem",
+            gridTemplateColumns: "repeat(auto-fill, minmax(min(350px, 100%), 1fr))"
+          }}>
+            {sessions.map((session) => (
+              <div
+                key={session._id}
+                style={{
+                  backgroundColor: "#050505",
+                  border: "1px solid #222",
+                  borderRadius: "12px",
+                  padding: "1.5rem",
+                  transition: "border-color 0.2s ease",
+                  position: "relative",
+                  cursor: "default"
+                }}
+              >
                 <div style={{
-                  width: status === "Completed" ? "100%" : "60%",
-                  height: "100%",
-                  background: status === "Completed" ? "#fff" : "linear-gradient(90deg, #fff 60%, #444 100%)",
-                  transition: "width 0.5s"
-                }} />
-              </div>
-              {/* Expandable details */}
-              {expanded[session._id] && (
-                <div style={{ fontSize: "13px", color: "#888", borderTop: "1px solid #222", paddingTop: "0.7rem" }}>
-                  <p style={{ margin: "0.25rem 0" }}><strong>ID:</strong> {session._id}</p>
-                  <p style={{ margin: "0.25rem 0" }}>
-                    <strong>Created:</strong> {new Date(session.createdAt).toLocaleDateString()}
-                  </p>
-                  {session.endTime && (
-                    <p style={{ margin: "0.25rem 0" }}>
-                      <strong>Completed:</strong> {new Date(session.endTime).toLocaleDateString()}
-                    </p>
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "flex-start",
+                  marginBottom: "1rem"
+                }}>
+                  <div style={{ flex: 1, minWidth: 0, paddingRight: "1rem" }}>
+                    <h3 style={{
+                      margin: 0,
+                      color: "#fff",
+                      fontSize: "1.1rem",
+                      fontFamily: baseStyles.fontFamily,
+                      fontWeight: 600,
+                      letterSpacing: "-0.3px"
+                    }}>
+                      {session.role || 'Untitled Session'}
+                    </h3>
+                    {session.user && (
+                      <p style={{ margin: "0.25rem 0 0 0", color: "#666", fontSize: "0.85rem" }}>
+                        {session.user.name}
+                      </p>
+                    )}
+                  </div>
+
+                  <div style={{
+                    fontSize: "0.75rem",
+                    color: session.endTime ? "#444" : "#ffc107",
+                    border: `1px solid ${session.endTime ? "#222" : "#ffc10740"}`,
+                    padding: "4px 10px",
+                    borderRadius: "100px",
+                    backgroundColor: session.endTime ? "transparent" : "#ffc10710",
+                    whiteSpace: "nowrap"
+                  }}>
+                    {session.endTime ? "Completed" : "In Progress"}
+                  </div>
+                </div>
+
+                <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem", marginBottom: "1rem" }}>
+                  {session.difficulty && (
+                    <span style={{ fontSize: "0.75rem", color: "#666", border: "1px solid #222", padding: "2px 8px", borderRadius: "4px", background: "#0a0a0a" }}>
+                      {session.difficulty}
+                    </span>
                   )}
-                  {session.summary && (
-                    <p style={{ margin: "0.25rem 0" }}>
-                      <strong>Summary:</strong> {session.summary}
-                    </p>
+                  {session.experience && (
+                    <span style={{ fontSize: "0.75rem", color: "#666", border: "1px solid #222", padding: "2px 8px", borderRadius: "4px", background: "#0a0a0a" }}>
+                      {session.experience} Exp
+                    </span>
                   )}
                 </div>
-              )}
-              <div style={{ textAlign: "right", marginTop: "0.5rem" }}>
-                <span style={{ fontSize: "0.9em", color: "#bbb", cursor: "pointer", textDecoration: "underline dotted" }}>
-                  {expanded[session._id] ? "Hide details ▲" : "Show details ▼"}
-                </span>
+
+                <div style={{
+                  fontSize: "0.8rem",
+                  color: "#444",
+                  borderTop: "1px solid #1a1a1a",
+                  paddingTop: "1rem",
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  fontFamily: "monospace"
+                }}>
+                  <span style={{ letterSpacing: "0.5px", color: "#555" }}>
+                    {new Date(session.createdAt).toLocaleDateString()}
+                  </span>
+                  <button
+                    onClick={() => toggleExpand(session._id)}
+                    style={{ background: "none", border: "none", color: "#444", cursor: "pointer", fontSize: "0.8rem", padding: 0, textDecoration: "none" }}
+                    onMouseEnter={e => e.target.style.color = "#888"}
+                    onMouseLeave={e => e.target.style.color = "#444"}
+                  >
+                    {expanded[session._id] ? "Less" : "Details"}
+                  </button>
+                </div>
+
+                {expanded[session._id] && (
+                  <div style={{ marginTop: "1rem", paddingTop: "1rem", borderTop: "1px dashed #222", color: "#666", fontSize: "0.85rem", lineHeight: "1.5" }}>
+                    <div style={{ marginBottom: "0.5rem" }}><strong>ID:</strong> {session._id}</div>
+                    {session.summary ? (
+                      <div><strong>Summary:</strong> {session.summary}</div>
+                    ) : (
+                      <div style={{ fontStyle: "italic", color: "#444" }}>No summary available.</div>
+                    )}
+                  </div>
+                )}
               </div>
-            </Card>
-          );
-        })}
+            ))}
+          </div>
+        )}
       </div>
-    </div>
+    </>
   );
 };
 
