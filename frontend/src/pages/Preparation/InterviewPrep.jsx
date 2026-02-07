@@ -139,8 +139,8 @@ const InterviewPrep = () => {
   return (
     <DashboardLayout>
       <RoleInfoHeader
-        role={sessionData?.role || ""}
-        topicsToFocus={sessionData?.topicsToFocus || ""}
+        role={sessionData?.role || (sessionData?.isResumeSession ? "Resume Session" : "")}
+        topicsToFocus={sessionData?.topicsToFocus || (sessionData?.isResumeSession ? "Resume" : "")}
         experience={sessionData?.experience || "-"}
         questions={sessionData?.questions?.length || "-"}
         description={sessionData?.description || ""}

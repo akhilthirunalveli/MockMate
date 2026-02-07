@@ -4,14 +4,20 @@ import Input from "../Home/Components/Input.jsx";
 import SpinnerLoader from "./Loader/SpinnerLoader.jsx";
 import axiosInstance from "../../utils/axiosInstance.js";
 import { API_PATHS } from "../../constants/apiPaths.js";
+import { extractTextFromPdf } from "../../utils/FileParsers.js";
+import { CloudUploadIcon, File02Icon } from "hugeicons-react";
 
 const CreateSessionForm = () => {
   const [formData, setFormData] = useState({
     role: "",
     experience: "",
     topicsToFocus: "",
-    description: "",
+    resumeText: "",  // Stores extracted text
+    isResumeSession: false,
   });
+
+  const [resumeFile, setResumeFile] = useState(null);
+  const [isExtracting, setIsExtracting] = useState(false);
 
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -25,13 +31,38 @@ const CreateSessionForm = () => {
     }));
   };
 
+  const handleFileChange = async (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      if (file.type !== "application/pdf") {
+        setError("Please upload a PDF file.");
+        return;
+      }
+
+      setResumeFile(file);
+      setIsExtracting(true);
+      setError("");
+
+      try {
+        const text = await extractTextFromPdf(file);
+        setFormData(prev => ({ ...prev, resumeText: text, isResumeSession: true }));
+      } catch (err) {
+        console.error(err);
+        setError("Failed to read PDF. Please try again.");
+        setResumeFile(null);
+      } finally {
+        setIsExtracting(false);
+      }
+    }
+  };
+
   const handleCreateSession = async (e) => {
     e.preventDefault();
 
-    const { role, experience, topicsToFocus } = formData;
+    const { role, experience, topicsToFocus, resumeText } = formData;
 
-    if (!role || !experience || !topicsToFocus) {
-      setError("Please fill all the required fields.");
+    if ((!role || !experience || !topicsToFocus) && !resumeText) {
+      setError("Please fill all the required fields or upload a resume.");
       return;
     }
 
@@ -47,6 +78,7 @@ const CreateSessionForm = () => {
           experience,
           topicsToFocus,
           numberOfQuestions: 10,
+          resumeText: formData.resumeText
         }
       );
 
@@ -55,6 +87,7 @@ const CreateSessionForm = () => {
 
       const response = await axiosInstance.post(API_PATHS.SESSION.CREATE, {
         ...formData,
+        description: formData.resumeText ? "Resume Integration Session" : "", // clear description or set default
         questions: generatedQuestions,
       });
 
@@ -107,20 +140,36 @@ const CreateSessionForm = () => {
         type="text"
       />
 
-      <Input
-        value={formData.description}
-        onChange={({ target }) => handleChange("description", target.value)}
-        label="Description"
-        placeholder="(Any specific goals or notes for this session)"
-        type="text"
-      />
+
+      <div className="bg-gray-50/50 border border-dashed border-gray-300 rounded-xl p-6 text-center hover:bg-gray-50 transition-colors">
+        <input
+          type="file"
+          accept=".pdf"
+          onChange={handleFileChange}
+          className="hidden"
+          id="resume-upload"
+        />
+        <label htmlFor="resume-upload" className="cursor-pointer flex items-center gap-4">
+          <div className="p-3 bg-white rounded-full shadow-sm border border-gray-100 shrink-0">
+            {resumeFile ? <File02Icon className="text-emerald-500" /> : <CloudUploadIcon className="text-blue-500" />}
+          </div>
+          <div className="text-left">
+            <div className="text-sm font-medium text-gray-700">
+              {resumeFile ? resumeFile.name : "Upload Resume (PDF)"}
+            </div>
+            <div className="text-xs text-gray-400">
+              {isExtracting ? "Extracting text..." : (resumeFile ? "Ready to analyze" : "We'll tailor questions to your experience")}
+            </div>
+          </div>
+        </label>
+      </div>
 
       {error && <p className="text-red-500 text-xs pb-2.5">{error}</p>}
 
       <button
         type="submit"
         className="btn-primary w-full mt-2"
-        disabled={isLoading}
+        disabled={isLoading || isExtracting}
       >
         {isLoading && <SpinnerLoader color="white" size={15} />} Create Session
       </button>

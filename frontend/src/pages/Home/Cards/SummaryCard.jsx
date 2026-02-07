@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { ArrowRight01Icon, Delete02Icon } from 'hugeicons-react';
+import { ArrowRight01Icon, Delete02Icon, File02Icon } from 'hugeicons-react';
 import { getInitials } from "../Utils/helper";
 const gradients = [
   "from-gray-900 via-black to-black",
@@ -30,10 +30,13 @@ const SummaryCard = ({
   onSelect,
   onDelete,
   index,
+  isResumeSession,
 }) => {
   const tags = Array.isArray(topicsToFocus)
     ? topicsToFocus
-    : (topicsToFocus || "").split(",").map(t => t.trim()).filter(Boolean);
+    : (topicsToFocus ? topicsToFocus.split(",").map((t) => t.trim()) : ["General"]);
+
+  const displayRole = role || "Resume Session";
   const gradientIdx = useMemo(() => {
     if (typeof index === "number") return index % gradients.length;
     return getRandomIndex(role + (description || "")) % gradients.length;
@@ -67,10 +70,14 @@ const SummaryCard = ({
         <div className="flex flex-row items-start gap-2 sm:gap-3">
           {/* Avatar/Initials */}
           <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-transparent border border-white flex items-center justify-center shadow-lg flex-shrink-0 mt-1">
-            <span className="text-lg sm:text-xl font-extrabold text-gray-100" style={{ fontSize: '1rem sm:1.25rem' }}>{getInitials(role)}</span>
+            {isResumeSession || displayRole === "Resume Session" ? (
+              <File02Icon className="text-white" size={24} />
+            ) : (
+              <span className="text-lg sm:text-xl font-extrabold text-gray-100" style={{ fontSize: '1rem sm:1.25rem' }}>{getInitials(displayRole)}</span>
+            )}
           </div>
           <div className="flex flex-col flex-grow min-w-0">
-            <h2 className="text-base sm:text-lg font-bold text-white mb-1 truncate" style={{ fontSize: '1rem sm:1.1rem' }}>{role}</h2>
+            <h2 className="text-base sm:text-lg font-bold text-white mb-1 truncate" style={{ fontSize: '1rem sm:1.1rem' }}>{displayRole}</h2>
             <div className="flex flex-wrap gap-1 sm:gap-2 mb-2 sm:mb-1">
               {tags.slice(0, 3).map((tag, idx) => (
                 <span
