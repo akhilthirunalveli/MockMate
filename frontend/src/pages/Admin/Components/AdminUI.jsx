@@ -4,16 +4,15 @@ import React from "react";
 export const baseStyles = {
   fontFamily: "'Montserrat', sans-serif",
   cardBase: {
-    backgroundColor: "#000000",
-    border: "1px solid #333",
-    borderRadius: "12px",
-    padding: "clamp(1rem, 3vw, 2rem)",
+    backgroundColor: "#0a0a0a",
+    border: "1px solid #222",
+    borderRadius: "16px",
+    padding: "clamp(1.5rem, 3vw, 2rem)",
+    boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
   },
   glassMorphism: {
-    background: "rgba(255, 255, 255, 0.05)",
-    backdropFilter: "blur(20px)",
-    WebkitBackdropFilter: "blur(20px)",
-    border: "1px solid rgba(255, 255, 255, 0.1)",
+    background: "#0a0a0a",
+    border: "1px solid #3333331c",
     borderRadius: "20px",
   }
 };
@@ -52,18 +51,19 @@ export const StatsCard = ({ value, label, subtitle, color }) => (
 );
 
 export const ChartCard = ({ title, children, height = "clamp(250px, 40vw, 300px)" }) => (
-  <Card>
+  <Card style={{ height: "100%", display: "flex", flexDirection: "column" }}>
     <h3 style={{
       color: "white",
       marginBottom: "1rem",
       fontFamily: baseStyles.fontFamily,
       fontWeight: "500",
       fontSize: "clamp(1rem, 3vw, 1.3rem)",
-      textAlign: "center"
+      textAlign: "center",
+      flexShrink: 0
     }}>
       {title}
     </h3>
-    <div style={{ width: "100%", height, minWidth: "250px", minHeight: "250px" }}>
+    <div style={{ width: "100%", flex: 1, minHeight: "250px", height: "100%" }}>
       {children}
     </div>
   </Card>
@@ -161,37 +161,64 @@ export const CardSkeleton = () => (
   </div>
 );
 
-export const ConnectionStatus = ({ status, url }) => {
+export const ConnectionStatus = ({ status, url, collapsed }) => {
   const statusConfig = {
     connected: { color: "#28a745", icon: "✓", text: "Connected" },
     failed: { color: "#dc3545", icon: "✗", text: "Disconnected" },
     testing: { color: "#ffc107", icon: "⏳", text: "Testing..." }
   };
   const config = statusConfig[status] || statusConfig.testing;
+
+  if (collapsed) {
+    return (
+      <div
+        title={`Backend: ${config.text}`}
+        style={{
+          width: "12px",
+          height: "12px",
+          borderRadius: "50%",
+          backgroundColor: config.color,
+          margin: "0 auto"
+        }}
+      />
+    );
+  }
+
   return (
     <div style={{
-      marginBottom: "clamp(0.6rem, 2vw, 0.8rem)",
-      padding: "clamp(0.4rem, 2vw, 0.6rem) clamp(0.6rem, 2.5vw, 0.8rem)",
-      borderRadius: "clamp(6px, 1.5vw, 10px)",
-      backgroundColor: config.color,
+      width: "100%", // Full width
+      padding: "0.9rem", // Match button padding
+      borderRadius: "12px",
+      backgroundColor: "#111",
       color: "white",
-      fontSize: "clamp(0.7rem, 2vw, 0.8rem)",
+      fontSize: "0.85rem",
       fontWeight: "500",
-      fontFamily: baseStyles.fontFamily
+      fontFamily: baseStyles.fontFamily,
+      display: "flex",
+      alignItems: "center",
+      gap: "0.8rem",
+      whiteSpace: "nowrap",
+      overflow: "hidden",
+      boxSizing: "border-box"
     }}>
-      <div style={{ display: "flex", flexDirection: "column", gap: "clamp(0.2rem, 0.8vw, 0.4rem)" }}>
-        <div style={{ fontWeight: "600" }}>
-          Backend: {config.icon} {config.text}
+      <div style={{
+        width: "8px",
+        height: "8px",
+        borderRadius: "50%",
+        backgroundColor: config.color,
+        flexShrink: 0
+      }} />
+      <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
+        <div style={{ fontWeight: "600", color: config.color }}>
+          {config.text}
         </div>
         {status === "connected" && url && (
           <div style={{
-            fontSize: "clamp(0.6rem, 1.6vw, 0.7rem)",
-            opacity: "0.85",
-            wordBreak: "break-all",
-            fontWeight: "400",
-            color: "rgba(255, 255, 255, 0.9)"
+            fontSize: "0.7rem",
+            color: "#666",
+            wordBreak: "break-all"
           }}>
-            {url}
+            {url.replace(/^https?:\/\//, '')}
           </div>
         )}
       </div>
