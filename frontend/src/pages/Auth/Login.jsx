@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { FaGoogle } from "react-icons/fa";
+import { GoogleIcon, Cancel01Icon } from 'hugeicons-react';
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { auth } from "../../config/firebase";
 import { BeatLoader, SyncLoader } from 'react-spinners';
@@ -113,21 +113,7 @@ const Login = ({ setCurrentPage, onClose, isDark = false }) => {
           } bg-transparent rounded-lg text-sm w-8 h-8 flex justify-center items-center absolute top-3.5 right-3.5 cursor-pointer transition-all duration-200 z-10`}
         onClick={onClose}
       >
-        <svg
-          className="w-3 h-3"
-          aria-hidden="true"
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 14 14"
-        >
-          <path
-            stroke="currentColor"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2"
-            d="M1 1l6 6m0 0l6 6M7 7l6-6M7 7l-6 6"
-          />
-        </svg>
+        <Cancel01Icon size={14} />
       </button>
 
       <style>
@@ -196,7 +182,7 @@ const Login = ({ setCurrentPage, onClose, isDark = false }) => {
             onClick={handleGoogleLogin}
             style={{ marginBottom: "8px" }}
           >
-            <FaGoogle className="mr-2" size={18} color="white" />
+            <GoogleIcon className="mr-2" size={18} color="white" />
             Continue with Google
           </button>
 
