@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { MdHome } from "react-icons/md";
+import { Home01Icon } from 'hugeicons-react';
 import Navbar from "../../Navbar/Navbar.jsx";
 import { useMediaStream } from "../hooks/useMediaStream.js";
 import { useSpeechRecognition } from "../hooks/useSpeechRecognition.js";
@@ -103,13 +103,7 @@ const Record = () => {
   return (
     <>
       {/* Main Content */}
-      <div
-        className="min-h-screen w-full px-4 py-6 overflow-auto"
-        style={{
-          backgroundImage: "radial-gradient(#FFFFFF 0.5px,#080708 0.5px)",
-          backgroundSize: "21px 21px",
-        }}
-      >
+      <div className="min-h-screen w-full px-4 py-6 overflow-auto bg-dots-dark">
         <Navbar />
 
         {/* Permission Request Modal - only show if user attempted access and there's an error */}
@@ -129,7 +123,7 @@ const Record = () => {
               onClick={() => handleNavigation("/dashboard")}
               className="flex items-center gap-2 px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-full transition-colors cursor-pointer"
             >
-              <MdHome size={20} />
+              <Home01Icon size={20} />
               Exit Session
             </button>
           </div>

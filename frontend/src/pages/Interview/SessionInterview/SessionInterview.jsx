@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import axiosInstance from "../../../utils/axiosInstance.js";
 import { API_PATHS } from "../../../constants/apiPaths.js";
 import { useNavigate } from "react-router-dom";
-import { MdHome } from "react-icons/md";
+import { Home01Icon } from 'hugeicons-react';
 import Navbar from "../../Navbar/Navbar.jsx";
 import { useMediaStream } from "../hooks/useMediaStream.js";
 import { useSpeechRecognition } from "../hooks/useSpeechRecognition.js";
@@ -136,13 +136,7 @@ const SessionInterview = () => {
   return (
     <>
       {/* Main Content */}
-      <div
-        className="min-h-screen w-full px-4 py-6 overflow-auto"
-        style={{
-          backgroundImage: "radial-gradient(#FFFFFF 0.5px,#080708 0.5px)",
-          backgroundSize: "21px 21px",
-        }}
-      >
+      <div className="min-h-screen w-full px-4 py-6 overflow-auto bg-dots-dark">
         <Navbar />
 
         {/* Session Selector - now inside header row, left of title */}
@@ -199,7 +193,7 @@ const SessionInterview = () => {
               onClick={() => handleNavigation("/dashboard")}
               className="flex items-center gap-2 px-6 py-3 bg-red-600 text-white border border-red-500 rounded-full transition-all duration-300 font-semibold hover:bg-red-700 hover:border-red-600 active:scale-95 cursor-pointer"
             >
-              <MdHome size={20} color="#ffffff" />
+              <Home01Icon size={20} color="#ffffff" />
               Exit Session
             </button>
           </div>
