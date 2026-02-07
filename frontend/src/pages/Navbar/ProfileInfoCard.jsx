@@ -1,4 +1,5 @@
 import React, { useContext, useState } from "react";
+import { Home01Icon, BookOpen01Icon, Logout01Icon } from 'hugeicons-react';
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "../../context/userContext.jsx";
 
@@ -56,7 +57,7 @@ const ProfileInfoCard = () => {
   };
 
   const handleHome = () => {
-    navigate("/"); // Change this path if your home route is different
+    navigate("/dashboard"); // Change this path if your home route is different
   };
 
   return (
@@ -114,23 +115,26 @@ const ProfileInfoCard = () => {
         {isButtonsVisible && window.innerWidth >= 640 && (
           <div className="flex gap-2 items-center justify-center transition-all duration-200">
             <button
-              className="px-3 py-1 text-sm font-semibold text-black bg-gray-100 cursor-pointer rounded-full shadow hover:bg-gray-200 hover:text-black transition-all"
+              className="p-2 text-black bg-gray-100 cursor-pointer rounded-full shadow hover:bg-gray-200 hover:text-black transition-all flex items-center justify-center"
               onClick={e => { e.stopPropagation(); handleHome(); }}
+              title="Home"
             >
-              Home
+              <Home01Icon size={18} />
             </button>
             <button
-              className="px-3 py-1 text-sm font-semibold bg-amber-600 cursor-pointer rounded-full shadow hover:bg-amber-500 text-white transition-all"
+              className="p-2 bg-amber-600 cursor-pointer rounded-full shadow hover:bg-amber-500 text-white transition-all flex items-center justify-center"
               onClick={e => { e.stopPropagation(); navigate("/docs"); }}
+              title="Docs"
             >
-              Docs
+              <BookOpen01Icon size={18} />
             </button>
 
             <button
-              className="px-3 py-1 text-sm font-semibold text-white bg-red-700 cursor-pointer rounded-full shadow hover:bg-red-500 transition-all"
+              className="p-2 text-white bg-red-700 cursor-pointer rounded-full shadow hover:bg-red-500 transition-all flex items-center justify-center"
               onClick={e => { e.stopPropagation(); handleLogout(); }}
+              title="Logout"
             >
-              Logout
+              <Logout01Icon size={18} />
             </button>
           </div>
         )}

@@ -70,7 +70,7 @@ const RoleInfoHeader = ({
               <div className="flex justify-between items-start">
                 <div className="w-full text-center sm:text-left">
                   <h2 className="text-2xl sm:text-3xl md:text-4xl text-white font-medium leading-tight">{role}</h2>
-                  <p className="text-xs sm:text-sm text-medium text-white bg-whitemt-2 sm:mt-3 md:mt-4 leading-relaxed">
+                  <p className="text-xs sm:text-sm text-medium text-white mt-2 sm:mt-3 md:mt-4 leading-relaxed">
                     {topicsToFocus}
                   </p>
                 </div>
