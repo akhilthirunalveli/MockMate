@@ -22,7 +22,7 @@ import SessionsTab from "./Components/SessionsTab.jsx";
 import BroadcastTab from "./Components/BroadcastTab.jsx";
 import AdminSidebar from "./Components/AdminSidebar.jsx";
 
-const ADMIN_CODE = "1110";
+const ADMIN_CODE = import.meta.env.VITE_ADMIN_CODE;
 // Premium Solid Colors (No Gradients)
 const COLORS = ['#007bff', '#28a745', '#ffc107', '#dc3545', '#6f42c1', '#fd7e14', '#20c997', '#6c757d'];
 
@@ -30,16 +30,17 @@ const COLORS = ['#007bff', '#28a745', '#ffc107', '#dc3545', '#6f42c1', '#fd7e14'
 const loadGoogleFonts = () => {
   if (!document.querySelector('link[href*="Montserrat"]')) {
     const link = document.createElement('link');
-    link.href = 'https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap';
+    link.href = 'https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=Anta&display=swap';
     link.rel = 'stylesheet';
     document.head.appendChild(link);
   }
 };
 loadGoogleFonts();
 
+import { toast } from "react-hot-toast";
+
 const LoginPage = ({ onLogin }) => {
   const [code, setCode] = useState("");
-  const [error, setError] = useState("");
   const [isWarping, setIsWarping] = useState(false);
   const canvasRef = React.useRef(null);
   const mouseRef = React.useRef({ x: -9999, y: -9999 });
@@ -50,12 +51,11 @@ const LoginPage = ({ onLogin }) => {
     if (code === ADMIN_CODE) {
       // Trigger Warp Animation
       setIsWarping(true);
-      setError("");
       setTimeout(() => {
         onLogin();
       }, 1500); // Wait for animation
     } else {
-      setError("ACCESS DENIED");
+      toast.error("ACCESS DENIED");
       setCode("");
     }
   };
@@ -228,7 +228,7 @@ const LoginPage = ({ onLogin }) => {
           background: "rgba(0, 0, 0, 1)", // Very dark glass
           backdropFilter: "blur(20px)",
           WebkitBackdropFilter: "blur(20px)",
-          padding: "3rem 4rem",
+          padding: "2rem 3rem",
           borderRadius: "24px",
           border: "1px solid rgba(255, 255, 255, 0.08)",
           boxShadow: "0 25px 50px rgba(0,0,0,0.5)", // Deep shadow
@@ -239,14 +239,28 @@ const LoginPage = ({ onLogin }) => {
           width: "90%"
         }}>
 
+          {/* Logo */}
+          {/* Logo */}
+          <div style={{ marginBottom: "1.5rem" }}>
+            <img
+              src="/Logo.svg"
+              alt="MockMate Logo"
+              style={{
+                width: "80px",
+                height: "auto",
+                margin: "0 auto",
+              }}
+            />
+          </div>
+
           {/* Header */}
-          <div style={{ marginBottom: "2.5rem" }}>
+          <div style={{ marginBottom: "1.5rem" }}>
             <h1 style={{
               color: "#fff",
               fontSize: "2rem",
               fontWeight: 700,
               letterSpacing: "-0.5px",
-              marginBottom: "0.5rem",
+              marginBottom: "0.25rem",
             }}>
               System Access
             </h1>
@@ -257,7 +271,7 @@ const LoginPage = ({ onLogin }) => {
 
           {/* Input Field (Hidden visually, functionality preserved for mobile keyboard) */}
           {/* We use a custom visualizer for the code */}
-          <div style={{ display: "flex", justifyContent: "center", gap: "1rem", marginBottom: "2.5rem" }}>
+          <div style={{ display: "flex", justifyContent: "center", gap: "1rem", marginBottom: "1.5rem" }}>
             {[0, 1, 2, 3].map((idx) => (
               <div key={idx} style={{
                 width: "50px",
@@ -290,7 +304,6 @@ const LoginPage = ({ onLogin }) => {
             onChange={(e) => {
               const val = e.target.value.replace(/\D/g, '').slice(0, 4);
               setCode(val);
-              if (error) setError("");
             }}
             style={{
               position: "absolute",
@@ -303,25 +316,12 @@ const LoginPage = ({ onLogin }) => {
             }}
           />
 
-          {/* Error Message */}
-          <div style={{
-            height: "20px",
-            color: "#ff4444",
-            fontSize: "0.85rem",
-            fontWeight: 600,
-            letterSpacing: "1px",
-            opacity: error ? 1 : 0,
-            transition: "opacity 0.2s"
-          }}>
-            {error}
-          </div>
-
           {/* Action Button */}
           <button
             onClick={handleSubmit}
             disabled={code.length !== 4}
             style={{
-              marginTop: "2rem",
+              marginTop: "1.5rem",
               width: "100%",
               padding: "1rem",
               borderRadius: "12px",
