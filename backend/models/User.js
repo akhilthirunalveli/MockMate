@@ -8,6 +8,7 @@ const UserSchema = new mongoose.Schema(
     profileImageUrl: { type: String, default: null },
     resumeLink: { type: String, default: null },
     initials: { type: String }, // User initials for display
+    isBanned: { type: Boolean, default: false },
   },
   { timestamps: true }
 );

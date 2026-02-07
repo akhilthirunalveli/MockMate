@@ -7,6 +7,7 @@ const sessionSchema = new mongoose.Schema({
   topicsToFocus: { type: String, required: true },
   description: String,
   questions: [{ type: mongoose.Schema.Types.ObjectId, ref: "Question" }],
+  endTime: { type: Date },
 }, { timestamps: true });
 
 module.exports = mongoose.model("Session", sessionSchema);
