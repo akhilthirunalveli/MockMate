@@ -1,7 +1,6 @@
 import React, { useMemo, useState, useEffect, useRef } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { LuCopy, LuCheck, LuRefreshCcw, LuSend, LuMessageSquare } from 'react-icons/lu';
-import { MdHome } from "react-icons/md";
+import { Copy01Icon, Tick01Icon, RefreshIcon, SentIcon, Comment01Icon, Home01Icon } from 'hugeicons-react';
 import VideoInterview from './VideoInterview.jsx';
 import Navbar from "../../Navbar/Navbar.jsx";
 import io from 'socket.io-client';
@@ -100,81 +99,69 @@ const LiveInterview = () => {
   if (!roomFromQuery) {
     return (
       <div
-        className="min-h-screen w-full px-4 py-6 overflow-auto"
+        className="min-h-screen w-full text-white flex flex-col"
         style={{
-          opacity: 1,
-          backgroundImage: "radial-gradient(#e5e5e5 0.5px,#030202 0.5px)",
-          backgroundSize: "21px 21px",
+          backgroundColor: '#000000ff',
+          backgroundImage: "radial-gradient(#333 1px, transparent 1px)",
+          backgroundSize: "24px 24px",
         }}
       >
         <Navbar />
-        <div className="min-h-[90vh] flex items-center justify-center">
-          <div className="w-full max-w-2xl bg-black/80 backdrop-blur-sm  rounded-2xl p-8 space-y-6 ">
-            <h1 className="text-2xl font-semibold text-center text-white">
-              Start a Live Interview
+        <div className="flex-1 flex items-center justify-center p-4">
+          <div className="w-full max-w-md bg-black border border-[#222] rounded-2xl p-8 shadow-2xl">
+            <h1 className="text-2xl font-semibold text-center mb-2">
+              Live Interview
             </h1>
-            <p className="text-gray-300 text-center">
-              Generate a secure room code, share the link, and join the call with
-              one click.
+            <p className="text-gray-400 text-center text-sm mb-8">
+              Secure, high-quality video & code collaboration.
             </p>
-            <div className="space-y-4">
-              <label className="text-sm uppercase tracking-wide text-gray-400">
-                Room Code
-              </label>
-              <div className="flex gap-3">
-                <input
-                  value={roomInput}
-                  onChange={(e) =>
-                    setRoomInput(e.target.value.replace(/[^a-zA-Z0-9-]/g, ''))
-                  }
-                  placeholder="Enter or generate a code"
-                  className="flex-1 rounded-xl bg-white/5 border border-white/10 px-4 py-3 text-lg tracking-widest font-mono text-white placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-white/40"
-                />
-                <button
-                  onClick={handleGenerateRoom}
-                  className="px-4 py-3 rounded-xl bg-white text-black font-semibold hover:bg-gray-200 transition cursor-pointer"
-                >
-                  <LuRefreshCcw className="inline-block mr-1" />
-                  New
-                </button>
-              </div>
-            </div>
 
-            <div className="space-y-2">
-              <p className="text-xs uppercase tracking-wide text-gray-400">
-                Shareable Link
-              </p>
-              <div className="flex gap-3">
-                <input
-                  value={activeLink}
-                  readOnly
-                  className="flex-1 rounded-xl bg-white/5 border border-white/10 px-4 py-3 text-sm text-gray-200"
-                />
-                <button
-                  onClick={handleCopyLink}
-                  className="px-4 py-3 rounded-xl bg-white/10 text-white hover:bg-white/20 transition border border-white/10 cursor-pointer"
-                  disabled={!activeLink}
-                >
-                  {copied ? (
-                    <span className="flex items-center gap-2">
-                      <LuCheck /> Copied
-                    </span>
-                  ) : (
-                    <span className="flex items-center gap-2">
-                      <LuCopy /> Copy
-                    </span>
-                  )}
-                </button>
+            <div className="space-y-6">
+              <div>
+                <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2 block">
+                  New Meeting
+                </label>
+                <div className="flex gap-2">
+                  <div className="flex-1 bg-[#1A1A1A] border border-[#333] rounded-lg px-4 py-3 flex items-center text-[#ddd] font-mono tracking-wider">
+                    {roomInput || "Generating..."}
+                  </div>
+                  <button
+                    onClick={handleGenerateRoom}
+                    className="p-3 bg-[#222] hover:bg-[#333] text-white rounded-lg transition-colors border border-[#333] cursor-pointer"
+                    title="Generate New Code"
+                  >
+                    <RefreshIcon size={20} />
+                  </button>
+                </div>
               </div>
-            </div>
 
-            <button
-              onClick={handleStartCall}
-              disabled={!roomInput}
-              className="w-full py-3 rounded-xl bg-emerald-600 text-white font-semibold text-lg hover:bg-emerald-500 disabled:opacity-40 transition shadow-lg shadow-emerald-900/20 cursor-pointer"
-            >
-              Join Room
-            </button>
+              <div>
+                <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2 block">
+                  Invite Link
+                </label>
+                <div className="flex gap-2">
+                  <div className="flex-1 bg-[#1A1A1A] border border-[#333] rounded-lg px-4 py-3 text-sm text-[#ddd] truncate">
+                    {activeLink || "Link will appear here"}
+                  </div>
+                  <button
+                    onClick={handleCopyLink}
+                    disabled={!activeLink}
+                    className="p-3 bg-[#222] hover:bg-[#333] text-white rounded-lg transition-colors border border-[#333] disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                    title="Copy Link"
+                  >
+                    {copied ? <Tick01Icon size={20} className="text-emerald-500" /> : <Copy01Icon size={20} />}
+                  </button>
+                </div>
+              </div>
+
+              <button
+                onClick={handleStartCall}
+                disabled={!roomInput}
+                className="w-full py-3.5 bg-white text-black font-semibold rounded-lg hover:bg-gray-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed mt-4 cursor-pointer"
+              >
+                Join Room
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -183,76 +170,88 @@ const LiveInterview = () => {
 
   return (
     <div
-      className="min-h-screen w-full px-4 py-6 overflow-auto"
+      className="h-screen w-full text-white flex flex-col overflow-hidden relative"
       style={{
-        opacity: 1,
-        backgroundImage: "radial-gradient(#e5e5e5 0.5px,#030202 0.5px)",
-        backgroundSize: "21px 21px",
+        backgroundColor: '#000000ff',
+        backgroundImage: "radial-gradient(#333 1px, transparent 1px)",
+        backgroundSize: "24px 24px",
       }}
     >
       <Navbar />
 
-      <div className="max-w-[90rem] mt-24 mx-auto flex flex-col gap-6 pb-8">
-        {/* Header */}
-        <div className="flex justify-between items-center mb-4">
+      {/* Main Content Area */}
+      <div className="flex-1 flex flex-col pt-24 px-6 pb-6 gap-6 h-full overflow-hidden z-10">
+
+        {/* Header Bar */}
+        <div className="h-14 flex justify-between items-center shrink-0">
           <div className="flex items-center gap-4">
-            <div className="bg-black/80 backdrop-blur-sm border border-white/30 rounded-full px-6 py-3 flex items-center gap-4">
-              <span className="text-gray-400 text-sm uppercase tracking-wide">Room ID</span>
-              <span className="text-xl font-semibold tracking-widest font-mono text-white">{roomFromQuery}</span>
-              <button
-                onClick={handleCopyLink}
-                className="ml-2 p-2 rounded-full hover:bg-white/10 transition text-white/80 hover:text-white"
-                title="Copy Link"
-              >
-                {copied ? <LuCheck /> : <LuCopy />}
-              </button>
+            <div className="flex items-center gap-4 px-5 py-2.5 bg-black border border-[#222] rounded-xl shadow-lg">
+              <div className="flex items-center gap-2">
+                <span className="relative flex h-2.5 w-2.5">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
+                </span>
+                <span className="text-sm font-semibold tracking-wide text-gray-200 uppercase">Live</span>
+              </div>
+              <div className="h-5 w-px bg-[#333]"></div>
+              <div className="flex items-center gap-3">
+                <span className="font-mono text-base tracking-widest text-white">{roomFromQuery}</span>
+                <button
+                  onClick={handleCopyLink}
+                  className="text-gray-400 hover:text-white transition-colors cursor-pointer p-1 hover:bg-[#222] rounded"
+                  title="Copy Link"
+                >
+                  {copied ? <Tick01Icon size={16} className="text-emerald-500" /> : <Copy01Icon size={16} />}
+                </button>
+              </div>
             </div>
           </div>
 
-          <div className="flex gap-3">
+          <div className="flex items-center gap-3">
             <button
               onClick={() => setShowChat(!showChat)}
-              className={`px-6 py-3 rounded-full border transition-all duration-300 font-semibold flex items-center gap-2 ${showChat
-                ? 'bg-emerald-500/20 border-emerald-500 text-emerald-400'
-                : 'bg-black/80 border-white/30 text-white hover:bg-white/10'
+              className={`p-3 rounded-xl transition-all border cursor-pointer shadow-lg ${showChat
+                ? 'bg-black text-white border-[#333]'
+                : 'bg-black text-gray-400 hover:text-white border-[#222] hover:border-[#333]'
                 }`}
+              title={showChat ? "Hide Chat" : "Show Chat"}
             >
-              <LuMessageSquare /> {showChat ? 'Hide Chat' : 'Show Chat'}
+              <Comment01Icon size={20} />
             </button>
             <button
               onClick={() => navigate('/interview/live')}
-              className="flex items-center gap-2 px-6 py-3 bg-red-600 text-white border border-red-500 rounded-full transition-all duration-300 font-semibold hover:bg-red-700 hover:border-red-600 active:scale-95 cursor-pointer"
+              className="flex items-center gap-2 px-5 py-3 bg-black hover:bg-[#1A1A1A] text-red-500 text-sm font-bold rounded-xl transition-all border border-[#222] hover:border-red-500/30 shadow-lg cursor-pointer"
             >
-              <MdHome size={20} />
-              Exit
+              <Home01Icon size={18} />
+              <span>Exit</span>
             </button>
           </div>
         </div>
 
-        {/* Main Content */}
-        <div className="flex flex-col md:flex-row gap-6 h-[calc(100vh-200px)] min-h-[500px]">
-          {/* Video Section */}
-          <div className={`flex-1 transition-all duration-300 ${showChat ? 'w-full md:w-2/3' : 'w-full'}`}>
+        {/* Workspace */}
+        <div className="flex-1 flex gap-6 min-h-0">
+          {/* Recent Video Area */}
+          <div className={`transition-all duration-300 ease-in-out min-w-0 ${showChat ? 'flex-[3]' : 'flex-1'}`}>
             <VideoInterview roomId={roomFromQuery} />
           </div>
 
-          {/* Chat Section */}
+          {/* Chat Sidebar */}
           {showChat && (
-            <div className="w-full md:w-1/3 bg-black/80 backdrop-blur-sm border border-white/20 rounded-2xl flex flex-col overflow-hidden transition-all duration-300 shadow-xl">
-              <div className="p-4 border-b border-white/10 bg-white/5 flex justify-between items-center">
-                <h3 className="font-semibold text-white flex items-center gap-2">
-                  <LuMessageSquare className="text-emerald-400" /> Live Chat
+            <div className="flex-1 max-w-[360px] bg-[#000] border border-[#222] rounded-2xl flex flex-col overflow-hidden shadow-2xl transition-all duration-300">
+              <div className="p-4 border-b border-[#222] flex justify-between items-center bg-black">
+                <h3 className="font-medium text-sm text-white flex items-center gap-2">
+                  Messages
                 </h3>
-                <span className="text-xs text-gray-400 px-2 py-1 rounded bg-white/5 border border-white/10">
-                  {chatHistory.length} messages
+                <span className="text-[10px] bg-[#222] text-gray-400 px-2 py-0.5 rounded border border-[#333]">
+                  {chatHistory.length}
                 </span>
               </div>
 
-              <div className="flex-1 overflow-y-auto p-4 space-y-4 custom-scrollbar">
+              <div className="flex-1 overflow-y-auto p-4 space-y-4 custom-scrollbar bg-[#0A0A0A]">
                 {chatHistory.length === 0 && (
-                  <div className="h-full flex flex-col items-center justify-center text-gray-500 space-y-2">
-                    <LuMessageSquare size={32} className="opacity-20" />
-                    <p className="text-sm">No messages yet</p>
+                  <div className="h-full flex flex-col items-center justify-center text-gray-600 space-y-2">
+                    <Comment01Icon size={24} className="opacity-20" />
+                    <p className="text-xs">No messages yet</p>
                   </div>
                 )}
                 {chatHistory.map((msg, idx) => (
@@ -261,14 +260,14 @@ const LiveInterview = () => {
                     className={`flex flex-col ${msg.author === socket?.id ? "items-end" : "items-start"}`}
                   >
                     <div
-                      className={`max-w-[85%] px-4 py-2 rounded-2xl text-sm ${msg.author === socket?.id
-                        ? "bg-emerald-600 text-white rounded-br-none shadow-lg shadow-emerald-900/20"
-                        : "bg-white/10 text-gray-200 rounded-bl-none border border-white/10"
+                      className={`max-w-[90%] px-3 py-2 rounded-lg text-sm ${msg.author === socket?.id
+                        ? "bg-[#222] text-white border border-[#333]"
+                        : "bg-black text-gray-300 border border-[#222]"
                         }`}
                     >
                       <p>{msg.message}</p>
                     </div>
-                    <span className="text-[10px] text-gray-500 mt-1 px-1">
+                    <span className="text-[10px] text-gray-600 mt-1 px-1">
                       {msg.time}
                     </span>
                   </div>
@@ -276,7 +275,7 @@ const LiveInterview = () => {
                 <div ref={chatEndRef} />
               </div>
 
-              <div className="p-4 border-t border-white/10 bg-white/5">
+              <div className="p-3 border-t border-[#222] bg-black">
                 <div className="flex gap-2">
                   <input
                     type="text"
@@ -285,15 +284,15 @@ const LiveInterview = () => {
                     onKeyPress={(event) => {
                       event.key === "Enter" && sendMessage();
                     }}
-                    placeholder="Type a message..."
-                    className="flex-1 bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-transparent placeholder:text-gray-600"
+                    placeholder="Type..."
+                    className="flex-1 bg-[#0A0A0A] border border-[#333] rounded-lg px-3 py-2.5 text-sm text-white focus:outline-none focus:border-gray-500 transition-colors placeholder:text-gray-700"
                   />
                   <button
                     onClick={sendMessage}
                     disabled={!message.trim()}
-                    className="p-3 bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 disabled:hover:bg-emerald-600 rounded-xl transition text-white shadow-lg shadow-emerald-900/20"
+                    className="p-2.5 bg-white text-black rounded-lg hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed transition-colors cursor-pointer"
                   >
-                    <LuSend size={18} />
+                    <SentIcon size={18} />
                   </button>
                 </div>
               </div>
