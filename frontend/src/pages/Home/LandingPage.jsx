@@ -8,6 +8,7 @@ import GithubLogo from "../../assets/github.png";
 
 import Login from "../Auth/Login.jsx";
 import SignUp from "../Auth/SignUp.jsx";
+import ForgotPassword from "../Auth/ForgotPassword.jsx";
 
 const TYPEWRITER_TEXT = "MockMate";
 const TYPING_SPEED = 100; // smoother, slightly faster
@@ -216,6 +217,13 @@ function LandingPage() {
           )}
           {currentPage === "signup" && (
             <SignUp
+              setCurrentPage={setCurrentPage}
+              onClose={() => setOpenAuthModal(false)}
+              onLoadingComplete={() => setIsLoading(false)}
+            />
+          )}
+          {currentPage === "forgotPassword" && (
+            <ForgotPassword
               setCurrentPage={setCurrentPage}
               onClose={() => setOpenAuthModal(false)}
               onLoadingComplete={() => setIsLoading(false)}

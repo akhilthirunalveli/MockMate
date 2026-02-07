@@ -1,5 +1,6 @@
 import React, { useContext, useState } from "react";
 import { GoogleIcon, Cancel01Icon } from 'hugeicons-react';
+import { BsGoogle } from "react-icons/bs";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { auth } from "../../config/firebase";
 import { BeatLoader, SyncLoader } from 'react-spinners';
@@ -158,6 +159,16 @@ const Login = ({ setCurrentPage, onClose, isDark = false }) => {
 
           {error && <p className="text-red-500 text-xs pb-2.5">{error}</p>}
 
+          <div className="flex justify-end mb-2">
+            <button
+              type="button"
+              className="text-xs font-medium text-blue-500 hover:text-blue-700 hover:underline transition-colors"
+              onClick={() => setCurrentPage("forgotPassword")}
+            >
+              Forgot Password?
+            </button>
+          </div>
+
           <button type="submit" className="btn-primary w-full mt-2" disabled={loginLoading}>
             <div className="flex items-center justify-center h-6">
               {loginLoading ? (
@@ -182,7 +193,7 @@ const Login = ({ setCurrentPage, onClose, isDark = false }) => {
             onClick={handleGoogleLogin}
             style={{ marginBottom: "8px" }}
           >
-            <GoogleIcon className="mr-2" size={18} color="white" />
+            <BsGoogle className="mr-2" size={18} color="white" />
             Continue with Google
           </button>
 
