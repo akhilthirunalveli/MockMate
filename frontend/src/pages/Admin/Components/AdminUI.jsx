@@ -197,7 +197,6 @@ export const ConnectionStatus = ({ status, url, collapsed }) => {
       display: "flex",
       alignItems: "center",
       gap: "0.8rem",
-      whiteSpace: "nowrap",
       overflow: "hidden",
       boxSizing: "border-box"
     }}>
@@ -216,7 +215,8 @@ export const ConnectionStatus = ({ status, url, collapsed }) => {
           <div style={{
             fontSize: "0.7rem",
             color: "#666",
-            wordBreak: "break-all"
+            wordBreak: "break-all",
+            overflowWrap: "anywhere"
           }}>
             {url.replace(/^https?:\/\//, '')}
           </div>
