@@ -173,9 +173,9 @@ const Navbar = () => {
                 <div className="relative">
                   <button
                     onClick={() => setShowNotifications(!showNotifications)}
-                    className="relative p-2 rounded-full hover:bg-white/10 transition-colors focus:outline-none"
+                    className="relative p-2 rounded-full hover:bg-white/10 transition-colors focus:outline-none cursor-pointer"
                   >
-                    <Mail01Icon className="text-gray-300 hover:text-white transition-colors" size={20} />
+                    <Mail01Icon className="text-gray-300 hover:text-white transition-colors cursor-pointer" size={20} />
                     {unreadCount > 0 && (
                       <span className="absolute top-1.5 right-2 w-2 h-2 bg-red-500 rounded-full border border-black shadow-[0_0_8px_rgba(239,68,68,0.6)]"></span>
                     )}
@@ -196,19 +196,19 @@ const Navbar = () => {
                           style={{ originY: 0 }}
                           className="absolute top-14 right-[-20px] w-80 bg-[#000000] border border-white/10 rounded-2xl shadow-2xl overflow-hidden z-50"
                         >
-                          <div className="p-4 border-b border-white/5 flex justify-between items-center bg-white/[0.02]">
+                          <div className="p-4 border-b border-white/5 flex justify-between items-center bg-white/[0.02] gap-2">
                             <h3 className="text-white font-semibold text-sm">
                               Notifications
                             </h3>
                             {unreadCount > 0 && (
-                              <span className="text-[10px] bg-red-900 text-white px-2 py-0.5 rounded-full border border-red-500/20">
+                              <span className="text-[10px] bg-red-900 text-white px-2 py-0.5 rounded-full">
                                 {unreadCount} new
                               </span>
                             )}
                             {notifications.length > 0 && (
                               <button
                                 onClick={clearAllNotifications}
-                                className="ml-auto text-gray-400 hover:text-red-500 transition-colors p-1 rounded-md hover:bg-white/5"
+                                className="ml-auto text-gray-400 hover:text-red-500 transition-colors p-1 rounded-md hover:bg-white/5 cursor-pointer"
                                 title="Clear all"
                               >
                                 <Delete02Icon size={14} />

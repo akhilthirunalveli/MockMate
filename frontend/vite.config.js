@@ -5,13 +5,7 @@ import { nodePolyfills } from 'vite-plugin-node-polyfills'
 
 export default defineConfig({
   plugins: [
-    react({
-      // Add explicit configuration for React plugin
-      include: "**/*.{jsx,tsx}",
-      babel: {
-        plugins: []
-      }
-    }),
+    react(),
     tailwindcss(),
     nodePolyfills({
       // simple-peer needs crypto, events, util polyfills

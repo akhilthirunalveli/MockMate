@@ -15,17 +15,17 @@ const PdfViewModal = ({ pdfUrl, onClose }) => {
   const directUrl = getDirectPdfUrl(pdfUrl);
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black backdrop-blur-sm"
       style={{ animation: "fadeIn 0.2s" }}
     >
-      <div className="relative w-[90vw] max-w-2xl h-[80vh] bg-white rounded-2xl shadow-2xl flex flex-col">
+      <div className="relative w-[90vw] max-w-2xl h-[80vh] bg-black rounded-2xl shadow-2xl flex flex-col border border-white/10">
         <button
           onClick={onClose}
           className="absolute top-4 right-4 z-10 p-2 rounded-full bg-white text-black transition-all duration-200 cursor-pointer shadow"
           aria-label="Close"
         >
           <IoClose className="w-6 h-6" />
-        </button>y
+        </button>
         <iframe
           src={directUrl}
           title="PDF Viewer"

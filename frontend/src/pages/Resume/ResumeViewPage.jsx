@@ -108,7 +108,7 @@ const ResumeViewPage = () => {
                 <iframe
                   src={directUrl}
                   title="PDF Viewer"
-                  className="w-full h-full border-none flex-1"
+                  className="w-full h-full border-none flex-1 bg-black"
                 />
               ) : (
                 <div className="w-full h-full flex flex-col items-center justify-center text-center p-10">

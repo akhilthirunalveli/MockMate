@@ -1,129 +1,181 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import Navbar from '../Navbar/Navbar.jsx';
 import {
-    UserCircleIcon,
-    DashboardSquare01Icon,
-    File02Icon,
+    Rocket01Icon,
     VideoReplayIcon,
+    File02Icon,
     UserGroupIcon,
     ArrowLeft01Icon,
-    Rocket01Icon,
-    BulbIcon
+    Cursor01Icon
 } from 'hugeicons-react';
 import { useNavigate } from 'react-router-dom';
+import { motion, useScroll, useSpring, useTransform } from 'framer-motion';
+
+const Step = ({ index, title, description, asset, icon, isLast }) => {
+    const isEven = index % 2 === 0;
+
+    return (
+        <div className="relative mb-32 md:mb-48">
+            {/* Timeline Connector */}
+            {!isLast && (
+                <div className="absolute left-8 md:left-1/2 top-16 bottom-[-128px] md:bottom-[-192px] w-[2px] bg-neutral-800 hidden md:block" />
+            )}
+
+            <div className={`flex flex-col ${isEven ? 'md:flex-row' : 'md:flex-row-reverse'} items-center gap-12 md:gap-24`}>
+                {/* Image Section */}
+                <motion.div
+                    initial={{ opacity: 0, x: isEven ? -50 : 50 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true, margin: "-100px" }}
+                    transition={{ duration: 0.8, ease: "easeOut" }}
+                    className="flex-1 w-full"
+                >
+                    <div className="relative">
+                        <div className="relative bg-black rounded-[20px] overflow-hidden border border-neutral-800 shadow-2xl">
+                            <img
+                                src={asset}
+                                alt={title}
+                                className="w-full h-auto object-cover"
+                            />
+                        </div>
+                    </div>
+                </motion.div>
+
+                {/* Text Section */}
+                <motion.div
+                    initial={{ opacity: 0, x: isEven ? 50 : -50 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true, margin: "-100px" }}
+                    transition={{ duration: 0.8, ease: "easeOut" }}
+                    className="flex-1 space-y-6 text-center md:text-left pt-8 md:pt-0"
+                >
+                    <div className="flex items-center justify-center md:justify-start gap-4 mb-2">
+                        <div className="w-12 h-12 rounded-full bg-white text-black flex items-center justify-center font-bold text-xl">
+                            {index + 1}
+                        </div>
+                        <div className="p-2 rounded-lg bg-neutral-900 border border-neutral-800 text-white">
+                            {icon}
+                        </div>
+                    </div>
+
+                    <h2 className="text-3xl md:text-4xl font-bold text-white tracking-tight">
+                        {title}
+                    </h2>
+
+                    <p className="text-neutral-400 text-lg leading-relaxed max-w-lg mx-auto md:mx-0">
+                        {description}
+                    </p>
+
+                    <div className="pt-4 flex items-center justify-center md:justify-start gap-2 text-neutral-500 text-sm font-medium">
+                        <Cursor01Icon size={16} />
+                        Scroll to continue
+                    </div>
+                </motion.div>
+            </div>
+        </div>
+    );
+};
 
 const Docs = () => {
     const navigate = useNavigate();
+    const containerRef = useRef(null);
+    const { scrollYProgress } = useScroll({
+        target: containerRef,
+        offset: ["start start", "end end"]
+    });
 
-    const Section = ({ title, children, icon }) => (
-        <div className="mb-16">
-            <div className="flex items-center gap-3 mb-6">
-                <div className="p-2 rounded-lg bg-neutral-900 border border-neutral-800 text-white">
-                    {icon}
-                </div>
-                <h2 className="text-2xl font-bold text-white">{title}</h2>
-            </div>
-            <div className="text-neutral-400 leading-relaxed text-lg space-y-4">
-                {children}
-            </div>
-        </div>
-    );
+    const scaleY = useSpring(scrollYProgress, {
+        stiffness: 100,
+        damping: 30,
+        restDelta: 0.001
+    });
 
-    const FeatureCard = ({ title, description }) => (
-        <div className="bg-neutral-900/50 backdrop-blur-sm border border-neutral-800 p-6 rounded-xl hover:border-neutral-700 transition-all group">
-            <h3 className="text-lg font-semibold text-white mb-2 group-hover:text-primary transition-colors">{title}</h3>
-            <p className="text-neutral-400 text-sm leading-relaxed">{description}</p>
-        </div>
-    );
+    const steps = [
+        {
+            title: "Strategize: Session Prep",
+            description: "Define your targets. Create specialized practice sessions tailored to specific job roles, technologies, and company cultures. Setting the context allows our AI to challenge you exactly where it matters.",
+            asset: "/Assets/Session - CreateSession.png",
+            icon: <Rocket01Icon size={20} />
+        },
+        {
+            title: "Practice: The Arena",
+            description: "Choose your battleground. Engage in HR-style behavioral rounds, deep-dive technical drills, or the high-intensity Live Interview mode. Every word is recorded, analyzed, and refined by AI.",
+            asset: "/Assets/Interview - SessionInterview.png",
+            icon: <VideoReplayIcon size={20} />
+        },
+        {
+            title: "Analyze: Resume & ATS",
+            description: "Your gateway to the job. Use our Bento-style resume workspace to manage links, receive AI-powered optimization tips, and run full ATS scans to ensure you pass the machine filter first.",
+            asset: "/Assets/Resume - ViewResume.png",
+            icon: <File02Icon size={20} />
+        },
+        {
+            title: "Manage: Admin Control",
+            description: "Total visibility. For power users and organizations, the admin console provides a centralized dashboard to manage users, monitor sessions, and broadcast system-wide updates.",
+            asset: "/Assets/AdminDashboard.png",
+            icon: <UserGroupIcon size={20} />
+        }
+    ];
 
     return (
-        <div className="min-h-screen bg-dots-dark font-['Nunito'] selection:bg-white/20">
+        <div className="min-h-screen bg-black text-white selection:bg-white/20 overflow-x-hidden font-['Nunito']">
+            <div className="fixed inset-0 bg-dots-dark opacity-40 pointer-events-none" />
             <Navbar />
 
-            <div className="max-w-4xl mx-auto pt-32 pb-20 px-6">
+            {/* Progress Top Bar */}
+            <motion.div
+                className="fixed top-0 left-0 right-0 h-1 bg-white z-[100] origin-left"
+                style={{ scaleX: scrollYProgress }}
+            />
 
-                {/* Header */}
-                <div className="text-center mb-20">
-                    <h1 className="text-5xl md:text-6xl font-bold text-white mb-6 tracking-tight">
-                        How it works.
-                    </h1>
-                    <p className="text-xl text-neutral-400 max-w-2xl mx-auto">
-                        Everything you need to know about using MockMate to crush your next interview. Simple, powerful, and AI-driven.
-                    </p>
-                </div>
-
-                {/* Content */}
-                <div className="space-y-20">
-
-                    {/* Intro */}
-                    <Section title="Welcome to MockMate" icon={<Rocket01Icon size={20} />}>
-                        <p>
-                            MockMate is your personal AI interview coach. We've designed it to be as simple as possible: you practice, we analyze, and you get better. No complex setups, no confusing metrics—just straight feedback to help you improve.
-                        </p>
-                    </Section>
-
-                    {/* Features Grid */}
-                    <div className="grid md:grid-cols-2 gap-4 mb-20">
-                        <FeatureCard
-                            title="Mock Interviews"
-                            description="Take realistic interviews customized to your job role. Our AI acts as the interviewer, asking relevant questions and listening to your answers."
-                        />
-                        <FeatureCard
-                            title="Resume Optimizer"
-                            description="Upload your resume and let our ATS-checker scan it. We'll tell you exactly what keywords are missing and how to format it for machines."
-                        />
-                        <FeatureCard
-                            title="Peer Connect"
-                            description="Practice with real people. Connect with peers for live coding sessions and behavioral practice using video and collaborative code editors."
-                        />
-                        <FeatureCard
-                            title="Dashboard"
-                            description="Track your progress over time. See your scores improve, review past feedback, and manage your recordings all in one place."
-                        />
-                    </div>
-
-                    {/* Getting Started */}
-                    <Section title="Getting Started" icon={<UserCircleIcon size={20} />}>
-                        <p>
-                            Starting is easy. If you haven't already, <span className="text-white font-medium">Create an Account</span>. We support Google Login for one-click access.
-                        </p>
-                        <p>
-                            Once you're in, head to the <strong>Dashboard</strong>. From there, you can start a new interview session immediately or upload your resume for a quick check.
-                        </p>
-                    </Section>
-
-                    {/* Pro Tips */}
-                    <Section title="Pro Tips" icon={<BulbIcon size={20} />}>
-                        <ul className="space-y-4 list-none">
-                            <li className="flex gap-3">
-                                <span className="text-yellow-500 font-bold">•</span>
-                                <span>Use headphones for the best audio experience during AI interviews.</span>
-                            </li>
-                            <li className="flex gap-3">
-                                <span className="text-yellow-500 font-bold">•</span>
-                                <span>Speak clearly and at a normal pace. Our AI is good, but clarity helps it give better feedback.</span>
-                            </li>
-                            <li className="flex gap-3">
-                                <span className="text-yellow-500 font-bold">•</span>
-                                <span>Review your resume feedback carefully. Small changes in formatting can make a huge difference to ATS parsers.</span>
-                            </li>
-                        </ul>
-                    </Section>
-
-                </div>
-
-                {/* Footer */}
-                <div className="mt-20 pt-10 border-t border-neutral-900 text-center">
-                    <p className="text-neutral-600 mb-6">Ready to practice?</p>
-                    <button
-                        onClick={() => navigate('/dashboard')}
-                        className="bg-white text-black px-8 py-3 rounded-full font-bold hover:bg-neutral-200 transition-colors inline-flex items-center gap-2"
+            <div className="max-w-7xl mx-auto px-6 relative z-10" ref={containerRef}>
+                {/* Hero */}
+                <header className="pt-32 pb-24 md:pt-48 md:pb-40 text-center relative">
+                    <motion.div
+                        initial={{ opacity: 0, y: 30 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.8 }}
                     >
-                        Go to Dashboard <ArrowLeft01Icon className="rotate-180" size={18} />
-                    </button>
-                </div>
+                        <h1 className="text-6xl md:text-8xl font-bold tracking-tighter mb-8 text-white">
+                            The Blueprint.
+                        </h1>
+                        <p className="text-xl md:text-2xl text-neutral-400 max-w-3xl mx-auto font-light leading-relaxed">
+                            Mastering the MockMate ecosystem. A technical walkthrough from initial setup to interview excellence.
+                        </p>
+                    </motion.div>
 
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 1, duration: 1 }}
+                        className="absolute bottom-[-20px] left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
+                    >
+                        <span className="text-neutral-600 text-[10px] uppercase tracking-widest font-bold">Scroll to start</span>
+                        <div className="w-[1px] h-12 bg-neutral-800" />
+                    </motion.div>
+                </header>
+
+                {/* Timeline Section */}
+                <main className="relative pt-20">
+                    {steps.map((step, index) => (
+                        <Step
+                            key={index}
+                            index={index}
+                            {...step}
+                            isLast={index === steps.length - 1}
+                        />
+                    ))}
+                </main>
             </div>
+
+            {/* Custom Styles for dots */}
+            <style dangerouslySetInnerHTML={{
+                __html: `
+                .bg-dots-dark {
+                    background-image: radial-gradient(#333 1px, transparent 1px);
+                    background-size: 30px 30px;
+                }
+            `}} />
         </div>
     );
 };
