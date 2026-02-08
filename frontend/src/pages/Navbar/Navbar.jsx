@@ -7,6 +7,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Mail01Icon, Delete02Icon, Cancel01Icon } from 'hugeicons-react';
 import axiosInstance from "../../utils/axiosInstance.js";
 import moment from "moment";
+import { BASE_URL } from "../../constants/apiPaths";
 
 
 
@@ -114,7 +115,7 @@ const Navbar = () => {
                   Mockmate
                   <span
                     className="text-xs sm:text-sm md:text-base -mt-3 sm:-mt-4 cursor-pointer hover:opacity-80 transition-opacity"
-                    onClick={(e) => {
+                    onClick={async (e) => {
                       e.preventDefault();
                       const toastStyle = {
                         fontFamily: "'poppins', sans-serif",
@@ -122,61 +123,46 @@ const Navbar = () => {
                         fontWeight: 200
                       };
 
-                      toast.custom(
-                        (t) => (
-                          <div
-                            className={`max-w-md bg-black/90 backdrop-blur-sm text-white px-6 py-4 shadow-lg rounded-full pointer-events-auto transition-all duration-300 ease-in-out hover:bg-black/95`}
-                            style={{
-                              animation: t.visible ? 'slideIn 0.6s ease-out forwards' : 'slideOut 0.6s ease-in forwards'
-                            }}
-                          >
-                            <p style={toastStyle}>
-                              Glad that you wish to know what Mockmate is!!
-                            </p>
-                          </div>
-                        ),
-                        { position: 'bottom-left', duration: 5000 }
-                      );
+                      try {
+                        const response = await fetch(`${BASE_URL}/api/admin/toasts`);
+                        const toasts = await response.json();
 
-                      setTimeout(() => {
-                        toast.custom(
-                          (t) => (
-                            <div
-                              className={`max-w-md bg-black/90 backdrop-blur-sm text-white px-6 py-4 shadow-lg rounded-full pointer-events-auto transition-all duration-300 ease-in-out hover:bg-black/95`}
-                              style={{
-                                animation: t.visible ? 'slideIn 0.6s ease-out forwards' : 'slideOut 0.6s ease-in forwards'
-                              }}
-                            >
-                              <p style={toastStyle}>
-                                Hi, I am Akhil, the creator of Mockmate. I built this platform to help you ace your interviews with confidence.
-                              </p>
-                            </div>
-                          ),
-                          { position: 'bottom-left', duration: 5000 }
-                        );
-                      }, 500);
+                        const activeToasts = Array.isArray(toasts)
+                          ? toasts.filter(t => t.isActive).sort((a, b) => a.order - b.order)
+                          : [];
 
-                      setTimeout(() => {
-                        toast.custom(
-                          (t) => (
-                            <div
-                              className={`max-w-md bg-black/90 backdrop-blur-sm text-white px-6 py-4 shadow-lg rounded-full pointer-events-auto transition-all duration-300 ease-in-out hover:bg-black/95`}
-                              style={{
-                                animation: t.visible ? 'slideIn 0.6s ease-out forwards' : 'slideOut 0.6s ease-in forwards'
-                              }}
-                            >
-                              <p style={toastStyle}>
-                                Current Version of Mockmate v1.3 is fully updated with new features. Now you can hope in your friends on a meet and try a interview mode.
-                              </p>
-                            </div>
-                          ),
-                          { position: 'bottom-left', duration: 5000 }
-                        );
-                      }, 1000);
+                        if (activeToasts.length === 0) {
+                          toast.error("No updates found at the moment.");
+                          return;
+                        }
+
+                        activeToasts.forEach((t, index) => {
+                          setTimeout(() => {
+                            toast.custom(
+                              (toastObj) => (
+                                <div
+                                  className={`max-w-md bg-white text-black/50 px-6 py-4 rounded-lg pointer-events-auto transition-all duration-300 ease-in-out`}
+                                  style={{
+                                    animation: toastObj.visible ? 'slideIn 0.6s ease-out forwards' : 'slideOut 0.6s ease-in forwards'
+                                  }}
+                                >
+                                  <p style={toastStyle}>
+                                    {t.message}
+                                  </p>
+                                </div>
+                              ),
+                              { position: 'bottom-left', duration: 5000 }
+                            );
+                          }, t.delay || (index * 500));
+                        });
+                      } catch (error) {
+                        console.error("Failed to fetch toasts", error);
+                        // Fallback or error message
+                        toast.error("Failed to load updates.");
+                      }
                     }}
                   >
                     <span className="font-normal opacity-50">v1.3 </span>
-                    <span className="font-bold bg-linear-to-r from-yellow-400 via-orange-500 to-yellow-600 text-transparent bg-clip-text">New</span>
                   </span>
                 </h2>
               </Link>
