@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import axiosInstance from "../../../utils/axiosInstance.js";
 import { API_PATHS } from "../../../constants/apiPaths.js";
-import { useNavigate } from "react-router-dom";
-import { Home01Icon } from 'hugeicons-react';
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { Home01Icon, ArrowDown01Icon } from 'hugeicons-react';
 import Navbar from "../../Navbar/Navbar.jsx";
 import { useMediaStream } from "../hooks/useMediaStream.js";
 import { useSpeechRecognition } from "../hooks/useSpeechRecognition.js";
@@ -16,17 +16,24 @@ import PermissionModal from "../Components/PermissionModal.jsx";
 
 const SessionInterview = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const filterResumeSessions = searchParams.get("isResumeSession") === "true";
   const [mirrored, setMirrored] = useState(false);
   const [sessions, setSessions] = useState([]);
   const [selectedSession, setSelectedSession] = useState(null);
   const [sessionQuestions, setSessionQuestions] = useState([]);
   const [currentQuestion, setCurrentQuestion] = useState("");
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   // Fetch all user sessions on mount
   useEffect(() => {
     const fetchSessions = async () => {
       try {
         const res = await axiosInstance.get(API_PATHS.SESSION.GET_ALL);
-        setSessions(res.data || []);
+        let sessionsList = res.data || [];
+        if (filterResumeSessions) {
+          sessionsList = sessionsList.filter(s => s.isResumeSession);
+        }
+        setSessions(sessionsList);
       } catch (err) {
         setSessions([]);
       }
@@ -155,38 +162,56 @@ const SessionInterview = () => {
           <div className="flex justify-between items-center mb-4">
             <div className="flex items-center gap-4">
               <div className="relative">
-                <div className="relative">
-                  <label htmlFor="session-select" className="block text-white text-sm font-medium mb-2 ml-1">
-                  </label>
-                  <select
-                    id="session-select"
-                    className="min-w-[400px] p-4 rounded-full bg-black/80 backdrop-blur-sm text-white border border-white/30 focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-white font-medium transition-all duration-300 hover:border-white/60 cursor-pointer appearance-none"
-                    value={selectedSession || ''}
-                    onChange={e => setSelectedSession(e.target.value)}
-                    style={{
-                      backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23ffffff' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e")`,
-                      backgroundPosition: 'right 16px center',
-                      backgroundRepeat: 'no-repeat',
-                      backgroundSize: '16px'
-                    }}
-                  >
-                    <option value="" disabled className="bg-black text-gray-300">
-                      Select a session to begin
-                    </option>
-                    {sessions.map(session => (
-                      <option
-                        key={session._id}
-                        value={session._id}
-                        className="bg-black text-white py-2"
-                      >
-                        {session.role || 'Interview'} • {session.topicsToFocus || 'General Topics'}
-                      </option>
-                    ))}
-                  </select>
-                  {!selectedSession && (
-                    <p className="text-gray-400 text-xs mt-1 ml-1">                    </p>
-                  )}
-                </div>
+                <button
+                  onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                  className="flex items-center justify-between min-w-[300px] p-4 rounded-xl bg-black text-white border border-white/30 font-medium transition-all duration-300 hover:border-white/60 cursor-pointer"
+                >
+                  <span className="truncate pr-8">
+                    {selectedSession
+                      ? (() => {
+                        const s = sessions.find(s => s._id === selectedSession);
+                        return (s?.role || (s?.isResumeSession ? 'Resume Interview' : 'Interview')) +
+                          (s?.topicsToFocus ? " • " + s.topicsToFocus : "");
+                      })()
+                      : "Select a session to begin"}
+                  </span>
+                  <ArrowDown01Icon
+                    size={18}
+                    className={`transition-transform duration-300 ${isDropdownOpen ? 'rotate-180' : ''}`}
+                  />
+                </button>
+
+                {isDropdownOpen && (
+                  <div className="absolute top-full left-0 mt-2 w-full bg-black border border-white/20 rounded-xl overflow-hidden shadow-2xl z-[100] animate-in fade-in slide-in-from-top-2 duration-200">
+                    <div className="max-h-60 overflow-y-auto custom-scrollbar">
+                      {sessions.length === 0 ? (
+                        <div className="p-4 text-white text-sm text-center italic">No sessions found</div>
+                      ) : (
+                        sessions.map(session => (
+                          <div
+                            key={session._id}
+                            onClick={() => {
+                              setSelectedSession(session._id);
+                              setIsDropdownOpen(false);
+                            }}
+                            className={`p-4 text-sm transition-colors cursor-pointer border-b border-white/5 last:border-0 hover:bg-white/5 ${selectedSession === session._id ? 'bg-white/10 text-white' : 'text-white/70'
+                              }`}
+                          >
+                            <div className="font-semibold">{session.role || 'Resume Interview'}</div>
+                          </div>
+                        ))
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                {/* Click overlay to close */}
+                {isDropdownOpen && (
+                  <div
+                    className="fixed inset-0 z-[90] cursor-default"
+                    onClick={() => setIsDropdownOpen(false)}
+                  />
+                )}
               </div>
             </div>
             <button

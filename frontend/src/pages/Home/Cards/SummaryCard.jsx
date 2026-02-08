@@ -34,9 +34,9 @@ const SummaryCard = ({
 }) => {
   const tags = Array.isArray(topicsToFocus)
     ? topicsToFocus
-    : (topicsToFocus ? topicsToFocus.split(",").map((t) => t.trim()) : ["General"]);
+    : (topicsToFocus ? topicsToFocus.split(",").map((t) => t.trim()) : ["Resume"]);
 
-  const displayRole = role || "Resume Session";
+  const displayRole = role || "Resume Based Session";
   const gradientIdx = useMemo(() => {
     if (typeof index === "number") return index % gradients.length;
     return getRandomIndex(role + (description || "")) % gradients.length;

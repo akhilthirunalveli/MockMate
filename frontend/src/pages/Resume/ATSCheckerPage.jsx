@@ -234,13 +234,13 @@ const ATSCheckerPage = () => {
                                             onClick={() => setInputMethod("upload")}
                                             className={`px-4 py-1.5 rounded-md text-xs font-semibold transition-all ${inputMethod === "upload" ? "bg-white text-black shadow-sm" : "text-gray-400 hover:text-white"}`}
                                         >
-                                            <IoCloudUploadOutline className="inline mr-1.5 text-lg" /> Upload
+                                            <IoCloudUploadOutline className="inline mr-1.5 text-lg" />
                                         </button>
                                         <button
                                             onClick={() => setInputMethod("text")}
                                             className={`px-4 py-1.5 rounded-md text-xs font-semibold transition-all ${inputMethod === "text" ? "bg-white text-black shadow-sm" : "text-gray-400 hover:text-white"}`}
                                         >
-                                            <IoTextOutline className="inline mr-1.5 text-lg" /> Paste
+                                            <IoTextOutline className="inline mr-1.5 text-lg" />
                                         </button>
                                     </div>
                                 </div>

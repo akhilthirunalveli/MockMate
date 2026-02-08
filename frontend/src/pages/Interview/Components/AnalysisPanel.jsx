@@ -24,7 +24,7 @@ const AnalysisPanel = ({
   const canAnalyze = transcript && transcript.trim().length >= 10;
 
   return (
-    <div className="bg-black border-2 border-white rounded-2xl p-6 min-h-[200px] shadow-2xl">
+    <div className="bg-black border border-white/30 rounded-2xl p-6 min-h-[200px] shadow-2xl">
       <div className="flex justify-between items-center mb-6">
         <div className="flex items-center gap-3">
           <div className="w-2 h-8 bg-gradient-to-b from-white to-gray-300 rounded-full"></div>

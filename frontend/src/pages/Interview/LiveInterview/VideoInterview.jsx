@@ -45,7 +45,7 @@ export default function VideoInterview({ roomId }) {
     <div className="flex flex-col h-full w-full bg-[#0A0A0A] rounded-2xl border border-[#222] relative overflow-hidden shadow-2xl group">
 
       {/* Status Bar (Top Center) */}
-      <div className="absolute top-4 left-1/2 -translate-x-1/2 z-40 flex flex-col items-center gap-1 pointer-events-none">
+      <div className="absolute top-6 left-1/2 -translate-x-1/2 z-40 flex flex-col items-center gap-1 pointer-events-none">
         {error && (
           <div className="bg-red-500 text-white px-4 py-1.5 rounded-lg text-xs font-semibold shadow-sm border border-red-600">
             {error.name === 'NotReadableError' ? 'Camera in use' : error.message}
@@ -55,7 +55,7 @@ export default function VideoInterview({ roomId }) {
         {!remoteConnected && !error && (
           <div className="bg-[#222] text-gray-200 px-4 py-1.5 rounded-lg border border-[#333] text-xs font-medium flex items-center gap-2 shadow-sm">
             <div className="w-1.5 h-1.5 rounded-full bg-yellow-500 animate-pulse" />
-            {connecting ? 'Connecting...' : `Waiting for guest...`}
+            {connecting ? 'Connecting' : `Waiting for guest`}
           </div>
         )}
       </div>
@@ -85,39 +85,39 @@ export default function VideoInterview({ roomId }) {
             </>
           ) : (
             <div className="flex items-center justify-center w-full h-full flex-col gap-3 text-gray-500">
-              <div className="w-10 h-10 rounded-full border-2 border-[#333] border-t-emerald-500 animate-spin" />
-              <p className="text-xs font-medium tracking-wide uppercase">Waiting...</p>
+              <div className="w-10 h-10 rounded-full border-2 border-[#333] border-t-white animate-spin" />
+              <p className="text-xs font-medium tracking-wide uppercase text-white">Waiting</p>
             </div>
           )}
         </div>
       </div>
 
       {/* Control Bar (Bottom Float) */}
-      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-3 bg-[#1A1A1A] border border-[#333] rounded-xl px-4 py-2 shadow-2xl z-50">
+      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-3 bg-[#1A1A1A] border border-[#333] rounded-full px-3 py-2 shadow-2xl z-50">
         <button
           onClick={toggleAudio}
-          className={`w-10 h-10 flex items-center justify-center rounded-lg transition-colors cursor-pointer border ${isAudio ? 'bg-[#262626] border-[#333] text-white hover:bg-[#333]' : 'bg-red-500/10 border-red-500/50 text-red-500 hover:bg-red-500/20'}`}
+          className={`w-10 h-10 flex items-center justify-center rounded-full transition-colors cursor-pointer border ${isAudio ? 'bg-[#262626] border-[#333] text-white hover:bg-[#333]' : 'bg-red-500/10 border-red-500/50 text-red-500 hover:bg-red-500/20'}`}
           title="Toggle Mic"
         >
           {isAudio ? <Mic01Icon size={18} /> : <MicOff01Icon size={18} />}
         </button>
         <button
           onClick={toggleVideo}
-          className={`w-10 h-10 flex items-center justify-center rounded-lg transition-colors cursor-pointer border ${isVideo ? 'bg-[#262626] border-[#333] text-white hover:bg-[#333]' : 'bg-red-500/10 border-red-500/50 text-red-500 hover:bg-red-500/20'}`}
+          className={`w-10 h-10 flex items-center justify-center rounded-full transition-colors cursor-pointer border ${isVideo ? 'bg-[#262626] border-[#333] text-white hover:bg-[#333]' : 'bg-amber-500/10 border-amber-500/50 text-amber-500 hover:bg-amber-500/20'}`}
           title="Toggle Camera"
         >
           {isVideo ? <Camera01Icon size={18} /> : <CameraOff01Icon size={18} />}
         </button>
         <button
           onClick={isScreenShare ? stopScreenShare : shareScreen}
-          className={`w-10 h-10 flex items-center justify-center rounded-lg transition-colors cursor-pointer border ${isScreenShare ? 'bg-emerald-600 border-emerald-500 text-white' : 'bg-[#262626] border-[#333] text-white hover:bg-[#333]'}`}
+          className={`w-10 h-10 flex items-center justify-center rounded-full transition-colors cursor-pointer border ${isScreenShare ? 'bg-emerald-600 border-emerald-500 text-white' : 'bg-[#262626] border-[#333] text-white hover:bg-[#333]'}`}
           title="Share Screen"
         >
           {isScreenShare ? <StopCircleIcon size={18} /> : <Share01Icon size={18} />}
         </button>
         <button
           onClick={() => setLayout(prev => prev === 'grid' ? 'sidebar' : 'grid')}
-          className="w-10 h-10 flex items-center justify-center rounded-lg bg-[#262626] border border-[#333] text-white hover:bg-[#333] transition-colors cursor-pointer"
+          className="w-10 h-10 flex items-center justify-center rounded-full bg-[#262626] border border-[#333] text-white hover:bg-[#333] transition-colors cursor-pointer"
           title="Toggle Layout"
         >
           {layout === 'grid' ? (
@@ -133,7 +133,7 @@ export default function VideoInterview({ roomId }) {
         <div className="w-px h-6 bg-[#333] mx-1"></div>
         <button
           onClick={endCall}
-          className="w-10 h-10 flex items-center justify-center rounded-lg bg-red-600 text-white hover:bg-red-700 transition-colors border border-red-500 cursor-pointer"
+          className="w-10 h-10 flex items-center justify-center rounded-full bg-red-600 text-white hover:bg-red-700 transition-colors border border-red-500 cursor-pointer"
           title="End Call"
         >
           <CallEnd02Icon size={18} />

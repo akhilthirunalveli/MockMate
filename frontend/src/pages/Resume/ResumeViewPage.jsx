@@ -1,11 +1,30 @@
-import React from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { ArrowLeft01Icon } from 'hugeicons-react';
-
-// Usage: <ResumeViewPage />
-// Expects location.state = { pdfUrl, details }
+import {
+  ArrowLeft01Icon,
+  ArrowRight01Icon,
+  Settings01Icon,
+  Idea01Icon,
+  ChartBarLineIcon,
+  CursorPointer01Icon,
+  Tick01Icon,
+  Download01Icon,
+  ArrowUpRight01Icon,
+  SparklesIcon,
+  Target01Icon,
+  Share01Icon,
+  CheckmarkCircle02Icon,
+  GoogleDriveIcon,
+  PencilEdit01Icon
+} from 'hugeicons-react';
+import { UserContext } from "../../context/userContext.jsx";
+import axiosInstance from "../../utils/axiosInstance.js";
+import { API_PATHS } from "../../constants/apiPaths.js";
+import toast from "react-hot-toast";
+import Navbar from "../Navbar/Navbar.jsx";
 
 const getDirectPdfUrl = (url) => {
+  if (!url) return "";
   const match = url.match(/drive\.google\.com\/file\/d\/([\w-]+)/);
   if (match) {
     return `https://drive.google.com/file/d/${match[1]}/preview`;
@@ -13,64 +32,200 @@ const getDirectPdfUrl = (url) => {
   return url;
 };
 
+const RESUME_TIPS = [
+  {
+    title: "Quantify Impact",
+    description: "Use numbers (e.g., 'Increased efficiency by 20%') to make your achievements more tangible."
+  },
+  {
+    title: "Keywords Matter",
+    description: "Align your skills with job descriptions to pass ATS filters effectively."
+  },
+  {
+    title: "Keep it Concise",
+    description: "Aim for a single page if you have less than 10 years of experience."
+  }
+];
+
+const RECOMMENDED_SECTIONS = [
+  "Core Competencies",
+  "Professional Summary",
+  "Key Projects",
+];
+
 const ResumeViewPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { pdfUrl, details } = location.state || {};
+  const { user, updateUser } = useContext(UserContext);
+
+  // State from location or context fallback
+  const initialPdfUrl = location.state?.pdfUrl || user?.resumeLink || "";
+  const initialDetails = location.state?.details || { name: user?.name, email: user?.email };
+
+  const [pdfUrl, setPdfUrl] = useState(initialPdfUrl);
+  const [editUrl, setEditUrl] = useState(initialPdfUrl);
+  const [isEditing, setIsEditing] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [tipIndex, setTipIndex] = useState(0);
+
   const directUrl = getDirectPdfUrl(pdfUrl);
 
-  return (
-    <div className="min-h-screen w-full flex bg-dots-dark">
-      <div className="w-full max-w-6xl mx-auto flex flex-row items-stretch py-10 gap-8">
-        {/* Left: PDF Viewer */}
-        <div className="flex-1 bg-white rounded-2xl shadow-2xl overflow-hidden flex flex-col">
-          <iframe
-            src={directUrl}
-            title="PDF Viewer"
-            className="flex-1 w-full h-[80vh] border-none"
-          />
-        </div>
-        {/* Right: Details */}
-        <div className="flex-1 flex flex-col justify-between text-white">
-          <div>
-            <button
-              onClick={() => navigate(-1)}
-              className="mb-6 flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 rounded-lg text-white font-semibold w-fit cursor-pointer"
-            >
-              <ArrowLeft01Icon className="w-5 h-5" /> Back
-            </button>
-            <h2 className="text-2xl font-bold mb-4">Resume Details</h2>
-            {/* Render details here */}
-            {details ? (
-              <div className="space-y-2">
-                {Object.entries(details).map(([key, value]) => (
-                  <div key={key}>
-                    <span className="font-semibold text-slate-300">{key}:</span> <span className="text-slate-100">{value}</span>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <p className="text-slate-400">No details provided.</p>
-            )}
+  const handleUpdateResume = async () => {
+    if (!editUrl.trim()) {
+      toast.error("Please enter a valid URL");
+      return;
+    }
 
-            <div className="mt-8 pt-6 border-t border-white/10">
-              <h3 className="text-xl font-bold mb-3">Tools</h3>
+    setSaving(true);
+    try {
+      const response = await axiosInstance.put(API_PATHS.AUTH.UPDATE_RESUME_LINK, {
+        resumeLink: editUrl.trim(),
+      });
+
+      updateUser(response.data.user);
+      setPdfUrl(editUrl.trim());
+      setIsEditing(false);
+      toast.success("Resume updated successfully!");
+    } catch (error) {
+      console.error("Error updating resume:", error);
+      toast.error("Failed to update resume link");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  return (
+    <div className="h-screen w-full bg-[#0A0A0A] bg-dots-dark text-white selection:bg-white/20 overflow-hidden flex flex-col">
+      <Navbar />
+
+      <div className="flex-1 max-w-8xl mx-auto px-4 sm:px-6 lg:px-9 pt-28 pb-6 w-full flex flex-col overflow-hidden">
+        <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 h-full min-h-0 flex-1">
+
+          {/* Left: PDF Viewer - Full Visibility */}
+          <div className="xl:col-span-8 h-full min-h-0 flex flex-col">
+            <div className="bg-black rounded-[30px] border border-[#222] overflow-hidden shadow-2xl relative flex-1 flex flex-col">
+              {pdfUrl ? (
+                <iframe
+                  src={directUrl}
+                  title="PDF Viewer"
+                  className="w-full h-full border-none flex-1"
+                />
+              ) : (
+                <div className="w-full h-full flex flex-col items-center justify-center text-center p-10">
+                  <Idea01Icon size={64} className="text-gray-700 mb-4" />
+                  <h3 className="text-xl font-semibold mb-2">No Resume Linked</h3>
+                  <p className="text-gray-500 max-w-sm mb-6">
+                    Link your resume to start analyzing it with MockMate Intelligence tools.
+                  </p>
+                  <button
+                    onClick={() => setIsEditing(true)}
+                    className="px-6 py-3 bg-white text-black font-bold rounded-xl cursor-pointer"
+                  >
+                    Add Resume Now
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Right: Bento Side Console */}
+          <div className="xl:col-span-4 grid grid-cols-2 grid-rows-6 gap-4 h-full min-h-0">
+
+            {/* Management Card - Bento A */}
+            <div className="col-span-2 row-span-1 bg-black rounded-[30px] p-5 shadow-2xl flex flex-col justify-center">
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-bold text-white uppercase py-2">Source Control</span>
+                {!isEditing && pdfUrl && (
+                  <button onClick={() => setIsEditing(true)} className="p-1.5 text-white/50 cursor-pointer hover:text-white transition-colors">
+                    <PencilEdit01Icon size={18} />
+                  </button>
+                )}
+              </div>
+              {isEditing ? (
+                <div className="flex gap-2">
+                  <input
+                    type="url"
+                    value={editUrl}
+                    onChange={(e) => setEditUrl(e.target.value)}
+                    className="flex-1 bg-[#0A0A0A] border border-[#333] rounded-xl px-3 py-2 text-[13px] focus:outline-none placeholder:text-gray-600"
+                    placeholder="Resume URL..."
+                  />
+                  <button onClick={handleUpdateResume} className="bg-white text-black px-4 py-2 rounded-xl text-[12px] font-bold cursor-pointer">Save</button>
+                </div>
+              ) : (
+                <div className="bg-[#0A0A0A] px-4 py-3 rounded-2xl border border-[#222] flex items-center gap-2">
+                  <p className="text-[13px] font-medium truncate text-white/50 tracking-tight">Active Source </p>
+                  <GoogleDriveIcon size={18} className="text-white/50" />
+                </div>
+              )}
+            </div>
+
+            {/* Intelligence Card - Bento B */}
+            <div className="col-span-2 row-span-3 bg-black rounded-[30px] p-6 shadow-2xl flex flex-col overflow-hidden">
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-2 text-[10px] font-bold text-white uppercase tracking-[0.2em]">
+                  Good Resume has these things
+                </div>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => setTipIndex(prev => (prev === 0 ? RESUME_TIPS.length - 1 : prev - 1))}
+                    className="p-1.5 bg-white/5 border border-white/10 rounded-lg text-white/50 cursor-pointer hover:text-white transition-colors"
+                  >
+                    <ArrowLeft01Icon size={14} />
+                  </button>
+                  <button
+                    onClick={() => setTipIndex(prev => (prev === RESUME_TIPS.length - 1 ? 0 : prev + 1))}
+                    className="p-1.5 bg-white/5 border border-white/10 rounded-lg text-white/50 cursor-pointer hover:text-white transition-colors"
+                  >
+                    <ArrowRight01Icon size={14} />
+                  </button>
+                </div>
+              </div>
+
+              <div className="flex-1 flex flex-col justify-center px-2">
+                <div key={tipIndex} className="bg-[#0A0A0A] p-6 rounded-3xl border border-white/5 animate-in fade-in slide-in-from-right-4 duration-300">
+                  <h4 className="font-bold text-[14px] text-white uppercase tracking-tight mb-3">{RESUME_TIPS[tipIndex].title}</h4>
+                  <p className="text-[12px] text-white/50 leading-relaxed">{RESUME_TIPS[tipIndex].description}</p>
+                </div>
+              </div>
+
+              <div className="mt-6 pt-4 border-t border-[#1A1A1A]">
+                <div className="flex gap-2 overflow-x-auto scrollbar-hide">
+                  {RECOMMENDED_SECTIONS.map((sec, idx) => (
+                    <span key={idx} className="shrink-0 px-3 py-1 bg-white/5 border border-white/10 rounded-lg text-[10px] font-bold text-gray-400">
+                      + {sec}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* ATS Power Tool - Bento C */}
+            <div className="col-span-1 row-span-2 bg-black rounded-[30px] p-6 shadow-2xl flex flex-col justify-between">
+              <div className="text-[10px] font-bold text-gray-500 uppercase tracking-[0.2em]"></div>
+              <div className="flex flex-col items-center">
+                <span className="text-4xl font-black text-white">85</span>
+                <span className="text-[10px] text-white/50 font-bold">Estimated</span>
+              </div>
               <button
                 onClick={() => navigate("/resume/ats-check")}
-                className="flex items-center gap-3 w-full p-4 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl transition-all group"
+                className="w-full bg-white text-black py-3 rounded-2xl text-[11px] font-bold cursor-pointer shadow-lg"
               >
-                <div className="p-2 bg-white/10 rounded-lg group-hover:scale-110 transition-transform">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 text-blue-400" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M11.25 4.533A9.707 9.707 0 006 3a9.735 9.735 0 00-3.25.555.75.75 0 00-.5.516l-.318 1.843a.75.75 0 00.434.848c.88.297 1.62.91 2.052 1.708.433.799.475 1.745.116 2.57l-.306.703a.75.75 0 00.385 1.01l1.761.64c.25.09.528.02.723-.178.508-.517.587-1.332.197-1.928-.39-.595-.148-1.42.366-1.666a.75.75 0 011.02.261l.525.932a.75.75 0 001.076.27l1.7-.872a.75.75 0 00.334-1.028l-.508-.987a.75.75 0 01.378-1.077c.602-.234.618-1.092.028-1.347l-1.348-.585z" />
-                    <path d="M6.5 21a1.5 1.5 0 110-3 1.5 1.5 0 010 3zM15.5 21a1.5 1.5 0 110-3 1.5 1.5 0 010 3zM21 6.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z" />
-                    <path fillRule="evenodd" d="M19.108 4.673a1.5 1.5 0 00-2.348-.46l-4.225 4.227a6.002 6.002 0 00-7.395 7.18 3.003 3.003 0 012.78 2.029 3 3 0 004.99 0 3.003 3.003 0 012.78-2.029 6.002 6.002 0 007.419-7.18l.84-.84a1.5 1.5 0 00-.84-2.927zM8.5 15a4.5 4.5 0 100-9 4.5 4.5 0 000 9z" clipRule="evenodd" />
-                  </svg>
-                </div>
-                <div className="text-left">
-                  <span className="block text-white font-bold">ATS Resume Checker</span>
-                  <span className="block text-slate-400 text-sm">Analyze compatibility with job descriptions</span>
-                </div>
+                Analyze
               </button>
+            </div>
+
+            {/* Skill Match Tool - Bento D */}
+            <div className="col-span-1 row-span-2 bg-black rounded-[30px] p-6 shadow-2xl flex flex-col justify-between">
+              <div className="text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em]"></div>
+              <div className="flex flex-col items-center">
+                <Target01Icon size={32} className="text-white mb-2" />
+                <span className="text-xl font-bold text-white">Target Fit</span>
+              </div>
+              <div className="bg-[#1A1A1A] h-1.5 w-full rounded-full overflow-hidden">
+                <div className="bg-white h-full w-[75%]"></div>
+              </div>
+              <p className="text-[9px] text-white font-medium text-center">Top 5% of Candidates</p>
             </div>
           </div>
         </div>

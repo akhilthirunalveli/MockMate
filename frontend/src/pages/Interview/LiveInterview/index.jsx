@@ -1,6 +1,6 @@
 import React, { useMemo, useState, useEffect, useRef } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { Copy01Icon, Tick01Icon, RefreshIcon, SentIcon, Comment01Icon, Home01Icon } from 'hugeicons-react';
+import { Copy01Icon, Tick01Icon, Refresh03Icon, SentIcon, Comment01Icon, Home01Icon } from 'hugeicons-react';
 import VideoInterview from './VideoInterview.jsx';
 import Navbar from "../../Navbar/Navbar.jsx";
 import io from 'socket.io-client';
@@ -108,45 +108,45 @@ const LiveInterview = () => {
       >
         <Navbar />
         <div className="flex-1 flex items-center justify-center p-4">
-          <div className="w-full max-w-md bg-black border border-[#222] rounded-2xl p-8 shadow-2xl">
+          <div className="w-full max-w-md bg-black rounded-2xl p-8 shadow-2xl">
             <h1 className="text-2xl font-semibold text-center mb-2">
               Live Interview
             </h1>
-            <p className="text-gray-400 text-center text-sm mb-8">
+            <p className="text-white/50 text-center text-sm mb-8">
               Secure, high-quality video & code collaboration.
             </p>
 
             <div className="space-y-6">
               <div>
-                <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2 block">
+                <label className="text-xs font-semibold text-white/50 uppercase tracking-wider mb-2 block">
                   New Meeting
                 </label>
                 <div className="flex gap-2">
-                  <div className="flex-1 bg-[#1A1A1A] border border-[#333] rounded-lg px-4 py-3 flex items-center text-[#ddd] font-mono tracking-wider">
-                    {roomInput || "Generating..."}
+                  <div className="flex-1 bg-[#222]/50 border border-[#333] rounded-lg px-4 py-3 text-sm text-[#ddd]/50 truncate">
+                    {roomInput || "Click on generate button"}
                   </div>
                   <button
                     onClick={handleGenerateRoom}
-                    className="p-3 bg-[#222] hover:bg-[#333] text-white rounded-lg transition-colors border border-[#333] cursor-pointer"
+                    className="p-3 bg-[#222]/50 hover:bg-[#333] text-white rounded-lg transition-colors border border-[#333] cursor-pointer"
                     title="Generate New Code"
                   >
-                    <RefreshIcon size={20} />
+                    <Refresh03Icon size={20} />
                   </button>
                 </div>
               </div>
 
               <div>
-                <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2 block">
+                <label className="text-xs font-semibold text-white/50 uppercase tracking-wider mb-2 block">
                   Invite Link
                 </label>
                 <div className="flex gap-2">
-                  <div className="flex-1 bg-[#1A1A1A] border border-[#333] rounded-lg px-4 py-3 text-sm text-[#ddd] truncate">
+                  <div className="flex-1 bg-[#222]/50 border border-[#333] rounded-lg px-4 py-3 text-sm text-[#ddd]/50 truncate">
                     {activeLink || "Link will appear here"}
                   </div>
                   <button
                     onClick={handleCopyLink}
                     disabled={!activeLink}
-                    className="p-3 bg-[#222] hover:bg-[#333] text-white rounded-lg transition-colors border border-[#333] disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                    className="p-3 bg-[#222]/50 hover:bg-[#333] text-white rounded-lg transition-colors border border-[#333] disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                     title="Copy Link"
                   >
                     {copied ? <Tick01Icon size={20} className="text-emerald-500" /> : <Copy01Icon size={20} />}
@@ -157,7 +157,7 @@ const LiveInterview = () => {
               <button
                 onClick={handleStartCall}
                 disabled={!roomInput}
-                className="w-full py-3.5 bg-white text-black font-semibold rounded-lg hover:bg-gray-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed mt-4 cursor-pointer"
+                className="w-full py-3.5 bg-white/90 text-black font-semibold rounded-lg hover:bg-gray-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed mt-4 cursor-pointer"
               >
                 Join Room
               </button>
@@ -180,18 +180,14 @@ const LiveInterview = () => {
       <Navbar />
 
       {/* Main Content Area */}
-      <div className="flex-1 flex flex-col pt-24 px-6 pb-6 gap-6 h-full overflow-hidden z-10">
+      <div className="flex-1 flex flex-col pt-26 px-8 pb-6 gap-6 h-full overflow-hidden z-10">
 
         {/* Header Bar */}
-        <div className="h-14 flex justify-between items-center shrink-0">
+        <div className="h-16 flex justify-between items-center shrink-0">
           <div className="flex items-center gap-4">
-            <div className="flex items-center gap-4 px-5 py-2.5 bg-black border border-[#222] rounded-xl shadow-lg">
+            <div className="flex items-center gap-4 px-5 py-2.5 bg-black border border-[#222] rounded-xl">
               <div className="flex items-center gap-2">
-                <span className="relative flex h-2.5 w-2.5">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
-                </span>
-                <span className="text-sm font-semibold tracking-wide text-gray-200 uppercase">Live</span>
+                <span className="text-sm font-semibold tracking-wide text-gray-200">Interview Code</span>
               </div>
               <div className="h-5 w-px bg-[#333]"></div>
               <div className="flex items-center gap-3">
@@ -220,16 +216,16 @@ const LiveInterview = () => {
             </button>
             <button
               onClick={() => navigate('/interview/live')}
-              className="flex items-center gap-2 px-5 py-3 bg-black hover:bg-[#1A1A1A] text-red-500 text-sm font-bold rounded-xl transition-all border border-[#222] hover:border-red-500/30 shadow-lg cursor-pointer"
+              className="flex items-center gap-2 px-6 py-3 bg-red-600 text-white border border-red-500 rounded-full transition-all duration-300 font-semibold hover:bg-red-700 hover:border-red-600 active:scale-95 cursor-pointer"
             >
               <Home01Icon size={18} />
-              <span>Exit</span>
+              <span>Exit Interview</span>
             </button>
           </div>
         </div>
 
         {/* Workspace */}
-        <div className="flex-1 flex gap-6 min-h-0">
+        <div className="flex-1 flex gap-2 min-h-0">
           {/* Recent Video Area */}
           <div className={`transition-all duration-300 ease-in-out min-w-0 ${showChat ? 'flex-[3]' : 'flex-1'}`}>
             <VideoInterview roomId={roomFromQuery} />
@@ -242,14 +238,14 @@ const LiveInterview = () => {
                 <h3 className="font-medium text-sm text-white flex items-center gap-2">
                   Messages
                 </h3>
-                <span className="text-[10px] bg-[#222] text-gray-400 px-2 py-0.5 rounded border border-[#333]">
+                <span className="text-[10px] bg-[#222] text-white/50 px-2 py-0.5 rounded border border-[#333]">
                   {chatHistory.length}
                 </span>
               </div>
 
               <div className="flex-1 overflow-y-auto p-4 space-y-4 custom-scrollbar bg-[#0A0A0A]">
                 {chatHistory.length === 0 && (
-                  <div className="h-full flex flex-col items-center justify-center text-gray-600 space-y-2">
+                  <div className="h-full flex flex-col items-center justify-center text-white/50 space-y-2">
                     <Comment01Icon size={24} className="opacity-20" />
                     <p className="text-xs">No messages yet</p>
                   </div>
@@ -262,12 +258,12 @@ const LiveInterview = () => {
                     <div
                       className={`max-w-[90%] px-3 py-2 rounded-lg text-sm ${msg.author === socket?.id
                         ? "bg-[#222] text-white border border-[#333]"
-                        : "bg-black text-gray-300 border border-[#222]"
+                        : "bg-black text-white/50 border border-[#222]"
                         }`}
                     >
                       <p>{msg.message}</p>
                     </div>
-                    <span className="text-[10px] text-gray-600 mt-1 px-1">
+                    <span className="text-[10px] text-white/50 mt-1 px-1">
                       {msg.time}
                     </span>
                   </div>
@@ -284,8 +280,8 @@ const LiveInterview = () => {
                     onKeyPress={(event) => {
                       event.key === "Enter" && sendMessage();
                     }}
-                    placeholder="Type..."
-                    className="flex-1 bg-[#0A0A0A] border border-[#333] rounded-lg px-3 py-2.5 text-sm text-white focus:outline-none focus:border-gray-500 transition-colors placeholder:text-gray-700"
+                    placeholder="Type a message..."
+                    className="flex-1 bg-[#0A0A0A] border border-[#333] rounded-lg px-3 py-2.5 text-sm text-white focus:outline-none focus:border-white/30 transition-colors placeholder:text-white/50"
                   />
                   <button
                     onClick={sendMessage}

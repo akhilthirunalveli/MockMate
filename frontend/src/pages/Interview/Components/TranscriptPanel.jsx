@@ -97,7 +97,7 @@ const TranscriptPanel = ({
   };
 
   return (
-    <div className="bg-black border-2 border-white rounded-2xl p-6 min-h-[480px] flex flex-col flex-1">
+    <div className="bg-black border border-white/30 rounded-xl p-6 min-h-[480px] flex flex-col flex-1">
       <div className="flex justify-between items-center mb-4">
         <div className="flex items-center gap-2">
           <span className="text-white text-sm opacity-70">Live Transcript</span>

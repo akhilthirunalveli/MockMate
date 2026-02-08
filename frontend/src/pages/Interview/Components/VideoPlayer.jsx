@@ -1,5 +1,5 @@
 import React from 'react';
-import { Mic01Icon, MicOff01Icon, Camera01Icon, CameraOff01Icon, RefreshIcon } from 'hugeicons-react';
+import { Mic01Icon, MicOff01Icon, Camera01Icon, CameraOff01Icon, ImageFlipHorizontalIcon } from 'hugeicons-react';
 
 const VideoPlayer = ({
   videoRef,
@@ -14,7 +14,7 @@ const VideoPlayer = ({
   stopRecording
 }) => {
   return (
-    <div className="flex-1 bg-black border-2 border-white rounded-2xl p-0 relative flex flex-col min-h-[350px] justify-between overflow-hidden">
+    <div className="flex-1 bg-black border border-white/30 rounded-xl p-0 relative flex flex-col min-h-[350px] justify-between overflow-hidden">
       <video
         ref={videoRef}
         autoPlay
@@ -36,7 +36,7 @@ const VideoPlayer = ({
 
       {/* Control Dock */}
       <div
-        className="absolute bottom-4 right-4 flex items-center gap-3 bg-black/60 backdrop-blur-md border border-white/10 rounded-full px-4 py-2"
+        className="absolute bottom-4 right-4 flex items-center gap-3 bg-black/60 backdrop-blur-md border border-white/10 rounded-full px-3 py-3"
         style={{
           boxShadow: "0 4px 16px rgba(0,0,0,0.3)"
         }}
@@ -45,8 +45,8 @@ const VideoPlayer = ({
         <button
           onClick={handleMicToggle}
           className={`w-10 h-10 flex items-center justify-center rounded-full border ${micOn
-            ? "border-white/30 bg-white/5 text-white hover:bg-white/10"
-            : "border-red-500/50 bg-red-500/10 text-red-500 hover:bg-red-500/20"
+            ? "border-white/30 text-white hover:bg-white/10"
+            : "border-red-500/50 text-red-500"
             } cursor-pointer transition-all duration-200 hover:scale-105`}
           title={micOn ? "Turn mic off" : "Turn mic on"}
         >
@@ -61,8 +61,8 @@ const VideoPlayer = ({
         <button
           onClick={handleCameraToggle}
           className={`w-10 h-10 flex items-center justify-center rounded-full border ${cameraOn
-            ? "border-white/30 bg-white/5 text-white hover:bg-white/10"
-            : "border-red-500/50 bg-red-500/10 text-red-500 hover:bg-red-500/20"
+            ? "border-white/30 text-white hover:bg-white/10"
+            : "border-amber-500/50 text-amber-500"
             } cursor-pointer transition-all duration-200 hover:scale-105`}
           title={cameraOn ? "Turn camera off" : "Turn camera on"}
         >
@@ -77,8 +77,8 @@ const VideoPlayer = ({
         <button
           onClick={isRecording ? stopRecording : startRecording}
           className={`w-10 h-10 flex items-center justify-center rounded-full border ${isRecording
-            ? "border-red-500 bg-red-500 text-white animate-pulse hover:bg-red-600"
-            : "border-red-500/80 bg-red-500/10 text-red-500 hover:bg-red-500/20"
+            ? "border-red-500 bg-red-500 text-white animate-pulse"
+            : "border-red-500/80 text-red-500"
             } cursor-pointer transition-all duration-200 hover:scale-105`}
           title={isRecording ? "Stop Recording" : "Start Recording"}
         >
@@ -92,12 +92,12 @@ const VideoPlayer = ({
         <button
           onClick={() => setMirrored(prev => !prev)}
           className={`w-10 h-10 flex items-center justify-center cursor-pointer rounded-full border 
-            border-white/30 bg-white/5 text-white hover:bg-white/10
+            border-white/30  text-white
             transition-all duration-200 hover:scale-105
             ${mirrored ? 'bg-white/10' : ''}`}
           title="Flip Camera View"
         >
-          <RefreshIcon size={20} />
+          <ImageFlipHorizontalIcon size={20} />
         </button>
       </div>
 
