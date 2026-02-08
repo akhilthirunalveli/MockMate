@@ -5,6 +5,7 @@ import {
     UserGroupIcon,
     Comment01Icon,
     Megaphone01Icon,
+    Notification01Icon,
     Logout01Icon
 } from 'hugeicons-react';
 import { BASE_URL } from "../../../constants/apiPaths";
@@ -17,6 +18,7 @@ const AdminSidebar = ({ activeTab, setActiveTab, onLogout, connectionStatus }) =
         { key: "users", label: "Users", icon: <UserGroupIcon size={20} /> },
         { key: "sessions", label: "Sessions", icon: <Comment01Icon size={20} /> },
         { key: "broadcast", label: "Broadcast", icon: <Megaphone01Icon size={20} /> },
+        { key: "toasts", label: "Toasts", icon: <Notification01Icon size={20} /> },
     ];
 
     return (

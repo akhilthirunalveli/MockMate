@@ -20,6 +20,7 @@ import { Card, StatsCard, ChartCard, Button, SkeletonLoader, CardSkeleton, Conne
 import UsersTab from "./Components/UsersTab.jsx";
 import SessionsTab from "./Components/SessionsTab.jsx";
 import BroadcastTab from "./Components/BroadcastTab.jsx";
+import ToastTab from "./Components/ToastTab.jsx";
 import AdminSidebar from "./Components/AdminSidebar.jsx";
 
 const ADMIN_CODE = import.meta.env.VITE_ADMIN_CODE;
@@ -609,7 +610,8 @@ const AdminDashboard = () => {
     { key: "analytics", label: "Analytics" },
     { key: "users", label: "Users", count: users.length },
     { key: "sessions", label: "Sessions", count: sessions.length },
-    { key: "broadcast", label: "Broadcast" }
+    { key: "broadcast", label: "Broadcast" },
+    { key: "toasts", label: "Toasts" }
   ];
 
   return (
@@ -841,6 +843,10 @@ const AdminDashboard = () => {
 
             {activeTab === "broadcast" && (
               <BroadcastTab />
+            )}
+
+            {activeTab === "toasts" && (
+              <ToastTab />
             )}
 
           </>
