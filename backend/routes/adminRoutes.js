@@ -139,4 +139,55 @@ router.get("/broadcasts", async (req, res) => {
 
 
 
+
+// --- TOAST MANAGEMENT ---
+
+// GET /toasts
+router.get("/toasts", async (req, res) => {
+    try {
+        const Toast = require("../models/Toast");
+        const toasts = await Toast.find().sort({ order: 1 });
+        res.json(toasts);
+    } catch (error) {
+        res.status(500).json({ message: "Failed to fetch toasts" });
+    }
+});
+
+// POST /toasts
+router.post("/toasts", async (req, res) => {
+    try {
+        const Toast = require("../models/Toast");
+        const { message, order, delay, isActive } = req.body;
+        const newToast = new Toast({ message, order, delay, isActive });
+        await newToast.save();
+        res.status(201).json(newToast);
+    } catch (error) {
+        res.status(500).json({ message: "Failed to create toast" });
+    }
+});
+
+// PUT /toasts/:id
+router.put("/toasts/:id", async (req, res) => {
+    try {
+        const Toast = require("../models/Toast");
+        const updatedToast = await Toast.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        if (!updatedToast) return res.status(404).json({ message: "Toast not found" });
+        res.json(updatedToast);
+    } catch (error) {
+        res.status(500).json({ message: "Failed to update toast" });
+    }
+});
+
+// DELETE /toasts/:id
+router.delete("/toasts/:id", async (req, res) => {
+    try {
+        const Toast = require("../models/Toast");
+        const deletedToast = await Toast.findByIdAndDelete(req.params.id);
+        if (!deletedToast) return res.status(404).json({ message: "Toast not found" });
+        res.json({ message: "Toast deleted successfully" });
+    } catch (error) {
+        res.status(500).json({ message: "Failed to delete toast" });
+    }
+});
+
 module.exports = router;
