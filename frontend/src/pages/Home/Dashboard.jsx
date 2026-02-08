@@ -17,6 +17,7 @@ import { UserContext } from "../../context/userContext.jsx";
 import CreateSessionForm from "../Preparation/CreateSessionForm.jsx";
 import DeleteAlertContent from "../Preparation/Components/DeleteAlertContent.jsx";
 import ResumeLinkModal from "../Resume/Modal/ResumeLinkModal.jsx";
+import { AiChat02Icon, File02Icon } from "hugeicons-react";
 
 const LoadingSpinner = () => (
   <MoonLoader color="#ffffff" />
@@ -134,8 +135,15 @@ const Dashboard = () => {
               onClick={handleResumeClick}
               title={user?.resumeLink ? "Manage Resume" : "Add Resume Link"}
             >
-              <IoDocumentTextOutline className="text-lg sm:text-xl text-black" />
+              <File02Icon className="text-lg sm:text-xl text-black" stroke="1" />
               <span className="hidden sm:inline">{user?.resumeLink ? "Resume" : "Add Resume"}</span>
+            </button>
+            <button
+              className="h-10 sm:h-12 flex items-center justify-center bg-[#fcfcfc] text-black rounded-full transition-all duration-300 cursor-pointer px-4 sm:px-5 py-2 border border-gray-100 shadow-[0_2px_10px_rgba(0,0,0,0.02)] hover:shadow-[0_4px_15px_rgba(0,0,0,0.05)] hover:bg-white"
+              onClick={() => toast("AI Career Coach coming soon!")}
+              title="AI Magic"
+            >
+              <AiChat02Icon className="text-black" />
             </button>
           </div>
         </div>
@@ -153,20 +161,11 @@ const Dashboard = () => {
         </div>
       </Modal>
 
-      <Modal
+      <ResumeLinkModal
         isOpen={openResumeModal}
-        onClose={() => {
-          setOpenResumeModal(false);
-        }}
-        hideHeader
-        isDark={true}
-      >
-        <ResumeLinkModal
-          onClose={() => setOpenResumeModal(false)}
-          onSave={() => {
-          }}
-        />
-      </Modal>
+        onClose={() => setOpenResumeModal(false)}
+        onSave={() => { }}
+      />
 
       <Modal
         isOpen={openDeleteAlert?.open}
