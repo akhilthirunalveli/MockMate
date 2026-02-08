@@ -1,26 +1,52 @@
 # <img src="frontend/public/Logo.svg" width="32" height="32" /> MockMate: AI-Powered Interview Excellence
 
+[![Live Demo](https://img.shields.io/badge/Live-Demo-white?style=for-the-badge&logo=vercel&logoColor=black)](https://mockmate.vercel.app)
+[![License: MIT](https://img.shields.io/badge/License-MIT-black?style=for-the-badge)](LICENSE)
+
 ![Mockmate Intro](Assets/Mockmate%20-%20Intro.gif)
 
 MockMate is a cutting-edge platform designed to bridge the gap between preparation and performance. By leveraging the power of **Google Gemini 1.5 Flash**, MockMate provides real-time, personalized interview practice, ATS-compliant resume analysis, and a suite of tools to help you land your dream job with confidence.
 
 ---
 
-## 🛠️ Tech Stack
+## �️ The Innovation Stack
 
-### Frontend
-- **Framework**: React 18 with Vite
-- **Styling**: Tailwind CSS & Vanilla CSS
-- **Animations**: Framer Motion (for premium, liquid-smooth transitions)
-- **Icons**: HugeIcons-React & React Icons
-- **State Management**: React Context API (User & Session)
+```mermaid
+graph TD
+    subgraph "The Intelligence (AI)"
+        GE["Google Gemini 1.5 Flash"]
+        NLP["Natural Language Processing"]
+    end
 
-### Backend
-- **Runtime**: Node.js & Express
-- **Database**: MongoDB with Mongoose
-- **Real-time**: Socket.io (for low-latency Live Interview streaming)
-- **AI Engine**: Google Gemini 1.5 Flash API
-- **Storage**: Cloudinary (Asset management)
+    subgraph "The Engine (Backend)"
+        NO["Node.js / Express"]
+        DB[("MongoDB Atlas")]
+        SK["Socket.io (Realtime)"]
+    end
+
+    subgraph "The Experience (Frontend)"
+        RE["React 18 / Vite"]
+        FM["Framer Motion"]
+        TW["Tailwind CSS"]
+    end
+
+    GE <--> NO
+    NLP <--> NO
+    NO <--> DB
+    NO <--> SK
+    SK <--> RE
+    RE <--> FM
+    RE <--> TW
+```
+
+| Component | Technology | Role |
+| :--- | :--- | :--- |
+| **Frontend** | React, Vite, Tailwind | Dynamic, liquid-smooth UI |
+| **Backend** | Node.js, Express | Scalable API orchestration |
+| **Intelligence** | Google Gemini 1.5 | Real-time AI interview analysis |
+| **Real-time** | Socket.io | Zero-lag interview streaming |
+| **Persistence** | MongoDB Atlas | Cloud-native data storage |
+| **Assets** | Cloudinary | Distributed media management |
 
 ---
 
