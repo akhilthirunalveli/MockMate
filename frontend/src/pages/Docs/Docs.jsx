@@ -31,7 +31,7 @@ const Step = ({ index, title, description, asset, icon, isLast }) => {
                     className="flex-1 w-full"
                 >
                     <div className="relative">
-                        <div className="relative bg-black rounded-[20px] overflow-hidden border border-neutral-800 shadow-2xl">
+                        <div className="relative bg-black rounded-xl overflow-hidden border border-neutral-800 shadow-2xl">
                             <img
                                 src={asset}
                                 alt={title}
@@ -65,11 +65,6 @@ const Step = ({ index, title, description, asset, icon, isLast }) => {
                     <p className="text-neutral-400 text-lg leading-relaxed max-w-lg mx-auto md:mx-0">
                         {description}
                     </p>
-
-                    <div className="pt-4 flex items-center justify-center md:justify-start gap-2 text-neutral-500 text-sm font-medium">
-                        <Cursor01Icon size={16} />
-                        Scroll to continue
-                    </div>
                 </motion.div>
             </div>
         </div>
@@ -122,11 +117,6 @@ const Docs = () => {
             <div className="fixed inset-0 bg-dots-dark opacity-40 pointer-events-none" />
             <Navbar />
 
-            {/* Progress Top Bar */}
-            <motion.div
-                className="fixed top-0 left-0 right-0 h-1 bg-white z-[100] origin-left"
-                style={{ scaleX: scrollYProgress }}
-            />
 
             <div className="max-w-7xl mx-auto px-6 relative z-10" ref={containerRef}>
                 {/* Hero */}
