@@ -69,7 +69,7 @@ const SummaryCard = ({
       <div className="relative z-10 flex flex-col h-full px-3 sm:px-4 pt-4 sm:pt-6 pb-3 sm:pb-4">
         <div className="flex flex-row items-start gap-2 sm:gap-3">
           {/* Avatar/Initials */}
-          <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-transparent border border-white flex items-center justify-center shadow-lg flex-shrink-0 mt-1">
+          <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-transparent border-2 border-white/50 flex items-center justify-center shadow-lg flex-shrink-0 mt-1">
             {isResumeSession || displayRole === "Resume Session" ? (
               <File02Icon className="text-white" size={24} />
             ) : (
@@ -99,13 +99,13 @@ const SummaryCard = ({
         </div>
         <div className="flex justify-end mt-auto pt-3">
           <button
-            className="flex items-center gap-1 text-xs sm:text-xs font-semibold text-white bg-transparent border border-gray-500 px-3 sm:px-2 py-1.5 sm:py-1 rounded-full shadow transition cursor-pointer hover:bg-white/10 active:scale-95"
+            className="flex items-center gap-1 text-xs sm:text-xs font-semibold text-white bg-transparent border border-gray-900 px-3 sm:px-2 py-1.5 sm:py-1 rounded-full shadow transition cursor-pointer hover:bg-white/5 active:scale-95"
             onClick={onSelect}
             style={{ minHeight: '32px', minWidth: '80px', fontSize: '0.75rem' }}
           >
-            <span className="text-xs">Explore</span>
+            <span className="text-xs ml-1">Explore</span>
             <span className="inline-flex items-center justify-center w-3 h-3 bg-transparent rounded-full ml-1">
-              <ArrowRight01Icon className="text-white" size={9} />
+              <ArrowRight01Icon className="text-white" size={10} />
             </span>
           </button>
         </div>
