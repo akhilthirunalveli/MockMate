@@ -55,7 +55,7 @@ const generateInterviewQuestions = async (req, res) => {
 
     // Create a new instance for each request to avoid any caching issues
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash-lite" });
 
     // Generate content with error handling and retry logic
     const result = await generateContentWithRetry(model, prompt);
@@ -163,7 +163,7 @@ const generateConceptExplanation = async (req, res) => {
 
     // Create a new instance for each request to avoid any caching issues
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash-lite" });
 
     // Generate content with retry logic
     const result = await generateContentWithRetry(model, prompt);
@@ -272,7 +272,7 @@ const analyzeTranscript = async (req, res) => {
 
     // Create a new instance for each request to avoid any caching issues
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash-lite" });
 
     // Generate content with error handling and retry logic
     const result = await generateContentWithRetry(model, prompt);
@@ -374,7 +374,7 @@ const cleanupTranscript = async (req, res) => {
 
     // Create a new instance for each request to avoid any caching issues
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash-lite" });
 
     // Generate content with error handling and retry logic
     const result = await generateContentWithRetry(model, prompt);
