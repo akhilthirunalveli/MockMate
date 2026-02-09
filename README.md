@@ -80,6 +80,13 @@ For administrators, the control center provides a bird's-eye view of users, sess
 ![Admin Console](Assets/AdminDashboard.png)
 ![Toast Management](Assets/AdminToast.png)
 ![Broadcasting](Assets/AdminBroadcastMessage.png)
+### Phase 5: Coaching (CoachMate)
+Your personal AI career companion. CoachMate provides real-time guidance, interview tips, and ATS resume advice in a conversational interface. It's designed to be your supportive placement friend, keeping you motivated and prepared.
+
+<p align="center">
+  <img src="Assets/Coachmate-%20WelcomeChat.png" width="45%" />
+  <img src="Assets/Coachmate-%20Chat.png" width="45%" />
+</p>
 
 ---
 
