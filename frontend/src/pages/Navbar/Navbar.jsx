@@ -8,6 +8,7 @@ import { Mail01Icon, Delete02Icon, Cancel01Icon } from 'hugeicons-react';
 import axiosInstance from "../../utils/axiosInstance.js";
 import moment from "moment";
 import { BASE_URL } from "../../constants/apiPaths";
+import { Home01Icon, BookOpen01Icon, Logout01Icon } from 'hugeicons-react';
 
 
 
@@ -162,7 +163,7 @@ const Navbar = () => {
                       }
                     }}
                   >
-                    <span className="font-normal opacity-50">v1.3 </span>
+                    <span className="font-normal opacity-50">v1.4 </span>
                   </span>
                 </h2>
               </Link>
@@ -194,9 +195,9 @@ const Navbar = () => {
                           exit={{ opacity: 0, y: -20, scaleY: 0.8 }}
                           transition={{ type: "spring", stiffness: 300, damping: 25 }}
                           style={{ originY: 0 }}
-                          className="absolute top-14 right-[-20px] w-80 bg-[#000000] border border-white/10 rounded-2xl shadow-2xl overflow-hidden z-50"
+                          className="absolute top-14 left-[-15px] w-70 bg-[#000000] border border-white/10 rounded-lg overflow-hidden z-50"
                         >
-                          <div className="p-4 border-b border-white/5 flex justify-between items-center bg-white/[0.02] gap-2">
+                          <div className="p-3 border-b border-white/5 flex justify-between items-center bg-white/[0.02] gap-2">
                             <h3 className="text-white font-semibold text-sm">
                               Notifications
                             </h3>
@@ -217,7 +218,7 @@ const Navbar = () => {
                           </div>
                           <div className="max-h-[320px] overflow-y-auto custom-scrollbar">
                             {notifications.length === 0 ? (
-                              <div className="flex flex-col items-center justify-center py-10 text-gray-500">
+                              <div className="flex flex-col items-center justify-center py-10 text-white/50">
                                 <Mail01Icon className="mb-2 opacity-20" size={24} />
                                 <p className="text-xs">No notifications</p>
                               </div>
@@ -264,19 +265,26 @@ const Navbar = () => {
                   {showMobileMenu && (
                     <>
                       <button
-                        onClick={() => {
-                          navigate("/");
-                          setShowMobileMenu(false);
-                        }}
-                        className="px-3 py-1.5 text-xs font-semibold text-black bg-yellow-500 rounded-full shadow hover:bg-yellow-400 transition-all cursor-pointer"
+                        className="p-2 text-black bg-gray-100 cursor-pointer rounded-full shadow hover:bg-gray-200 hover:text-black transition-all flex items-center justify-center"
+                        onClick={e => { e.stopPropagation(); handleHome(); }}
+                        title="Home"
                       >
-                        Home
+                        <Home01Icon size={18} />
                       </button>
                       <button
-                        onClick={handleLogout}
-                        className="px-3 py-1.5 text-xs font-semibold text-white bg-red-700 rounded-full shadow hover:bg-red-400 transition-all cursor-pointer"
+                        className="p-2 bg-amber-600 cursor-pointer rounded-full shadow hover:bg-amber-500 text-white transition-all flex items-center justify-center"
+                        onClick={e => { e.stopPropagation(); navigate("/docs"); }}
+                        title="Docs"
                       >
-                        Logout
+                        <BookOpen01Icon size={18} />
+                      </button>
+
+                      <button
+                        className="p-2 text-white bg-red-700 cursor-pointer rounded-full shadow hover:bg-red-500 transition-all flex items-center justify-center"
+                        onClick={e => { e.stopPropagation(); handleLogout(); }}
+                        title="Logout"
+                      >
+                        <Logout01Icon size={18} />
                       </button>
                     </>
                   )}
