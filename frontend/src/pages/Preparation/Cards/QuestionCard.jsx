@@ -44,9 +44,8 @@ const QuestionCard = ({
 
           <div className="flex items-center justify-end ml-4 relative">
             <div
-              className={`flex ${
-                isExpanded ? "md:flex" : "md:hidden group-hover:flex"
-              }`}
+              className={`flex ${isExpanded ? "md:flex" : "md:hidden group-hover:flex"
+                }`}
             >
               <button
                 className="flex items-center gap-2 text-xs text-indigo-800 font-medium bg-indigo-50 px-3 py-1 mr-2 rounded text-nowrap border border-indigo-50 hover:border-indigo-200 cursor-pointer"
@@ -72,14 +71,13 @@ const QuestionCard = ({
             </div>
 
             <button
-              className="text-gray-400 hover:text-gray-500 cursor-pointer"
+              className="text-gray-400 hover:text-white cursor-pointer"
               onClick={toggleExpand}
             >
               <LuChevronDown
                 size={20}
-                className={`transform transition-transform duration-300 ${
-                  isExpanded ? "rotate-180" : ""
-                }`}
+                className={`transform transition-transform duration-300 ${isExpanded ? "rotate-180" : ""
+                  }`}
               />
             </button>
           </div>
@@ -91,9 +89,9 @@ const QuestionCard = ({
         >
           <div
             ref={contentRef}
-            className="mt-4 text-gray-700 bg-gray-50 px-5 py-3 rounded-lg"
+            className="mt-4 text-gray-700 bg-zinc-950 px-5 py-3"
           >
-             <AIResponsePreview content={answer} />
+            <AIResponsePreview content={answer} />
           </div>
         </div>
       </div>
