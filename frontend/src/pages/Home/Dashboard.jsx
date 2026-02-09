@@ -17,13 +17,12 @@ import { UserContext } from "../../context/userContext.jsx";
 import CreateSessionForm from "../Preparation/CreateSessionForm.jsx";
 import DeleteAlertContent from "../Preparation/Components/DeleteAlertContent.jsx";
 import ResumeLinkModal from "../Resume/Modal/ResumeLinkModal.jsx";
-import { AiChat02Icon, File02Icon } from "hugeicons-react";
+import CoachMateDrawer from "./Components/CoachMateDrawer.jsx";
+import { AiChat02Icon, File02Icon, Add01Icon } from "hugeicons-react";
 
 const LoadingSpinner = () => (
   <MoonLoader color="#ffffff" />
 );
-
-
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -31,14 +30,13 @@ const Dashboard = () => {
 
   const [openCreateModal, setOpenCreateModal] = useState(false);
   const [openResumeModal, setOpenResumeModal] = useState(false);
+  const [openCoachMate, setOpenCoachMate] = useState(false);
   const [sessions, setSessions] = useState([]);
   const [openDeleteAlert, setOpenDeleteAlert] = useState({
     open: false,
     data: null,
   });
   const [openRecordTypeModal, setOpenRecordTypeModal] = useState(false);
-
-
 
   const handleResumeClick = () => {
     // Always open the modal first to show edit options
@@ -105,7 +103,7 @@ const Dashboard = () => {
               onClick={() => setOpenCreateModal(true)}
               title="Session"
             >
-              <LuPlus className="text-lg sm:text-xl text-black" />
+              <Add01Icon className="text-lg sm:text-xl text-black" />
               <span className="hidden sm:inline">Session</span>
             </button>
             <button
@@ -140,7 +138,7 @@ const Dashboard = () => {
             </button>
             <button
               className="h-10 sm:h-12 flex items-center justify-center bg-[#fcfcfc] text-black rounded-full transition-all duration-300 cursor-pointer px-4 sm:px-5 py-2 border border-gray-100 shadow-[0_2px_10px_rgba(0,0,0,0.02)] hover:shadow-[0_4px_15px_rgba(0,0,0,0.05)] hover:bg-white"
-              onClick={() => toast("AI Career Coach coming soon!")}
+              onClick={() => setOpenCoachMate(true)}
               title="AI Magic"
             >
               <AiChat02Icon className="text-black" />
@@ -148,6 +146,11 @@ const Dashboard = () => {
           </div>
         </div>
       </div>
+
+      <CoachMateDrawer
+        isOpen={openCoachMate}
+        onClose={() => setOpenCoachMate(false)}
+      />
 
       <Modal
         isOpen={openCreateModal}
