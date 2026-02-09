@@ -86,7 +86,7 @@ const ProfileInfoCard = () => {
                 className="w-10 h-10 rounded-full mr-3 flex items-center justify-center text-white font-bold text-lg"
                 style={{
                   backgroundColor: user?.name ?
-                    ['#EF4444', '#F97316', '#F59E0B', '#06B6D4', '#3B82F6', '#8B5CF6', '#EC4899'][
+                    ['#EF4444', '#F97316', '#F59E0B', '#EC4899'][
                     Math.abs(user.name.split('').reduce((a, b) => a + b.charCodeAt(0), 0)) % 10
                     ] : '#6B7280'
                 }}
