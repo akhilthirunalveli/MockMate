@@ -103,7 +103,7 @@ const ResumeViewPage = () => {
 
           {/* Left: PDF Viewer - Full Visibility */}
           <div className="xl:col-span-8 h-full min-h-0 flex flex-col">
-            <div className="bg-black rounded-[30px] border border-[#222] overflow-hidden shadow-2xl relative flex-1 flex flex-col">
+            <div className="bg-black rounded-xl  overflow-hidden shadow-2xl relative flex-1 flex flex-col">
               {pdfUrl ? (
                 <iframe
                   src={directUrl}
@@ -190,9 +190,9 @@ const ResumeViewPage = () => {
               </div>
 
               <div className="mt-6 pt-4 border-t border-[#1A1A1A]">
-                <div className="flex gap-2 overflow-x-auto scrollbar-hide">
+                <div className="flex gap-2 overflow-x-auto scrollbar-hide items-center justify-center">
                   {RECOMMENDED_SECTIONS.map((sec, idx) => (
-                    <span key={idx} className="shrink-0 px-3 py-1 bg-white/5 border border-white/10 rounded-lg text-[10px] font-bold text-gray-400">
+                    <span key={idx} className="shrink-0 px-3 py-1 bg-white/5 border border-white/10 rounded-lg text-[10px] font-bold text-white/50">
                       + {sec}
                     </span>
                   ))}
@@ -204,8 +204,8 @@ const ResumeViewPage = () => {
             <div className="col-span-1 row-span-2 bg-black rounded-[30px] p-6 shadow-2xl flex flex-col justify-between">
               <div className="text-[10px] font-bold text-gray-500 uppercase tracking-[0.2em]"></div>
               <div className="flex flex-col items-center">
-                <span className="text-4xl font-black text-white">85</span>
-                <span className="text-[10px] text-white/50 font-bold">Estimated</span>
+                <span className="text-xl font-black text-white">Check ATS</span>
+                <span className="text-[10px] text-white/50 font-bold">Estimate ATS Score</span>
               </div>
               <button
                 onClick={() => navigate("/resume/ats-check")}
@@ -220,12 +220,12 @@ const ResumeViewPage = () => {
               <div className="text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em]"></div>
               <div className="flex flex-col items-center">
                 <Target01Icon size={32} className="text-white mb-2" />
-                <span className="text-xl font-bold text-white">Target Fit</span>
+                <span className="text-xl font-bold text-white">Is it a good fit?</span>
               </div>
               <div className="bg-[#1A1A1A] h-1.5 w-full rounded-full overflow-hidden">
                 <div className="bg-white h-full w-[75%]"></div>
               </div>
-              <p className="text-[9px] text-white font-medium text-center">Top 5% of Candidates</p>
+              <p className="text-[9px] text-white font-medium text-center">Are you in the top 5% of candidates?</p>
             </div>
           </div>
         </div>

@@ -2,19 +2,20 @@ import React, { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import {
-    IoArrowBack,
-    IoCheckmarkCircle,
-    IoWarning,
-    IoBriefcase,
-    IoDownloadOutline,
-    IoCloudUploadOutline,
-    IoTextOutline,
-    IoClose,
-    IoStatsChart,
-    IoBookOutline,
-    IoTimeOutline,
-    IoCodeSlash
-} from "react-icons/io5";
+    ArrowLeft01Icon,
+    CheckmarkCircle02Icon,
+    AlertCircleIcon,
+    Pdf02Icon,
+    FolderUploadIcon,
+    PencilEdit01Icon,
+    Cancel01Icon,
+    BarChartIcon,
+    Book01Icon,
+    TimeScheduleIcon,
+    CodeIcon
+} from "hugeicons-react";
+
+
 import DashboardLayout from "../Home/Components/DashboardLayout";
 import { useReactToPrint } from "react-to-print";
 import { extractTextFromPdf, extractTextFromDocx } from "../../utils/FileParsers";
@@ -226,22 +227,31 @@ const ATSCheckerPage = () => {
                             <div className="flex justify-between items-center px-2 mb-4 shrink-0">
                                 <div>
                                     <h1 className="text-2xl font-bold text-white tracking-tight">ATS Analysis</h1>
-                                    <p className="text-gray-400 text-xs">Optimize your resume for the algorithms.</p>
+                                    <p className="text-white/80 text-xs">Optimize your resume for the algorithms.</p>
                                 </div>
                                 <div className="flex gap-3">
-                                    <div className="bg-[#111] p-1 rounded-lg flex border border-white/10">
-                                        <button
-                                            onClick={() => setInputMethod("upload")}
-                                            className={`px-4 py-1.5 rounded-md text-xs font-semibold transition-all ${inputMethod === "upload" ? "bg-white text-black shadow-sm" : "text-gray-400 hover:text-white"}`}
-                                        >
-                                            <IoCloudUploadOutline className="inline mr-1.5 text-lg" />
-                                        </button>
-                                        <button
-                                            onClick={() => setInputMethod("text")}
-                                            className={`px-4 py-1.5 rounded-md text-xs font-semibold transition-all ${inputMethod === "text" ? "bg-white text-black shadow-sm" : "text-gray-400 hover:text-white"}`}
-                                        >
-                                            <IoTextOutline className="inline mr-1.5 text-lg" />
-                                        </button>
+                                    <div className="bg-black p-1 rounded-xl flex border border-white/10 relative overflow-hidden">
+                                        {[
+                                            { id: "upload", label: "File Upload", icon: FolderUploadIcon },
+                                            { id: "text", label: "Paste Text", icon: PencilEdit01Icon },
+                                        ].map((method) => (
+                                            <button
+                                                key={method.id}
+                                                onClick={() => setInputMethod(method.id)}
+                                                className={`relative z-10 px-4 py-2 rounded-lg text-xs font-bold transition-colors flex items-center gap-2 cursor-pointer ${inputMethod === method.id ? "text-black" : "text-white/50 hover:text-white/90"
+                                                    }`}
+                                            >
+                                                <method.icon className="text-lg" />
+                                                <span className="hidden sm:inline">{method.label}</span>
+                                                {inputMethod === method.id && (
+                                                    <motion.div
+                                                        layoutId="activeInputMethod"
+                                                        className="absolute inset-0 bg-white/90 rounded-lg -z-10 shadow-sm"
+                                                        transition={{ type: "spring", bounce: 0.15, duration: 0.5 }}
+                                                    />
+                                                )}
+                                            </button>
+                                        ))}
                                     </div>
                                 </div>
                             </div>
@@ -249,9 +259,9 @@ const ATSCheckerPage = () => {
                             {/* Split Screen Content */}
                             <div className="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-6 min-h-0 pb-4">
                                 {/* Left Panel: Resume Input (65% width -> col-span-8) */}
-                                <div className="lg:col-span-8 bg-[#0A0A0A] border border-white/5 rounded-2xl relative overflow-hidden group hover:border-white/10 transition-all flex flex-col">
+                                <div className="lg:col-span-8 bg-black border border-white/5 rounded-2xl relative overflow-hidden group transition-all flex flex-col">
                                     {inputMethod === "upload" ? (
-                                        <div className="h-full flex flex-col items-center justify-center border-2 border-dashed border-white/5 rounded-2xl m-2 group-hover:border-white/10 transition-all bg-[#0F0F0F] relative">
+                                        <div className="h-full flex flex-col items-center justify-center border-1 border-dashed border-white/5 rounded-2xl m-2 transition-all bg-zinc-950/30 relative">
                                             <input
                                                 type="file"
                                                 onChange={handleFileUpload}
@@ -259,7 +269,7 @@ const ATSCheckerPage = () => {
                                                 className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
                                             />
                                             <div className="bg-blue-500/10 p-4 rounded-full mb-3 transaction-transform group-hover:scale-110 duration-300">
-                                                <IoCloudUploadOutline className="text-blue-500 text-3xl" />
+                                                <FolderUploadIcon className="text-blue-500 text-3xl" />
                                             </div>
                                             <h3 className="text-lg font-bold text-white mb-1">
                                                 {isParsing ? "Parsing..." : fileName ? "File Selected" : "Upload Resume"}
@@ -273,40 +283,40 @@ const ATSCheckerPage = () => {
                                             value={resumeText}
                                             onChange={(e) => setResumeText(e.target.value)}
                                             placeholder="Paste your resume content here..."
-                                            className="w-full h-full bg-transparent text-gray-300 placeholder-gray-600 focus:outline-none resize-none custom-scrollbar p-6 text-sm leading-relaxed"
+                                            className="w-full h-full bg-transparent text-white placeholder-white/50 focus:outline-none resize-none custom-scrollbar p-6 text-sm leading-relaxed"
                                             style={{ fontFamily: "'Nunito', sans-serif" }}
                                         />
                                     )}
                                 </div>
 
                                 {/* Right Panel: Job Description (35% width -> col-span-4) */}
-                                <div className="lg:col-span-4 bg-[#0A0A0A] border border-white/5 rounded-2xl flex flex-col relative group hover:border-white/10 transition-all p-4">
+                                <div className="lg:col-span-4 bg-black border border-white/5 rounded-2xl flex flex-col relative group transition-all p-4">
                                     <div className="flex justify-between items-center mb-2">
-                                        <span className="text-gray-400 text-sm font-medium ml-2">Description</span>
-                                        <span className="text-xs font-medium text-gray-500 uppercase tracking-widest bg-[#0A0A0A] px-2 py-1 rounded border border-white/5">Target Job</span>
+                                        <span className="text-white/90 text-base font-medium ml-2">Description</span>
+                                        <span className="text-xs font-medium text-white/50 uppercase tracking-widest px-2 py-1 rounded border border-white/5">Target Job</span>
                                     </div>
                                     <textarea
                                         value={jobDescription}
                                         onChange={(e) => setJobDescription(e.target.value)}
                                         placeholder="Paste the job description here..."
-                                        className="w-full flex-1 bg-transparent text-gray-300 placeholder-gray-600 focus:outline-none resize-none custom-scrollbar p-2 text-sm leading-relaxed"
+                                        className="w-full flex-1 bg-transparent text-gray-300 placeholder-white/50 focus:outline-none resize-none custom-scrollbar p-2 text-sm leading-relaxed"
                                     />
                                     <button
                                         onClick={analyzeResume}
                                         disabled={!resumeText || isAnalyzing || isParsing}
-                                        className={`w-full mt-4 py-3 rounded-xl font-bold text-sm tracking-wide transition-all shadow-lg flex items-center justify-center gap-2 ${!resumeText || isAnalyzing || isParsing
-                                            ? "bg-[#222] text-gray-500 cursor-not-allowed border border-white/5"
+                                        className={`w-full mt-4 py-3 rounded-xl font-bold text-sm tracking-wide transition-all shadow-lg flex cursor-pointer items-center justify-center gap-2 ${!resumeText || isAnalyzing || isParsing
+                                            ? "bg-white/50 text-black cursor-not-allowed border border-white/5"
                                             : "bg-white text-black hover:bg-gray-100 transform hover:scale-[1.02] active:scale-[0.98]"
                                             }`}
                                     >
                                         {isAnalyzing ? (
                                             <>
                                                 <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
-                                                Analyzing...
+                                                Analyzing
                                             </>
                                         ) : (
                                             <>
-                                                Analyze Match <IoArrowBack className="rotate-180" />
+                                                Analyze Match <ArrowLeft01Icon className="rotate-180" />
                                             </>
                                         )}
                                     </button>
@@ -323,19 +333,19 @@ const ATSCheckerPage = () => {
                             className="space-y-8"
                         >
                             {/* Navbar-aligned Header */}
-                            <div className="flex flex-col md:flex-row justify-between items-center bg-[#0A0A0A] border border-white/5 p-4 rounded-2xl backdrop-blur-md sticky top-24 z-20 shadow-2xl">
+                            <div className="flex flex-col md:flex-row justify-between items-center bg-black p-3 rounded-2xl backdrop-blur-md sticky top-24 z-20 shadow-2xl">
                                 <button
                                     onClick={() => setView("input")}
-                                    className="flex items-center gap-2 px-6 py-2.5 hover:bg-white/5 rounded-xl text-gray-400 hover:text-white transition-colors text-base font-medium cursor-pointer"
+                                    className="flex items-center gap-2 px-6 py-2.5 hover:bg-white/5 rounded-xl text-white/80 hover:text-white transition-colors text-base font-medium cursor-pointer"
                                 >
-                                    <IoArrowBack /> Edit Inputs
+                                    <ArrowLeft01Icon /> Edit Inputs
                                 </button>
-                                <h2 className="text-white font-bold text-xl hidden md:block tracking-tight">Analysis Report</h2>
+                                <h2 className="text-white font-bold text-2xl hidden md:block tracking-tight">Analysis Report</h2>
                                 <button
                                     onClick={handlePrint}
                                     className="flex items-center gap-2 px-6 py-2.5 bg-white text-black hover:bg-gray-200 rounded-xl font-bold transition-colors text-sm shadow-lg hover:shadow-xl cursor-pointer"
                                 >
-                                    <IoDownloadOutline size={18} /> Export PDF
+                                    <Pdf02Icon size={18} /> Export PDF
                                 </button>
                             </div>
 
@@ -344,10 +354,10 @@ const ATSCheckerPage = () => {
                                 <div className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-8 gap-8">
 
                                     {/* 1. Score Card (Tall Left) */}
-                                    <div className="md:col-span-2 lg:col-span-2 lg:row-span-2 bg-[#0A0A0A] border border-white/5 rounded-[32px] p-8 flex flex-col items-center justify-center relative overflow-hidden group print:border-gray-200 print:bg-white">
+                                    <div className="md:col-span-2 lg:col-span-2 lg:row-span-2 bg-black border border-white/5 rounded-xl p-8 flex flex-col items-center justify-center relative overflow-hidden group print:border-gray-200 print:bg-white">
                                         <div className="absolute top-0 right-0 w-40 h-40 bg-blue-500/10 blur-[60px] rounded-full point-events-none" />
 
-                                        <h3 className="text-gray-400 font-medium mb-8 z-10 print:text-black uppercase tracking-widest text-sm">Match Score</h3>
+                                        <h3 className="text-white/80 font-medium mb-8 z-10 print:text-black uppercase tracking-widest text-sm">Match Score</h3>
                                         <div className="relative w-56 h-56 z-10">
                                             <svg className="w-full h-full transform -rotate-90 drop-shadow-2xl">
                                                 <circle cx="112" cy="112" r="100" stroke="#1a1a1a" strokeWidth="16" fill="transparent" />
@@ -364,7 +374,7 @@ const ATSCheckerPage = () => {
                                                 />
                                             </svg>
                                             <div className="absolute inset-0 flex flex-col items-center justify-center">
-                                                <span className="text-7xl font-black bg-clip-text text-transparent bg-gradient-to-b from-white to-gray-500 print:text-black">
+                                                <span className="text-7xl font-black bg-clip-text text-transparent bg-gradient-to-b from-white to-white print:text-black">
                                                     {results.score}
                                                 </span>
                                             </div>
@@ -378,10 +388,10 @@ const ATSCheckerPage = () => {
                                     </div>
 
                                     {/* 2. Missing Keywords (Wide) */}
-                                    <div className="md:col-span-2 lg:col-span-4 bg-[#0A0A0A] border border-white/5 rounded-[32px] p-8 print:border-gray-200 print:bg-white relative overflow-hidden">
+                                    <div className="md:col-span-2 lg:col-span-4 bg-black border border-white/5 rounded-xl p-8 print:border-gray-200 print:bg-white relative overflow-hidden">
                                         <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-amber-500/50 to-transparent opacity-50" />
                                         <h3 className="font-bold text-xl mb-6 flex items-center gap-3 text-white print:text-black">
-                                            <IoWarning className="text-amber-500 text-2xl" /> Missing Keywords
+                                            <AlertCircleIcon className="text-amber-500 text-2xl" /> Missing Keywords
                                         </h3>
                                         {results.feedback.missingKeywords.length > 0 ? (
                                             <div className="flex flex-wrap gap-3">
@@ -394,18 +404,18 @@ const ATSCheckerPage = () => {
                                         ) : (
                                             <div className="flex flex-col items-center justify-center py-8">
                                                 <div className="bg-green-500/10 p-4 rounded-full mb-3">
-                                                    <IoCheckmarkCircle className="text-green-500 text-3xl" />
+                                                    <CheckmarkCircle02Icon className="text-green-500 text-3xl" />
                                                 </div>
-                                                <p className="text-gray-400">Perfect match! All key terms found.</p>
+                                                <p className="text-white/80">Perfect match! All key terms found.</p>
                                             </div>
                                         )}
                                     </div>
 
                                     {/* 3. Hard Skills (Wide - Right) */}
-                                    <div className="md:col-span-2 lg:col-span-2 md:row-span-1 bg-[#0A0A0A] border border-white/5 rounded-[32px] p-8 print:border-gray-200 print:bg-white relative overflow-hidden">
+                                    <div className="md:col-span-2 lg:col-span-2 md:row-span-1 bg-black border border-white/5 rounded-xl p-8 print:border-gray-200 print:bg-white relative overflow-hidden">
                                         <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-blue-500/50 to-transparent opacity-50" />
                                         <h3 className="font-bold text-xl mb-6 text-white print:text-black flex items-center gap-2">
-                                            <IoCodeSlash className="text-blue-500" />
+                                            <CodeIcon className="text-blue-500" />
                                             Skills
                                         </h3>
                                         {results.feedback.hardSkills.length > 0 ? (
@@ -416,7 +426,7 @@ const ATSCheckerPage = () => {
                                                     </span>
                                                 ))}
                                                 {results.feedback.hardSkills.length > 8 && (
-                                                    <span className="px-3 py-1 bg-[#222] text-gray-400 rounded-lg text-xs font-medium">
+                                                    <span className="px-3 py-1 bg-[#222] text-white/80 rounded-lg text-xs font-medium">
                                                         +{results.feedback.hardSkills.length - 8} more
                                                     </span>
                                                 )}
@@ -427,10 +437,10 @@ const ATSCheckerPage = () => {
                                     </div>
 
                                     {/* 4. Experience & Readability (New Metrics) */}
-                                    <div className="md:col-span-2 lg:col-span-2 bg-[#0A0A0A] border border-white/5 rounded-[32px] p-8 flex flex-col justify-between print:border-gray-200 print:bg-white">
+                                    <div className="md:col-span-2 lg:col-span-2 bg-black border border-white/5 rounded-xl p-8 flex flex-col justify-between print:border-gray-200 print:bg-white">
                                         <div>
                                             <h3 className="font-bold text-lg mb-4 text-white print:text-black flex items-center gap-2">
-                                                <IoStatsChart className="text-purple-500" /> Experience
+                                                <BarChartIcon className="text-purple-500" /> Experience
                                             </h3>
                                             <div className="text-2xl font-bold text-white mb-1">{results.feedback.advanced.level}</div>
                                             <div className="text-xs text-gray-500 uppercase tracking-wider">Detected Level</div>
@@ -451,13 +461,13 @@ const ATSCheckerPage = () => {
 
 
                                     {/* 5. Formatting Stats (Clean Cards) */}
-                                    <div className="md:col-span-2 lg:col-span-2 bg-[#0A0A0A] border border-white/5 rounded-[32px] p-8 flex flex-col justify-between print:border-gray-200 print:bg-white">
+                                    <div className="md:col-span-2 lg:col-span-2 bg-black border border-white/5 rounded-xl p-8 flex flex-col justify-between print:border-gray-200 print:bg-white">
                                         <h3 className="font-bold text-lg mb-6 text-white print:text-black flex items-center gap-2">
-                                            <IoBookOutline className="text-pink-500" /> Structure
+                                            <Book01Icon className="text-pink-500" /> Structure
                                         </h3>
                                         <div className="space-y-4">
                                             <div className="flex justify-between items-center">
-                                                <span className="text-gray-400 text-sm">Word Count</span>
+                                                <span className="text-white/80 text-sm">Word Count</span>
                                                 <span className={`font-bold ${results.feedback.formatting.find(f => f.msg.includes("Word"))?.status === 'good' ? 'text-green-400' : 'text-amber-400'}`}>
                                                     {results.feedback.formatting.find(f => f.msg.includes("Word"))?.val || 0} words
                                                 </span>
@@ -469,7 +479,7 @@ const ATSCheckerPage = () => {
                                                 />
                                             </div>
                                             <div className="flex justify-between items-center pt-2">
-                                                <span className="text-gray-400 text-sm">Completeness</span>
+                                                <span className="text-white/80 text-sm">Completeness</span>
                                                 <span className="font-bold text-white">{results.feedback.advanced.completeness}%</span>
                                             </div>
                                             <div className="w-full bg-[#222] h-2 rounded-full overflow-hidden">
@@ -482,16 +492,16 @@ const ATSCheckerPage = () => {
                                     </div>
 
                                     {/* 6. Essentials Checklist (Tall Right) */}
-                                    <div className="md:col-span-2 lg:col-span-2 lg:row-span-2 bg-[#0A0A0A] border border-white/5 rounded-[32px] p-8 print:border-gray-200 print:bg-white">
+                                    <div className="md:col-span-2 lg:col-span-2 lg:row-span-2 bg-black border border-white/5 rounded-xl p-8 print:border-gray-200 print:bg-white">
                                         <h3 className="font-bold text-xl mb-6 text-white print:text-black flex items-center gap-2">
-                                            <IoCheckmarkCircle className="text-green-500" /> Essentials
+                                            <CheckmarkCircle02Icon className="text-green-500" /> Essentials
                                         </h3>
                                         <div className="space-y-3">
                                             {Object.entries(results.feedback.contactInfo).map(([key, valid]) => (
                                                 <div key={key} className="flex items-center justify-between p-3.5 bg-white/5 rounded-xl border border-white/5 hover:bg-white/10 transition-colors">
                                                     <span className="capitalize text-gray-300 print:text-black font-medium">{key}</span>
                                                     {valid ? (
-                                                        <IoCheckmarkCircle className="text-green-500 text-xl" />
+                                                        <CheckmarkCircle02Icon className="text-green-500 text-xl" />
                                                     ) : (
                                                         <div className="w-2 h-2 bg-red-500 rounded-full" title="Missing" />
                                                     )}
@@ -501,11 +511,11 @@ const ATSCheckerPage = () => {
                                             <div className="space-y-4">
                                                 {results.feedback.sections.map((sec, i) => (
                                                     <div key={i} className="flex items-center justify-between text-sm group">
-                                                        <span className="text-gray-400 capitalize group-hover:text-white transition-colors">{sec.name}</span>
+                                                        <span className="text-white/80 capitalize group-hover:text-white transition-colors">{sec.name}</span>
                                                         {sec.found ? (
                                                             <div className="w-2 h-2 bg-green-500 rounded-full shadow-[0_0_8px_rgba(34,197,94,0.5)]"></div>
                                                         ) : (
-                                                            <IoClose className="text-red-500 opacity-50" />
+                                                            <Cancel01Icon className="text-red-500 opacity-50" />
                                                         )}
                                                     </div>
                                                 ))}
@@ -514,13 +524,13 @@ const ATSCheckerPage = () => {
                                     </div>
 
                                     {/* 7. Fun / Tone Metrics (Wide Bottom) */}
-                                    <div className="md:col-span-4 lg:col-span-4 bg-[#0A0A0A] border border-white/5 rounded-[32px] p-8 print:border-gray-200 print:bg-white flex flex-col md:flex-row gap-8 items-center justify-between">
+                                    <div className="md:col-span-4 lg:col-span-4 bg-black border border-white/5 rounded-xl p-8 print:border-gray-200 print:bg-white flex flex-col md:flex-row gap-8 items-center justify-between">
                                         <div className="flex items-center gap-6">
                                             <div className="bg-white/5 p-4 rounded-full">
-                                                <IoTimeOutline className="text-3xl text-gray-300" />
+                                                <TimeScheduleIcon className="text-3xl text-gray-300" />
                                             </div>
                                             <div>
-                                                <div className="text-gray-400 text-sm font-medium mb-1">Human Read Time</div>
+                                                <div className="text-white/80 text-sm font-medium mb-1">Human Read Time</div>
                                                 <div className="text-3xl font-bold text-white print:text-black">
                                                     {((results.feedback.formatting.find(f => f.msg.includes("Word"))?.val || 0) / 200).toFixed(1)}m
                                                 </div>
@@ -529,7 +539,7 @@ const ATSCheckerPage = () => {
                                         <div className="h-12 w-px bg-white/10 hidden md:block" />
                                         <div className="flex items-center gap-6">
                                             <div>
-                                                <div className="text-gray-400 text-sm font-medium mb-1">Impact Score</div>
+                                                <div className="text-white/80 text-sm font-medium mb-1">Impact Score</div>
                                                 <div className="text-3xl font-bold text-white print:text-black">
                                                     {results.feedback.impact.metricsCount} <span className="text-lg text-gray-500 font-normal">metrics</span>
                                                 </div>
@@ -537,7 +547,7 @@ const ATSCheckerPage = () => {
                                         </div>
                                         <div className="h-12 w-px bg-white/10 hidden md:block" />
                                         <div className="flex flex-col gap-1 text-right">
-                                            <div className="text-gray-400 text-sm font-medium">Tone Detector</div>
+                                            <div className="text-white/80 text-sm font-medium">Tone Detector</div>
                                             <div className={`font-bold text-lg ${results.feedback.impact.actionVerbsCount > 5 ? "text-green-400" : "text-amber-400"}`}>
                                                 {results.feedback.impact.actionVerbsCount > 5 ? "Action Oriented" : "Passive Voice"}
                                             </div>
@@ -545,7 +555,7 @@ const ATSCheckerPage = () => {
                                     </div>
 
                                     {/* 8. Soft Skills (Added to fill gap) */}
-                                    <div className="md:col-span-2 lg:col-span-2 bg-[#0A0A0A] border border-white/5 rounded-[32px] p-8 print:border-gray-200 print:bg-white relative overflow-hidden">
+                                    <div className="md:col-span-2 lg:col-span-2 bg-black border border-white/5 rounded-xl p-8 print:border-gray-200 print:bg-white relative overflow-hidden">
                                         <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-purple-500/50 to-transparent opacity-50" />
                                         <h3 className="font-bold text-lg mb-6 text-white print:text-black flex items-center gap-2">
                                             Soft Skills

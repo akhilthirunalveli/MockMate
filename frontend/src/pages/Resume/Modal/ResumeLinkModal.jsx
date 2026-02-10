@@ -124,7 +124,7 @@ const ResumeLinkModal = ({ isOpen, onClose, onSave }) => {
                 {!user?.resumeLink ? "Add Your Resume" : isEditing ? "Update Link" : "Resume Options"}
               </h3>
               <p className="text-sm text-slate-700 mt-1 mb-8">
-                {!user?.resumeLink ? "Link your resume to unlock full features." : isEditing ? "Enter the new URL for your resume." : "Select an action to proceed with your resume"}
+                {!user?.resumeLink ? "Link your resume to unlock full features." : isEditing ? "Enter the new URL for your resume." : "Select an action to proceed with your resume. You can check your ATS Score and get interview & recommendations to improve your resume."}
               </p>
 
               {!isEditing && user?.resumeLink ? (
