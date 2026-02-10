@@ -101,9 +101,9 @@ const LiveInterview = () => {
       <div
         className="min-h-screen w-full text-white flex flex-col"
         style={{
-          backgroundColor: '#000000ff',
-          backgroundImage: "radial-gradient(#333 1px, transparent 1px)",
-          backgroundSize: "24px 24px",
+          backgroundImage: "radial-gradient(#dadadac7 0.5px, #000000 0.5px)",
+          backgroundSize: "21px 21px",
+          backgroundColor: "#030202",
         }}
       >
         <Navbar />
@@ -122,12 +122,12 @@ const LiveInterview = () => {
                   New Meeting
                 </label>
                 <div className="flex gap-2">
-                  <div className="flex-1 bg-[#222]/50 border border-[#333] rounded-lg px-4 py-3 text-sm text-[#ddd]/50 truncate">
+                  <div className="flex-1 bg-black border border-white/10 rounded-lg px-4 py-3 text-sm text-white/90 truncate">
                     {roomInput || "Click on generate button"}
                   </div>
                   <button
                     onClick={handleGenerateRoom}
-                    className="p-3 bg-[#222]/50 hover:bg-[#333] text-white rounded-lg transition-colors border border-[#333] cursor-pointer"
+                    className="p-3 bg-black text-white/50 hover:text-white rounded-lg transition-colors border border-white/10 cursor-pointer"
                     title="Generate New Code"
                   >
                     <Refresh03Icon size={20} />
@@ -140,13 +140,13 @@ const LiveInterview = () => {
                   Invite Link
                 </label>
                 <div className="flex gap-2">
-                  <div className="flex-1 bg-[#222]/50 border border-[#333] rounded-lg px-4 py-3 text-sm text-[#ddd]/50 truncate">
+                  <div className="flex-1 bg-black border border-white/10 rounded-lg px-4 py-3 text-sm text-white/90 truncate">
                     {activeLink || "Link will appear here"}
                   </div>
                   <button
                     onClick={handleCopyLink}
                     disabled={!activeLink}
-                    className="p-3 bg-[#222]/50 hover:bg-[#333] text-white rounded-lg transition-colors border border-[#333] disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                    className="p-3 bg-black text-white/50 hover:text-white rounded-lg transition-colors border border-white/10 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                     title="Copy Link"
                   >
                     {copied ? <Tick01Icon size={20} className="text-emerald-500" /> : <Copy01Icon size={20} />}
@@ -157,7 +157,7 @@ const LiveInterview = () => {
               <button
                 onClick={handleStartCall}
                 disabled={!roomInput}
-                className="w-full py-3.5 bg-white/90 text-black font-semibold rounded-lg hover:bg-gray-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed mt-4 cursor-pointer"
+                className="w-full py-3.5 bg-white/80 text-black font-semibold rounded-lg hover:bg-gray-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed mt-4 cursor-pointer"
               >
                 Join Room
               </button>
@@ -233,8 +233,8 @@ const LiveInterview = () => {
 
           {/* Chat Sidebar */}
           {showChat && (
-            <div className="flex-1 max-w-[360px] bg-[#000] border border-[#222] rounded-2xl flex flex-col overflow-hidden shadow-2xl transition-all duration-300">
-              <div className="p-4 border-b border-[#222] flex justify-between items-center bg-black">
+            <div className="flex-1 max-w-[360px] bg-black border border-[#222] rounded-2xl flex flex-col overflow-hidden shadow-2xl transition-all duration-300">
+              <div className="p-4 border-b border-[#222] flex justify-between items-center bg-black/90">
                 <h3 className="font-medium text-sm text-white flex items-center gap-2">
                   Messages
                 </h3>
@@ -243,7 +243,7 @@ const LiveInterview = () => {
                 </span>
               </div>
 
-              <div className="flex-1 overflow-y-auto p-4 space-y-4 custom-scrollbar bg-[#0A0A0A]">
+              <div className="flex-1 overflow-y-auto p-4 space-y-4 custom-scrollbar bg-[#0A0A0A]/50">
                 {chatHistory.length === 0 && (
                   <div className="h-full flex flex-col items-center justify-center text-white/50 space-y-2">
                     <Comment01Icon size={24} className="opacity-20" />
@@ -271,7 +271,7 @@ const LiveInterview = () => {
                 <div ref={chatEndRef} />
               </div>
 
-              <div className="p-3 border-t border-[#222] bg-black">
+              <div className="p-3 border-[#222] bg-[#0A0A0A]/50">
                 <div className="flex gap-2">
                   <input
                     type="text"

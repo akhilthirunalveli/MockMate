@@ -42,7 +42,7 @@ export default function VideoInterview({ roomId }) {
   }, [isScreenShare]);
 
   return (
-    <div className="flex flex-col h-full w-full bg-[#0A0A0A] rounded-2xl border border-[#222] relative overflow-hidden shadow-2xl group">
+    <div className="flex flex-col h-full w-full bg-black rounded-2xl border border-[#222] relative overflow-hidden shadow-2xl group">
 
       {/* Status Bar (Top Center) */}
       <div className="absolute top-6 left-1/2 -translate-x-1/2 z-40 flex flex-col items-center gap-1 pointer-events-none">
