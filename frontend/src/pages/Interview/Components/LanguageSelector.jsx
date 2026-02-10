@@ -61,7 +61,7 @@ const LanguageSelector = ({ value, onChange, disabled }) => {
                         animate={{ opacity: 1, y: 4, scale: 1 }}
                         exit={{ opacity: 0, y: -10, scale: 0.95 }}
                         transition={{ duration: 0.15, ease: 'easeOut' }}
-                        className="absolute right-0 top-full z-50 w-48 py-1.5 bg-black border border-white/10 rounded-xl cursor-pointer backdrop-blur-xl overflow-hidden"
+                        className="absolute right-0 top-full z-50 w-29 py-1.5 bg-black border border-white/10 rounded-lg cursor-pointer backdrop-blur-xl overflow-hidden"
                     >
                         <div className="max-h-64 overflow-y-auto custom-scrollbar">
                             {languages.map((lang) => (
@@ -71,10 +71,10 @@ const LanguageSelector = ({ value, onChange, disabled }) => {
                                         onChange(lang.value);
                                         setIsOpen(false);
                                     }}
-                                    className={`w-full flex items-center justify-between px-4 py-2 text-left text-xs transition-colors
+                                    className={`w-full flex items-center cursor-pointer justify-between px-4 py-2 text-left text-xs transition-colors
                     ${value === lang.value
                                             ? 'bg-white/10 text-white font-medium'
-                                            : 'text-gray-400 hover:bg-white/5 hover:text-white'}
+                                            : 'text-white/50 hover:bg-white/5 hover:text-white'}
                   `}
                                 >
                                     {lang.label}
