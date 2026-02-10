@@ -618,8 +618,8 @@ const AdminDashboard = () => {
     <div style={{
       minHeight: "100vh",
       backgroundColor: "#000000",
-      backgroundImage: "radial-gradient(#222 1px, #000000 1px)",
-      backgroundSize: "20px 20px",
+      backgroundImage: "radial-gradient(#222 0.5px, #000000 1px)",
+      backgroundSize: "21px 21px",
       fontFamily: baseStyles.fontFamily,
       display: "flex"
     }}>

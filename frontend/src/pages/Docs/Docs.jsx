@@ -114,7 +114,7 @@ const Docs = () => {
 
     return (
         <div className="min-h-screen bg-black text-white selection:bg-white/20 overflow-x-hidden font-['Nunito']">
-            <div className="fixed inset-0 bg-dots-dark opacity-40 pointer-events-none" />
+            <div className="fixed inset-0 bg-dots-dark " />
             <Navbar />
 
 
@@ -163,7 +163,7 @@ const Docs = () => {
                 __html: `
                 .bg-dots-dark {
                     background-image: radial-gradient(#333 1px, transparent 1px);
-                    background-size: 30px 30px;
+                    background-size: 21px 21px;
                 }
             `}} />
         </div>

@@ -27,7 +27,7 @@ const QuestionCard = ({
   };
   return (
     <div className="pl-4 md:pl-12">
-      <div className="bg-black rounded-lg mb-8 overflow-hidden py-4 px-6 border border-gray-100/60 group">
+      <div className="bg-black rounded-lg mb-8 overflow-hidden py-4 px-6 border border-gray-100/10 group">
         <div className="flex items-start justify-between cursor-pointer">
           <div className="flex items-start gap-3.5">
             <span className="text-xs md:text-[18px] font-semibold text-white leading-[18px]">
