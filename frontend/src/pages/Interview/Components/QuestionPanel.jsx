@@ -14,7 +14,7 @@ const QuestionPanel = ({ currentQuestion, setCurrentQuestion, setTranscript, set
   return (
     <div className="bg-black border border-white/30 rounded-xl p-6 flex flex-col justify-center min-h-[120px] relative shadow-lg">
       <div className="flex justify-between items-start mb-2">
-        <span className="text-white text-sm opacity-70">Current Question</span>
+        <span className="text-white text-sm">Current Question</span>
         <button
           onClick={handleNextQuestion}
           className="text-white text-xs bg-green-500 hover:bg-green-600 px-3 py-1 rounded-full cursor-pointer"
@@ -25,7 +25,7 @@ const QuestionPanel = ({ currentQuestion, setCurrentQuestion, setTranscript, set
         </button>
       </div>
       <p className="text-white text-lg leading-relaxed min-h-[32px]">
-        {currentQuestion || <span className="text-gray-400">Select a session to load questions</span>}
+        {currentQuestion || <span className="text-white/50">Select a session to load questions</span>}
       </p>
     </div>
   );

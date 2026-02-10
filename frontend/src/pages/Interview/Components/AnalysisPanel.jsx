@@ -27,8 +27,8 @@ const AnalysisPanel = ({
     <div className="bg-black border border-white/30 rounded-2xl p-6 min-h-[200px] shadow-2xl">
       <div className="flex justify-between items-center mb-6">
         <div className="flex items-center gap-3">
-          <div className="w-2 h-8 bg-gradient-to-b from-white to-gray-300 rounded-full"></div>
-          <span className="text-white text-lg font-medium tracking-wide">Interview Analysis</span>
+          <div className="w-1 h-8 bg-white/80 rounded-full"></div>
+          <span className="text-white text-base font-medium tracking-wide">Interview Analysis</span>
         </div>
         {canAnalyze && !isAnalyzing && !analysis && (
           <button
@@ -168,7 +168,7 @@ const AnalysisPanel = ({
         {recordedChunks.length === 0 && !analysis && !isAnalyzing && (
           <div className="text-center py-12">
             <p className="text-white font-medium mb-2">No recording data available yet</p>
-            <p className="text-gray-400 text-sm">Start recording to see AI-powered interview analysis and feedback here</p>
+            <p className="text-white/50 text-sm">Start recording to see AI-powered interview analysis and feedback here</p>
           </div>
         )}
       </div>

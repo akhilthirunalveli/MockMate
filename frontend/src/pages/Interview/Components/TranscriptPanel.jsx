@@ -2,6 +2,8 @@ import React, { useRef, useEffect, useState } from 'react';
 import axiosInstance from '../../../utils/axiosInstance.js';
 import { API_PATHS } from '../../../constants/apiPaths.js';
 
+import LanguageSelector from './LanguageSelector.jsx';
+
 const TranscriptPanel = ({
   transcript,
   interimTranscript,
@@ -100,7 +102,10 @@ const TranscriptPanel = ({
     <div className="bg-black border border-white/30 rounded-xl p-6 min-h-[480px] flex flex-col flex-1">
       <div className="flex justify-between items-center mb-4">
         <div className="flex items-center gap-2">
-          <span className="text-white text-sm opacity-70">Live Transcript</span>
+          <div className="flex items-center gap-3">
+            <div className="w-1 h-8 bg-white/80 rounded-full"></div>
+            <span className="text-white text-base font-medium tracking-wide">Live Transcript</span>
+          </div>
           {!speechSupported && (
             <span className="text-yellow-400 text-xs bg-yellow-900/30 px-2 py-1 rounded">
               Speech recognition not supported
@@ -115,26 +120,13 @@ const TranscriptPanel = ({
         <div className="flex items-center gap-2">
           {/* Language Selector */}
           {speechSupported && (
-            <select
+            <LanguageSelector
               value={language}
-              onChange={(e) => changeLanguage(e.target.value)}
-              className="text-xs bg-black text-white px-2 py-1 rounded border border-gray-600 cursor-pointer"
+              onChange={changeLanguage}
               disabled={isListening}
-            >
-              <option value="en-US">English (US)</option>
-              <option value="en-GB">English (UK)</option>
-              <option value="en-AU">English (AU)</option>
-              <option value="en-IN">English (India)</option>
-              <option value="es-ES">Spanish</option>
-              <option value="fr-FR">French</option>
-              <option value="de-DE">German</option>
-              <option value="it-IT">Italian</option>
-              <option value="pt-BR">Portuguese</option>
-              <option value="ja-JP">Japanese</option>
-              <option value="ko-KR">Korean</option>
-              <option value="zh-CN">Chinese</option>
-            </select>
+            />
           )}
+
 
           {speechSupported && micOn && (
             <div className="flex items-center gap-2">
@@ -208,7 +200,7 @@ const TranscriptPanel = ({
                 <div ref={transcriptEndRef} />
               </div>
             ) : (
-              <div className="text-gray-400 text-center py-8">
+              <div className="text-white/50 text-center py-8">
                 {!speechSupported ? (
                   <div>
                     <p>Speech recognition not available in this browser.</p>
@@ -235,7 +227,7 @@ const TranscriptPanel = ({
       </div>
 
       {/* Transcript Controls */}
-      <div className="flex justify-between items-center mt-4 pt-4 border-t border-gray-500">
+      <div className="flex justify-between items-center mt-4 pt-4 border-t border-white/30">
         <div className="text-xs text-gray-400">
           {transcript.length > 0 && `${transcript.length} characters`}
           {accuracy > 0 && transcript.length > 0 && (
