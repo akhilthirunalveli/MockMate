@@ -16,10 +16,6 @@ const Step = ({ index, title, description, asset, icon, isLast }) => {
 
     return (
         <div className="relative mb-32 md:mb-48">
-            {/* Timeline Connector */}
-            {!isLast && (
-                <div className="absolute left-8 md:left-1/2 top-16 bottom-[-128px] md:bottom-[-192px] w-[2px] bg-neutral-800 hidden md:block" />
-            )}
 
             <div className={`flex flex-col ${isEven ? 'md:flex-row' : 'md:flex-row-reverse'} items-center gap-12 md:gap-24`}>
                 {/* Image Section */}
@@ -141,7 +137,6 @@ const Docs = () => {
                         className="absolute bottom-[-20px] left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
                     >
                         <span className="text-neutral-600 text-[10px] uppercase tracking-widest font-bold">Scroll to start</span>
-                        <div className="w-[1px] h-12 bg-neutral-800" />
                     </motion.div>
                 </header>
 
@@ -162,7 +157,7 @@ const Docs = () => {
             <style dangerouslySetInnerHTML={{
                 __html: `
                 .bg-dots-dark {
-                    background-image: radial-gradient(#333 1px, transparent 1px);
+                    background-image: radial-gradient(#333 1px, #000000 1px);
                     background-size: 21px 21px;
                 }
             `}} />
