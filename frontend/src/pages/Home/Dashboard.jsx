@@ -97,7 +97,7 @@ const Dashboard = () => {
         </div>
 
         <div className="fixed bottom-4 sm:bottom-6 md:bottom-10 left-1/2 -translate-x-1/2 flex gap-2 sm:gap-4">
-          <div className="bg-black/10 backdrop-blur-md p-2 rounded-full flex gap-2 sm:gap-3 border border-gray-200/50">
+          <div className="bg-black/10 backdrop-blur-md p-2 rounded-full flex gap-2 sm:gap-3 border border-gray-200/30">
             <button
               className="h-10 sm:h-12 flex items-center justify-center gap-2 bg-white text-black rounded-full transition-colors cursor-pointer px-4 sm:px-5 py-2 text-xs sm:text-sm font-semibold"
               onClick={() => setOpenCreateModal(true)}

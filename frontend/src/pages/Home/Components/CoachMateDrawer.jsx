@@ -24,15 +24,25 @@ const SUGGESTIONS = [
 
 const BackgroundAura = () => (
     <div className="absolute inset-0 overflow-hidden pointer-events-none">
+
         {/* Deep Indigo Flow - Top Left */}
         <motion.div
-            className="absolute -top-32 -left-32 w-[450px] h-[450px] bg-indigo-500/[0.08] rounded-full blur-[130px]"
+            className="absolute -top-32 -left-32 w-[600px] h-[600px] rounded-full blur-[110px]"
+            style={{
+                background:
+                    "radial-gradient(circle, rgba(99,102,241,0.15) 0%, rgba(99,102,241,0.08) 30%, transparent 70%)",
+            }}
         />
 
         {/* Soft Amber Glow - Middle Right */}
         <motion.div
-            className="absolute top-1/4 -right-24 w-[500px] h-[500px] bg-amber-500/[0.04] rounded-full blur-[150px]"
+            className="absolute top-1/4 -right-24 w-[650px] h-[650px] rounded-full blur-[110px]"
+            style={{
+                background:
+                    "radial-gradient(circle, rgba(245,158,11,0.12) 0%, rgba(245,158,11,0.06) 30%, transparent 70%)",
+            }}
         />
+
     </div>
 );
 
