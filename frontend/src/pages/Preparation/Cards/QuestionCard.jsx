@@ -1,5 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { LuChevronDown, LuPin, LuPinOff, LuSparkles } from "react-icons/lu";
+import { ArrowDown01Icon, PinIcon, PinOffIcon, AiMagicIcon } from 'hugeicons-react';
+
 import AIResponsePreview from "../../Interview/Components/AIResponsePreview.jsx";
 
 const QuestionCard = ({
@@ -48,24 +50,24 @@ const QuestionCard = ({
                 }`}
             >
               <button
-                className="flex items-center gap-2 text-xs text-indigo-800 font-medium bg-indigo-50 px-3 py-1 mr-2 rounded text-nowrap border border-indigo-50 hover:border-indigo-200 cursor-pointer"
+                className="flex items-center gap-2 text-xs text-indigo-800 font-medium bg-indigo-50 px-3 py-1 mr-2 rounded text-nowrap border border-indigo-50 hover:border-indigo-100 hover:bg-indigo-100 cursor-pointer"
                 onClick={onTogglePin}
               >
                 {isPinned ? (
-                  <LuPinOff className="text-xs" />
+                  <PinOffIcon size={14} />
                 ) : (
-                  <LuPin className="text-xs" />
+                  <PinIcon size={14} />
                 )}
               </button>
 
               <button
-                className="flex items-center gap-2 text-xs text-cyan-800 font-medium bg-cyan-50 px-3 py-1 mr-2 rounded text-nowrap border border-cyan-50 hover:border-cyan-200 cursor-pointer"
+                className="flex items-center gap-2 text-xs text-cyan-800 font-medium bg-cyan-50 px-3 py-1 mr-2 rounded text-nowrap border border-cyan-50 hover:border-cyan-100 hover:bg-cyan-100 cursor-pointer"
                 onClick={() => {
                   setIsExpanded(true);
                   onLearnMore();
                 }}
               >
-                <LuSparkles />
+                <AiMagicIcon size={14} />
                 <span className="hidden md:block">Learn More</span>
               </button>
             </div>

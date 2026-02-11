@@ -88,6 +88,50 @@ const Navbar = () => {
     fetchNotifications();
   }, [user]);
 
+  const fetchAndShowToasts = async () => {
+    try {
+      const response = await fetch(`${BASE_URL}/api/admin/toasts`);
+      const toasts = await response.json();
+
+      const activeToasts = Array.isArray(toasts)
+        ? toasts.filter(t => t.isActive).sort((a, b) => a.order - b.order)
+        : [];
+
+      if (activeToasts.length === 0) return;
+
+      activeToasts.forEach((t, index) => {
+        setTimeout(() => {
+          toast.custom(
+            (toastObj) => (
+              <div
+                className={`max-w-sm bg-black text-white px-5 py-3 rounded-full border border-white/10 shadow-2xl pointer-events-auto transition-all duration-500 ease-in-out flex items-center gap-3 group`}
+                style={{
+                  animation: toastObj.visible ? 'slideIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards' : 'slideOut 0.4s cubic-bezier(0.7, 0, 0.84, 0) forwards',
+                  background: 'linear-gradient(to right, #000, #000) padding-box, linear-gradient(to right, #6366f180, #f59e0b80) border-box opacity-50',
+                  border: '1.5px solid transparent'
+                }}
+              >
+                <div className="flex-shrink-0 w-2 h-2 rounded-full bg-gradient-to-r from-indigo-500 to-amber-500 animate-pulse" />
+                <p className="text-[12px] font-bold tracking-tight leading-tight">
+                  {t.message}
+                </p>
+                <button
+                  onClick={() => toast.dismiss(toastObj.id)}
+                  className="ml-auto opacity-0 group-hover:opacity-40 hover:opacity-100 transition-opacity cursor-pointer p-1"
+                >
+                  <Cancel01Icon size={14} />
+                </button>
+              </div>
+            ),
+            { position: 'bottom-left', duration: 6000 }
+          );
+        }, t.delay || (index * 1200));
+      });
+    } catch (error) {
+      console.error("Failed to fetch toasts", error);
+    }
+  };
+
   const handleLogout = () => {
     localStorage.clear();
     clearUser();
@@ -107,7 +151,7 @@ const Navbar = () => {
           opacity: 1,
         }}>
         <div className="max-w-8xl mx-auto">
-          <div className="bg-transparent text-white backdrop-blur-xl rounded-[20px] sm:rounded-[25px] md:rounded-[30px] shadow-lg shadow-black/[0.03] border border-gray-200/50">
+          <div className="bg-transparent text-white backdrop-blur-xl rounded-[20px] sm:rounded-[25px] md:rounded-[30px] shadow-lg shadow-black/[0.03] border border-gray-200/40">
             <div className="container mx-auto flex items-center h-14 sm:h-12 md:h-14 lg:h-16 px-5 sm:px-4 md:px-6 lg:px-8">
               <Link to="/dashboard" className="flex-shrink-0">
                 <h2
@@ -116,51 +160,9 @@ const Navbar = () => {
                   Mockmate
                   <span
                     className="text-xs sm:text-sm md:text-base -mt-3 sm:-mt-4 cursor-pointer hover:opacity-80 transition-opacity"
-                    onClick={async (e) => {
+                    onClick={(e) => {
                       e.preventDefault();
-                      const toastStyle = {
-                        fontFamily: "'poppins', sans-serif",
-                        fontSize: '0.875rem',
-                        fontWeight: 200
-                      };
-
-                      try {
-                        const response = await fetch(`${BASE_URL}/api/admin/toasts`);
-                        const toasts = await response.json();
-
-                        const activeToasts = Array.isArray(toasts)
-                          ? toasts.filter(t => t.isActive).sort((a, b) => a.order - b.order)
-                          : [];
-
-                        if (activeToasts.length === 0) {
-                          toast.error("No updates found at the moment.");
-                          return;
-                        }
-
-                        activeToasts.forEach((t, index) => {
-                          setTimeout(() => {
-                            toast.custom(
-                              (toastObj) => (
-                                <div
-                                  className={`max-w-md bg-white text-black/50 px-6 py-4 rounded-lg pointer-events-auto transition-all duration-300 ease-in-out`}
-                                  style={{
-                                    animation: toastObj.visible ? 'slideIn 0.6s ease-out forwards' : 'slideOut 0.6s ease-in forwards'
-                                  }}
-                                >
-                                  <p style={toastStyle}>
-                                    {t.message}
-                                  </p>
-                                </div>
-                              ),
-                              { position: 'bottom-left', duration: 5000 }
-                            );
-                          }, t.delay || (index * 500));
-                        });
-                      } catch (error) {
-                        console.error("Failed to fetch toasts", error);
-                        // Fallback or error message
-                        toast.error("Failed to load updates.");
-                      }
+                      fetchAndShowToasts();
                     }}
                   >
                     <span className="font-normal opacity-50">v1.4 </span>

@@ -9,6 +9,7 @@ import GithubLogo from "../../assets/github.png";
 import Login from "../Auth/Login.jsx";
 import SignUp from "../Auth/SignUp.jsx";
 import ForgotPassword from "../Auth/ForgotPassword.jsx";
+import UserProfileButton from "./Components/UserProfileButton.jsx";
 
 const TYPEWRITER_TEXT = "MockMate";
 const TYPING_SPEED = 100; // smoother, slightly faster
@@ -138,51 +139,10 @@ function LandingPage() {
           {showButton && (
             <div className="flex flex-row gap-[0.5em] items-center justify-center w-auto flex-nowrap">
               {user ? (
-                <button
-                  className="bg-black border-2 border-white rounded-[10em] px-[1em] py-[0.3em] text-white font-semibold text-[0.8rem] min-w-[180px] text-center shadow-[0_2px_16px_0_rgba(0,0,0,0)] cursor-pointer outline-none transition-colors duration-200 flex items-center gap-[0.5em]"
+                <UserProfileButton
+                  user={user}
                   onClick={() => navigate("/dashboard")}
-                >
-                  {(user.profileImageUrl && user.profileImageUrl.startsWith('http')) || user.photoURL ? (
-                    <img
-                      src={user.profileImageUrl || user.photoURL}
-                      alt="profile"
-                      className="w-[2.5em] h-[2.5em] rounded-[90%] object-cover mr-[0.9em]"
-                      referrerPolicy="no-referrer"
-                    />
-                  ) : (
-                    <div
-                      className="w-[2.5em] h-[2.5em] rounded-[90%] mr-[0.9em] flex items-center justify-center text-white font-bold text-[1.2em]"
-                      style={{
-                        backgroundColor: user?.name ?
-                          ['#EF4444', '#F97316', '#F59E0B', '#10B981', '#06B6D4', '#3B82F6', '#8B5CF6', '#EC4899'][
-                          Math.abs(user.name.split('').reduce((a, b) => a + b.charCodeAt(0), 0)) % 10
-                          ] : '#6B7280',
-                      }}
-                    >
-                      {user?.profileImageUrl && !user.profileImageUrl.startsWith('http')
-                        ? user.profileImageUrl
-                        : user?.name ?
-                          (() => {
-                            const words = user.name.trim().split(' ').filter(word => word.length > 0);
-                            if (words.length === 0) return 'U';
-                            if (words.length === 1) return words[0][0].toUpperCase();
-                            return (words[0][0] + words[words.length - 1][0]).toUpperCase();
-                          })() : 'U'
-                      }
-                    </div>
-                  )}
-                  <div className="flex flex-col items-start">
-                    <span className="font-bold text-[1.08em] text-white">
-                      {user.name || user.email}
-                    </span>
-                    <span className="font-normal text-[0.97em] text-slate-300">
-                      {user.email}
-                    </span>
-                  </div>
-                  <span className="ml-[0.3em] text-[2.4em] text-[#ffffff4d] flex items-center">
-                    &#x203A;
-                  </span>
-                </button>
+                />
               ) : (
                 <button
                   className="colorful-gradient-btn w-auto max-w-[190px] min-w-[90px] text-[clamp(0.9rem,2.5vw,1.1rem)] m-0 font-bold outline-none text-white shadow-[0_2px_16px_0_rgba(0,0,0,0.18)] px-[2.2em] py-[0.6em] rounded-full cursor-pointer tracking-[0.03em] hover:shadow-[0_4px_24px_0_rgba(0,0,0,0.22)] hover:scale-[1.045] focus:shadow-[0_4px_24px_0_rgba(0,0,0,0.22)] focus:scale-[1.045] border-[5px] border-black"

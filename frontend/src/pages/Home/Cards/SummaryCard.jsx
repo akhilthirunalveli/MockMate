@@ -55,7 +55,7 @@ const SummaryCard = ({
       }} />
       {onDelete && (
         <button
-          className="absolute top-2 sm:top-3 right-2 sm:right-3 w-8 h-8 sm:w-7 sm:h-7 flex items-center justify-center rounded-full bg-red-900 hover:bg-red-600 text-white text-xs font-bold shadow transition z-20 opacity-0 group-hover:opacity-100 cursor-pointer"
+          className="absolute top-2 sm:top-3 right-2 sm:right-3 w-8 h-8 sm:w-7 sm:h-7 flex items-center justify-center rounded-full bg-red-800 hover:bg-red-900 text-white text-xs font-bold shadow transition z-20 opacity-0 group-hover:opacity-100 cursor-pointer"
           style={{ lineHeight: 1 }}
           onClick={e => {
             e.stopPropagation();
@@ -99,7 +99,7 @@ const SummaryCard = ({
         </div>
         <div className="flex justify-end mt-auto pt-3">
           <button
-            className="flex items-center gap-1 text-xs sm:text-xs font-semibold text-white bg-transparent border border-gray-900 px-3 sm:px-2 py-1.5 sm:py-1 rounded-full shadow transition cursor-pointer hover:bg-white/5 active:scale-95"
+            className="flex items-center gap-1 text-xs sm:text-xs font-semibold text-white bg-transparent border border-gray-200/15 px-3 sm:px-2 py-1.5 sm:py-1 rounded-full shadow transition cursor-pointer hover:bg-white/5 active:scale-95"
             onClick={onSelect}
             style={{ minHeight: '32px', minWidth: '80px', fontSize: '0.75rem' }}
           >
