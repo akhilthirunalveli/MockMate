@@ -185,19 +185,18 @@ const LiveInterview = () => {
         {/* Header Bar */}
         <div className="h-16 flex justify-between items-center shrink-0">
           <div className="flex items-center gap-4">
-            <div className="flex items-center gap-4 px-5 py-2.5 bg-black border border-[#222] rounded-xl">
-              <div className="flex items-center gap-2">
-                <span className="text-sm font-semibold tracking-wide text-gray-200">Interview Code</span>
+            <div className="flex items-center px-4 py-2 bg-black border border-white/10 rounded-lg">
+              <div className="flex items-center gap-2 pr-4 border-r border-white/10">
+                <span className="text-[11px] font-semibold uppercase tracking-widest text-[#888]">Session</span>
               </div>
-              <div className="h-5 w-px bg-[#333]"></div>
-              <div className="flex items-center gap-3">
-                <span className="font-mono text-base tracking-widest text-white">{roomFromQuery}</span>
+              <div className="flex items-center gap-3 pl-4">
+                <span className="font-mono text-sm tracking-[0.15em] font-semibold text-[#E0E0E0]">{roomFromQuery}</span>
                 <button
                   onClick={handleCopyLink}
-                  className="text-gray-400 hover:text-white transition-colors cursor-pointer p-1 hover:bg-[#222] rounded"
+                  className="flex items-center justify-center w-6 h-6 bg-[#222] text-[#888] hover:text-white hover:bg-[#333] transition-all duration-200 rounded-full cursor-pointer hover:shadow-[0_0_10px_rgba(255,255,255,0.1)]"
                   title="Copy Link"
                 >
-                  {copied ? <Tick01Icon size={16} className="text-emerald-500" /> : <Copy01Icon size={16} />}
+                  {copied ? <Tick01Icon size={12} className="text-emerald-500" /> : <Copy01Icon size={12} />}
                 </button>
               </div>
             </div>
