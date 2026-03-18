@@ -1,5 +1,6 @@
 import React, { useRef, useEffect } from 'react';
-import { Mic01Icon, MicOff01Icon, Camera01Icon, CameraOff01Icon, Share01Icon, StopCircleIcon, CallEnd02Icon } from 'hugeicons-react';
+import { Mic01Icon, MicOff01Icon, Camera01Icon, CameraOff01Icon, CallEnd02Icon } from 'hugeicons-react';
+import { motion } from 'framer-motion';
 import useWebRTC from '../../../hooks/useWebRTC.js';
 
 export default function VideoInterview({ roomId }) {
@@ -9,18 +10,18 @@ export default function VideoInterview({ roomId }) {
     remoteConnected,
     isAudio,
     isVideo,
-    isScreenShare,
     connecting,
     error,
     toggleAudio,
     toggleVideo,
-    shareScreen,
-    stopScreenShare,
     endCall
   } = useWebRTC(roomId);
 
   const localVideoRef = useRef();
   const remoteVideoRef = useRef();
+  const containerRef = useRef();
+
+  const [isSplitScreen, setIsSplitScreen] = React.useState(false);
 
   useEffect(() => {
     if (localVideoRef.current && localStream) {
@@ -29,17 +30,7 @@ export default function VideoInterview({ roomId }) {
     if (remoteVideoRef.current && remoteStream) {
       remoteVideoRef.current.srcObject = remoteStream;
     }
-  }, [localStream, remoteStream]);
-
-  const [layout, setLayout] = React.useState('grid'); // 'grid' | 'sidebar'
-
-  useEffect(() => {
-    if (isScreenShare) {
-      setLayout('sidebar');
-    } else {
-      setLayout('grid');
-    }
-  }, [isScreenShare]);
+  }, [localStream, remoteStream, isSplitScreen]);
 
   return (
     <div className="flex flex-col h-full w-full bg-black rounded-2xl border border-[#222] relative overflow-hidden shadow-2xl group">
@@ -61,27 +52,18 @@ export default function VideoInterview({ roomId }) {
       </div>
 
       {/* Main Video Area */}
-      <div className={`flex-1 h-full w-full p-4 ${layout === 'grid' ? 'grid grid-cols-1 md:grid-cols-2 gap-4' : 'flex gap-4'}`}>
+      <div ref={containerRef} className={`flex-1 w-full h-full relative p-4 ${isSplitScreen ? 'flex flex-col md:flex-row gap-4' : ''}`}>
 
-        {/* Local Stream (You/Screen) */}
-        {/* In Sidebar mode, if sharing screen, this becomes main. If standard, it's part of grid */}
-        <div className={`relative bg-[#111] rounded-lg overflow-hidden border border-[#222] shadow-inner
-          ${layout === 'grid' ? 'w-full h-full' : isScreenShare ? 'flex-[3]' : 'w-64 h-48 order-2'}
-        `}>
-          <video ref={localVideoRef} autoPlay muted playsInline className="w-full h-full object-cover" />
-          <div className="absolute bottom-3 left-3 bg-[#000] text-white text-[10px] font-bold px-2 py-1 rounded border border-[#333]">
-            {isScreenShare ? 'Your Screen' : 'You'}
-          </div>
-        </div>
-
-        {/* Remote Stream (Guest) */}
-        <div className={`relative bg-[#111] rounded-lg overflow-hidden border border-[#222] shadow-inner
-           ${layout === 'grid' ? 'w-full h-full' : isScreenShare ? 'w-64 h-48 order-2' : 'flex-[3]'}
-        `}>
+        {/* Remote Stream (Guest) - Background/Split Right */}
+        <div className={
+          isSplitScreen
+            ? "flex-1 bg-[#111] rounded-lg overflow-hidden border border-[#222] shadow-inner relative"
+            : "absolute inset-4 z-10 bg-[#111] rounded-lg overflow-hidden border border-[#222] shadow-inner"
+        }>
           {remoteStream ? (
             <>
               <video ref={remoteVideoRef} autoPlay playsInline className="w-full h-full object-cover" />
-              <div className="absolute bottom-3 right-3 bg-[#000] text-white text-[10px] font-bold px-2 py-1 rounded border border-[#333]">Guest</div>
+              <div className="absolute bottom-4 right-4 bg-black/70 backdrop-blur-md text-white text-xs font-bold px-3 py-1.5 rounded-lg border border-white/10 shadow-lg">Guest</div>
             </>
           ) : (
             <div className="flex items-center justify-center w-full h-full flex-col gap-3 text-gray-500">
@@ -90,50 +72,76 @@ export default function VideoInterview({ roomId }) {
             </div>
           )}
         </div>
+
+        {/* Local Stream (You/Screen) - Floating/Split Left */}
+        <motion.div
+          drag={!isSplitScreen}
+          dragConstraints={containerRef}
+          dragMomentum={false}
+          className={
+            isSplitScreen
+              ? "flex-1 bg-[#111] rounded-lg overflow-hidden border border-[#222] shadow-inner relative z-10"
+              : "absolute z-20 resize overflow-hidden bg-[#111] rounded-xl border border-white/20 shadow-[-8px_8px_30px_rgba(0,0,0,0.6)] group box-border pointer-events-auto"
+          }
+          initial={isSplitScreen ? {} : { x: typeof window !== 'undefined' ? window.innerWidth - 340 : 0, y: 16 }} // Starts at top right relative to container only if floating
+          style={
+            isSplitScreen
+              ? { x: 0, y: 0, width: 'auto', height: 'auto', minWidth: 'auto', minHeight: 'auto', maxWidth: 'none', maxHeight: 'none' }
+              : { width: '280px', height: '210px', minWidth: '150px', minHeight: '110px', maxWidth: '100%', maxHeight: '100%' }
+          }
+        >
+          {/* Invisible drag handle covering the drag area mostly - only when floating */}
+          {!isSplitScreen && <div className="absolute inset-0 z-30 opacity-0 cursor-grab active:cursor-grabbing hover:bg-black/5 transition-colors" />}
+
+          <video ref={localVideoRef} autoPlay muted playsInline className="w-full h-full object-cover relative z-10" />
+
+          <div className="absolute bottom-2 left-2 z-40 bg-black/70 backdrop-blur-md text-white text-[10px] font-bold px-2 py-1 rounded border border-white/10 shadow pointer-events-none">
+            You
+          </div>
+
+          {/* Resize handle visual indicator in the bottom-right corner - only when floating */}
+          {!isSplitScreen && <div className="absolute bottom-0 right-0 z-40 w-5 h-5 bg-gradient-to-tl from-white/30 to-transparent pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity" />}
+        </motion.div>
       </div>
 
       {/* Control Bar (Bottom Float) */}
       <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-3 bg-[#1A1A1A] border border-[#333] rounded-full px-3 py-2 shadow-2xl z-50">
         <button
           onClick={toggleAudio}
-          className={`w-10 h-10 flex items-center justify-center rounded-full transition-colors cursor-pointer border ${isAudio ? 'bg-[#262626] border-[#333] text-white hover:bg-[#333]' : 'bg-red-500/10 border-red-500/50 text-red-500 hover:bg-red-500/20'}`}
+          className={`w-10 h-10 flex items-center justify-center rounded-full transition-colors cursor-pointer border ${isAudio ? 'bg-[#262626] border-[#333] text-white hover:bg-[#333]' : 'bg-red-500 border-red-500/50 text-white hover:bg-red-500'}`}
           title="Toggle Mic"
         >
           {isAudio ? <Mic01Icon size={18} /> : <MicOff01Icon size={18} />}
         </button>
         <button
           onClick={toggleVideo}
-          className={`w-10 h-10 flex items-center justify-center rounded-full transition-colors cursor-pointer border ${isVideo ? 'bg-[#262626] border-[#333] text-white hover:bg-[#333]' : 'bg-amber-500/10 border-amber-500/50 text-amber-500 hover:bg-amber-500/20'}`}
+          className={`w-10 h-10 flex items-center justify-center rounded-full transition-colors cursor-pointer border ${isVideo ? 'bg-[#262626] border-[#333] text-white hover:bg-[#333]' : 'bg-amber-500 border-amber-500/50 text-white hover:bg-amber-500'}`}
           title="Toggle Camera"
         >
           {isVideo ? <Camera01Icon size={18} /> : <CameraOff01Icon size={18} />}
         </button>
+
+        {/* Layout Toggle Button */}
         <button
-          onClick={isScreenShare ? stopScreenShare : shareScreen}
-          className={`w-10 h-10 flex items-center justify-center rounded-full transition-colors cursor-pointer border ${isScreenShare ? 'bg-emerald-600 border-emerald-500 text-white' : 'bg-[#262626] border-[#333] text-white hover:bg-[#333]'}`}
-          title="Share Screen"
-        >
-          {isScreenShare ? <StopCircleIcon size={18} /> : <Share01Icon size={18} />}
-        </button>
-        <button
-          onClick={() => setLayout(prev => prev === 'grid' ? 'sidebar' : 'grid')}
+          onClick={() => setIsSplitScreen(prev => !prev)}
           className="w-10 h-10 flex items-center justify-center rounded-full bg-[#262626] border border-[#333] text-white hover:bg-[#333] transition-colors cursor-pointer"
           title="Toggle Layout"
         >
-          {layout === 'grid' ? (
+          {isSplitScreen ? (
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 6h16M4 12h16m-7 6h7" />
-            </svg> // Sidebar Icon substitute or View Icon
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 8V16C3 17.1046 3.89543 18 5 18H19C20.1046 18 21 17.1046 21 16V8C21 6.89543 20.1046 6 19 6H5C3.89543 6 3 6.89543 3 8ZM15 6V18" />
+            </svg>
           ) : (
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 6a2 2 0 012-2h12a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 01-2-2V6z" />
-            </svg> // Grid Icon substitute
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 6h16M4 12h16m-7 6h7" />
+            </svg>
           )}
         </button>
+
         <div className="w-px h-6 bg-[#333] mx-1"></div>
         <button
           onClick={endCall}
-          className="w-10 h-10 flex items-center justify-center rounded-full bg-red-600 text-white hover:bg-red-700 transition-colors border border-red-500 cursor-pointer"
+          className="w-10 h-10 flex items-center justify-center rounded-full bg-red-600 text-white hover:bg-red-700 transition-colors border border-red-600 cursor-pointer"
           title="End Call"
         >
           <CallEnd02Icon size={18} />
