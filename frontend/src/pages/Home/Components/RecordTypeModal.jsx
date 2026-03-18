@@ -1,7 +1,7 @@
 import React from "react";
 import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { LiveStreaming01Icon, UserSettings01Icon, UserStar01Icon } from "hugeicons-react";
+import { LiveStreaming01Icon, UserSettings01Icon, UserStar01Icon, CodeSquareIcon } from "hugeicons-react";
 
 const RecordTypeModal = ({ isOpen, onClose, onSelect }) => {
   const modalContent = (
@@ -26,7 +26,7 @@ const RecordTypeModal = ({ isOpen, onClose, onSelect }) => {
             animate={{ scale: 1, opacity: 1, y: 0 }}
             exit={{ scale: 0.95, opacity: 0, y: 20 }}
             transition={{ duration: 0.2, ease: "easeOut" }}
-            className="relative flex flex-col justify-center rounded-lg shadow-lg w-full max-w-[90vw] sm:max-w-[80vw] md:max-w-[45vw] lg:max-w-[40vw] min-h-[220px] p-4 sm:p-8 overflow-hidden"
+            className="relative flex flex-col justify-center rounded-lg shadow-lg w-full max-w-[95vw] md:max-w-[820px] min-h-[220px] p-6 sm:p-8 overflow-hidden mx-auto"
             style={{
               background: "#FFFFFF",
             }}
@@ -58,28 +58,39 @@ const RecordTypeModal = ({ isOpen, onClose, onSelect }) => {
               </button>
               <h3 className="text-xl font-semibold text-black mb-3">Choose Interview Type</h3>
               <p className="text-sm text-slate-700 mt-1 mb-8">Select where you'd like to record the interview. Simply, Turn on your camera and mic, see the question and answer on screen and get AI feedbacks</p>
-              <div className="flex flex-col sm:flex-row gap-6 sm:gap-8 w-full justify-center items-center">
+              <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 w-full justify-center items-start mt-4">
                 <button
-                  className="w-36 h-36 rounded-xl bg-transparent text-[#111] font-semibold text-base flex flex-col items-center justify-center text-center p-5 gap-3 transition cursor-pointer"
+                  className="w-[160px] h-[140px] rounded-xl bg-transparent text-[#111] font-semibold text-[15px] flex flex-col items-center justify-center text-center p-4 gap-3 cursor-pointer transition shrink-0"
                   onClick={() => onSelect("hr")}
                 >
-                  <UserStar01Icon size={40} />
-                  <span>HR Interview</span>
+                  <UserStar01Icon size={40} className="shrink-0" />
+                  <span className="leading-tight whitespace-nowrap">HR Interview</span>
                 </button>
                 <button
-                  className="w-48 h-40 rounded-xl bg-transparent text-[#111] font-semibold text-base flex flex-col items-center justify-center text-center p-5 gap-3 cursor-pointer transition"
+                  className="w-[160px] h-[140px] rounded-xl bg-transparent text-[#111] font-semibold text-[15px] flex flex-col items-center justify-center text-center p-4 gap-3 cursor-pointer transition shrink-0"
                   onClick={() => onSelect("session")}
                 >
-                  <UserSettings01Icon size={40} />
-                  <span>Session Interview</span>
+                  <UserSettings01Icon size={40} className="shrink-0" />
+                  <span className="leading-tight whitespace-nowrap">Session Interview</span>
                 </button>
                 <button
-                  className="w-36 h-36 rounded-xl bg-transparent text-[#111] font-semibold text-base flex flex-col items-center justify-center text-center p-5 gap-3 cursor-pointer transition"
+                  className="w-[160px] h-[140px] rounded-xl bg-transparent text-[#111] font-semibold text-[15px] flex flex-col items-center justify-center text-center p-4 gap-3 cursor-pointer transition shrink-0"
                   onClick={() => onSelect("live")}
                 >
-
-                  <LiveStreaming01Icon size={40} className="text-black stroke-1" />
-                  <span>1:1 Interview </span>
+                  <LiveStreaming01Icon size={40} className="text-black stroke-1 shrink-0" />
+                  <span className="leading-tight whitespace-nowrap">1:1 Interview</span>
+                </button>
+                <button
+                  className="w-[160px] h-[140px] rounded-xl bg-transparent text-[#111] font-semibold text-[15px] flex flex-col items-center justify-center text-center p-4 gap-3 cursor-pointer transition shrink-0"
+                  onClick={() => onSelect("coding")}
+                >
+                  <div className="relative">
+                    <CodeSquareIcon size={40} className="text-black stroke-1 shrink-0" />
+                    <span className="absolute -top-1.5 -right-4 bg-red-600 text-white text-[9px] font-bold px-1.5 py-0.5 rounded leading-none uppercase border border-red-600">
+                      New
+                    </span>
+                  </div>
+                  <span className="leading-tight whitespace-nowrap">Live Coding</span>
                 </button>
               </div>
             </div>
