@@ -140,7 +140,7 @@
 }
 
 .bg-dots-dark {
-  background-image: radial-gradient(#dadadac7 0.5px, #000000 0.5px);
+  background-image: radial-gradient(#dadadaa6 0.5px, #000000 0.5px);
   background-size: 21px 21px;
   background-color: #030202;
   /* Fallback/Base color */
