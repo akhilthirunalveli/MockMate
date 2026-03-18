@@ -125,6 +125,8 @@ const Dashboard = () => {
                   navigate("/interview/session-interview");
                 } else if (type === "live") {
                   navigate("/interview/live");
+                } else if (type === "coding") {
+                  navigate("/interview/coding");
                 }
               }}
             />
