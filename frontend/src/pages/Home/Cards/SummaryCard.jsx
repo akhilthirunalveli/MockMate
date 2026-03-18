@@ -82,7 +82,7 @@ const SummaryCard = ({
               {tags.slice(0, 3).map((tag, idx) => (
                 <span
                   key={idx}
-                  className="bg-white/90 text-gray-900 text-[10px] sm:text-[11px] font-semibold px-1.5 sm:px-2 py-0.5 rounded-full shadow"
+                  className="bg-white/90 text-gray-900 text-[10px] sm:text-[11px] font-semibold px-1.5 sm:px-2 py-0.5 rounded-full shadow capitalize"
                   style={{ fontSize: '0.65rem sm:0.7rem' }}
                 >
                   {tag}
@@ -94,7 +94,6 @@ const SummaryCard = ({
                 </span>
               )}
             </div>
-            <p className="text-xs sm:text-xs text-gray-300 mb-2 sm:mb-1 line-clamp-2 leading-relaxed" style={{ fontSize: '0.75rem sm:0.85rem' }}>{description}</p>
           </div>
         </div>
         <div className="flex justify-end mt-auto pt-3">
