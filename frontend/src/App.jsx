@@ -69,6 +69,7 @@ import Record from "./pages/Interview/HRInterview/Record.jsx";
 import Admin from "./pages/Admin/admin.jsx";
 import SessionInterview from "./pages/Interview/SessionInterview/SessionInterview.jsx";
 import LiveInterview from "./pages/Interview/LiveInterview/index.jsx";
+import CodingInterview from "./pages/Interview/CodingInterview/index.jsx";
 import Docs from "./pages/Docs/Docs.jsx";
 
 const App = () => {
@@ -90,6 +91,7 @@ const App = () => {
               <Route path="/resume/ats-check" element={<ATSCheckerPage />} />
               <Route path="/interview-prep/session-interview" element={<SessionInterview />} />
               <Route path="/interview/live" element={<LiveInterview />} />
+              <Route path="/interview/coding" element={<CodingInterview />} />
             </Routes>
           </ErrorBoundary>
 
