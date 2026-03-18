@@ -12,6 +12,11 @@ import { Home01Icon, BookOpen01Icon, Logout01Icon } from 'hugeicons-react';
 
 
 
+const CACHE_DURATION_MS = 60000; // 1 minute
+let cachedNotifications = null;
+let cachedUnreadCount = 0;
+let lastFetchTime = 0;
+
 const Navbar = () => {
   useEffect(() => {
     const style = document.createElement('style');
@@ -47,16 +52,31 @@ const Navbar = () => {
 
   // Notification State
   const [showNotifications, setShowNotifications] = useState(false);
-  const [notifications, setNotifications] = useState([]);
-  const [unreadCount, setUnreadCount] = useState(0);
+  const [notifications, setNotifications] = useState(cachedNotifications || []);
+  const [unreadCount, setUnreadCount] = useState(cachedUnreadCount || 0);
 
   const fetchNotifications = async () => {
     try {
       if (!user) return; // Don't fetch if no user
+      const now = Date.now();
+
+      // Use cache if it's less than 1 minute old
+      if (cachedNotifications && (now - lastFetchTime < CACHE_DURATION_MS)) {
+        setNotifications(cachedNotifications);
+        setUnreadCount(cachedUnreadCount);
+        return;
+      }
+
       const response = await axiosInstance.get('/api/notifications');
       console.log("[NAVBAR] Notifications fetched:", response.data);
-      setNotifications(response.data);
-      setUnreadCount(response.data.filter(n => !n.isRead).length);
+
+      // Update Cache
+      cachedNotifications = response.data;
+      cachedUnreadCount = response.data.filter(n => !n.isRead).length;
+      lastFetchTime = now;
+
+      setNotifications(cachedNotifications);
+      setUnreadCount(cachedUnreadCount);
     } catch (err) {
       console.error("Failed to fetch notifications", err);
     }
@@ -65,8 +85,16 @@ const Navbar = () => {
   const markRead = async (id) => {
     try {
       await axiosInstance.put(`/api/notifications/${id}/read`);
-      setNotifications(prev => prev.map(n => n._id === id ? { ...n, isRead: true } : n));
-      setUnreadCount(prev => Math.max(0, prev - 1));
+      setNotifications(prev => {
+        const updated = prev.map(n => n._id === id ? { ...n, isRead: true } : n);
+        cachedNotifications = updated; // Update cache
+        return updated;
+      });
+      setUnreadCount(prev => {
+        const updated = Math.max(0, prev - 1);
+        cachedUnreadCount = updated; // Update cache
+        return updated;
+      });
     } catch (err) {
       console.error("Failed to mark read");
     }
@@ -75,6 +103,11 @@ const Navbar = () => {
   const clearAllNotifications = async () => {
     try {
       await axiosInstance.delete('/api/notifications/clear-all');
+
+      // Clear cache
+      cachedNotifications = [];
+      cachedUnreadCount = 0;
+
       setNotifications([]);
       setUnreadCount(0);
       toast.success("All notifications cleared");
@@ -165,7 +198,7 @@ const Navbar = () => {
                       fetchAndShowToasts();
                     }}
                   >
-                    <span className="font-normal opacity-50">v1.4 </span>
+                    <span className="font-normal opacity-50">v1.5 </span>
                   </span>
                 </h2>
               </Link>
@@ -241,7 +274,7 @@ const Navbar = () => {
                                       {moment(note.createdAt).fromNow(true)}
                                     </span>
                                   </div>
-                                  <p className="text-xs text-gray-500 line-clamp-2 leading-relaxed group-hover:text-gray-400 transition-colors">
+                                  <p className="text-xs text-gray-500 leading-relaxed group-hover:text-gray-400 transition-colors">
                                     {note.message}
                                   </p>
                                   {!note.isRead && (
@@ -282,11 +315,12 @@ const Navbar = () => {
                       </button>
 
                       <button
-                        className="p-2 text-white bg-red-700 cursor-pointer rounded-full shadow hover:bg-red-500 transition-all flex items-center justify-center"
+                        className="p-2 sm:px-4 sm:py-2 text-white bg-red-500 cursor-pointer rounded-full shadow hover:bg-red-700 transition-all flex items-center justify-center sm:gap-2"
                         onClick={e => { e.stopPropagation(); handleLogout(); }}
                         title="Logout"
                       >
                         <Logout01Icon size={18} />
+                        <span className="hidden sm:inline text-sm font-medium">Logout</span>
                       </button>
                     </>
                   )}
