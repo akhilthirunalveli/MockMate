@@ -147,7 +147,12 @@ const ResumeLinkModal = ({ isOpen, onClose, onSave }) => {
                     className="cursor-pointer w-40 h-40 rounded-xl bg-transparent text-[#111] font-semibold text-base flex flex-col items-center justify-center text-center p-5 gap-3 transition"
                     onClick={() => navigate("/interview/session-interview?isResumeSession=true")}
                   >
-                    <UserStar01Icon size={40} />
+                    <div className="relative">
+                      <UserStar01Icon size={40} className="shrink-0" />
+                      <span className="absolute -top-1.5 -right-4 bg-red-600 text-white text-[9px] font-bold px-1.5 py-0.5 rounded leading-none uppercase border border-red-600">
+                        New
+                      </span>
+                    </div>
                     <span>Resume Prep</span>
                   </button>
                 </div>
