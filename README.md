@@ -51,11 +51,14 @@ Before jumping into a seat, you need to define your targets. MockMate allows you
 ![Interview Prep](Assets/Session%20-%20InterviewPrep.png)
 
 ### Phase 2: Practice (The Arena)
-Practice makes perfect. Choose between HR-style behavioral rounds, session-specific technical drills, or the high-intensity **Live Interview** mode.
+Practice makes perfect. Choose between HR-style behavioral rounds, session-specific technical drills, the high-intensity **Live Interview** mode, or the real-time **Live Coding Environment**.
+
+- **Live Coding Mode**: A premium, dual-pane IDE experience powered by Monaco Editor. Synchronize your code in real-time natively through WebSockets across multiple languages (JavaScript, Python, Java, C++) while maintaining tightly integrated, split-screen video feeds to simulate an authentic technical pair-programming interview!
 
 ![Practice Selection](Assets/Interview%20-%20InterviewType.png)
 ![HR Practice](Assets/Interview%20-%20HRInterview.png)
 ![Live Practice](Assets/Interview%20-%20LiveInterview.png)
+![Coding Interview](Assets/Interview%20-%20CodingInterview.png)
 
 ### Phase 3: Analysis (The Feedback Loop)
 Your resume is your gateway. Use our Bento-style resume workspace to manage your source links, get AI-powered improvement tips, and run an ATS analysis against your target roles.
