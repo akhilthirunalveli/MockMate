@@ -86,14 +86,14 @@ function LandingPage() {
     <div className="min-h-screen w-screen flex flex-col justify-center items-center bg-dots-dark px-[5vw] transition-[background,color] duration-300">
       {!showAll ? (
         <>
-          <h1 className={`${fontMontserrat} text-[clamp(2rem,7vw,3rem)] font-medium mb-4 text-white leading-[1.1] text-center max-w-[95vw] break-words`}>
+          <h1 className={`${fontMontserrat} text-[clamp(2rem,7vw,3rem)] font-medium mb-4 text-white leading-[1.1] text-center max-w-[95vw] break-words bg-[#020202] backdrop-blur-sm px-6 py-3 rounded-2xl`}>
             {displayedText}
             {displayedText.length === TYPEWRITER_TEXT.length - 1 && (
               <span className="border-r-2 border-[#333] animate-blink">&nbsp;</span>
             )}
           </h1>
           {displayedText.length === TYPEWRITER_TEXT.length - 1 && (
-            <h2 className={`${fontMontserrat} text-[clamp(1.1rem,4vw,2rem)] font-light mb-8 text-white leading-[1.2] text-center flex items-center justify-center gap-[0.5em] flex-wrap max-w-[95vw]`}>
+            <h2 className={`${fontMontserrat} text-[clamp(1.1rem,4vw,2rem)] font-light mb-8 text-white leading-[1.2] text-center flex items-center justify-center gap-[0.5em] flex-wrap max-w-[95vw] bg-[#020202] backdrop-blur-sm px-6 py-3 rounded-2xl`}>
               {/* Render subtitle with pill if enough chars */}
               {displayedSubtitle.length <= SUBTITLE_TEXT.length
                 ? displayedSubtitle
@@ -120,10 +120,10 @@ function LandingPage() {
         </>
       ) : (
         <>
-          <h1 className={`${fontMontserrat} text-[clamp(2rem,7vw,3rem)] font-medium mb-4 text-white leading-[1.1] text-center max-w-[95vw] break-words`}>
+          <h1 className={`${fontMontserrat} text-[clamp(2rem,7vw,3rem)] font-medium mb-4 text-white leading-[1.1] text-center max-w-[95vw] break-words bg-[#020202] backdrop-blur-sm px-6 py-3 rounded-2xl`}>
             MockMate
           </h1>
-          <h2 className={`${fontMontserrat} text-[clamp(1.1rem,4vw,2rem)] font-light mb-8 text-white leading-[1.2] text-center flex items-center justify-center gap-[0.5em] flex-wrap max-w-[95vw]`}>
+          <h2 className={`${fontMontserrat} text-[clamp(1.1rem,4vw,2rem)] font-light mb-8 text-white leading-[1.2] text-center flex items-center justify-center gap-[0.5em] flex-wrap max-w-[95vw] bg-[#020202] backdrop-blur-sm px-6 py-3 rounded-2xl`}>
             Ace Interviews with
             <span className={`${fontMontserrat} inline-flex items-center justify-center gap-[0.2em] px-[0.7em] py-[0.25em] rounded-full bg-transparent border-[1.5px] border-blue-500 text-blue-700 font-semibold text-[clamp(0.9rem,3vw,1.1rem)] mx-[0.25em] relative bg-[linear-gradient(120deg,transparent_0%,#dbeafe_20%,#60A5FA_40%,#1D4ED8_50%,#60A5FA_60%,#dbeafe_80%,transparent_100%)] bg-[length:200%_100%] bg-clip-text text-transparent animate-shine`}>
               {/* Add Gemini SVG before AI */}

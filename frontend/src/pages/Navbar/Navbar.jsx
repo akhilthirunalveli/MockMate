@@ -184,9 +184,9 @@ const Navbar = () => {
           opacity: 1,
         }}>
         <div className="max-w-8xl mx-auto">
-          <div className="bg-transparent text-white backdrop-blur-xl rounded-[20px] sm:rounded-[25px] md:rounded-[30px] shadow-lg shadow-black/[0.03] border border-gray-200/40">
-            <div className="container mx-auto flex items-center h-14 sm:h-12 md:h-14 lg:h-16 px-5 sm:px-4 md:px-6 lg:px-8">
-              <Link to="/dashboard" className="flex-shrink-0">
+          <div className="bg-transparent text-white backdrop-blur-xl rounded-[20px] sm:rounded-[25px] md:rounded-[30px] shadow-lg shadow-black/[0.03] border border-gray-400/30">
+            <div className="flex items-center justify-between h-14 sm:h-12 md:h-14 lg:h-16 px-4 sm:px-4 md:px-6 lg:px-8 w-full">
+              <Link to="/dashboard" className="flex-shrink-0 min-w-0">
                 <h2
                   className="text-xl sm:text-2xl md:text-3xl font-medium text-white truncate flex items-center gap-2"
                   style={{ fontFamily: "'anta', cursive" }}>
@@ -202,9 +202,8 @@ const Navbar = () => {
                   </span>
                 </h2>
               </Link>
-              <div className="flex-1"></div>
 
-              <div className="flex items-center gap-2 sm:gap-3 md:gap-4">
+              <div className="flex items-center flex-shrink-0 gap-2 sm:gap-3 md:gap-4">
                 {/* Magic Pill Notification */}
                 <div className="relative">
                   <button
@@ -293,62 +292,7 @@ const Navbar = () => {
                   </AnimatePresence>
                 </div>
 
-                <div className="hidden sm:block">
-                  <ProfileInfoCard />
-                </div>
-                <div className="block sm:hidden flex items-center gap-2">
-                  {showMobileMenu && (
-                    <>
-                      <button
-                        className="p-2 text-black bg-gray-100 cursor-pointer rounded-full shadow hover:bg-gray-200 hover:text-black transition-all flex items-center justify-center"
-                        onClick={e => { e.stopPropagation(); handleHome(); }}
-                        title="Home"
-                      >
-                        <Home01Icon size={18} />
-                      </button>
-                      <button
-                        className="p-2 bg-amber-600 cursor-pointer rounded-full shadow hover:bg-amber-500 text-white transition-all flex items-center justify-center"
-                        onClick={e => { e.stopPropagation(); navigate("/docs"); }}
-                        title="Docs"
-                      >
-                        <BookOpen01Icon size={18} />
-                      </button>
-
-                      <button
-                        className="p-2 sm:px-4 sm:py-2 text-white bg-red-500 cursor-pointer rounded-full shadow hover:bg-red-700 transition-all flex items-center justify-center sm:gap-2"
-                        onClick={e => { e.stopPropagation(); handleLogout(); }}
-                        title="Logout"
-                      >
-                        <Logout01Icon size={18} />
-                        <span className="hidden sm:inline text-sm font-medium">Logout</span>
-                      </button>
-                    </>
-                  )}
-
-                  <button
-                    onClick={handleProfileClick}
-                    className="flex items-center focus:outline-none"
-                  >
-                    <div
-                      className="w-8 h-8 rounded-full flex items-center justify-center text-white font-bold text-sm border-2 border-transparent hover:border-white/30 transition-all"
-                      style={{
-                        backgroundColor: user?.name ?
-                          ['#EF4444', '#F97316', '#F59E0B', '#84CC16', '#22C55E', '#10B981', '#06B6D4', '#3B82F6', '#8B5CF6', '#EC4899'][
-                          Math.abs(user.name.split('').reduce((a, b) => a + b.charCodeAt(0), 0)) % 10
-                          ] : '#6B7280'
-                      }}
-                    >
-                      {user?.name ?
-                        (() => {
-                          const words = user.name.trim().split(' ').filter(word => word.length > 0);
-                          if (words.length === 0) return 'U';
-                          if (words.length === 1) return words[0][0].toUpperCase();
-                          return (words[0][0] + words[words.length - 1][0]).toUpperCase();
-                        })() : 'U'
-                      }
-                    </div>
-                  </button>
-                </div>
+                <ProfileInfoCard />
               </div>
             </div>
           </div>

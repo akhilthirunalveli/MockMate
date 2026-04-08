@@ -67,8 +67,6 @@ const ProfileInfoCard = () => {
         ref={cardRef}
         onMouseEnter={handleShowButtons}
         onMouseLeave={handleHideButtons}
-        onClick={handleCardClick}
-        style={{ minWidth: 120 }}
       >
         {/* Profile Info (maintains flow width but invisible when buttons are visible on large screens) */}
         <div className={`flex items-center cursor-pointer transition-all duration-200 ${((isButtonsVisible && window.innerWidth >= 640) || isOpen) ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>

@@ -25,7 +25,7 @@ import AdminSidebar from "./Components/AdminSidebar.jsx";
 
 const ADMIN_CODE = import.meta.env.VITE_ADMIN_CODE;
 // Premium Solid Colors (No Gradients)
-const COLORS = ['#007bff', '#28a745', '#ffc107', '#dc3545', '#6f42c1', '#fd7e14', '#20c997', '#6c757d'];
+const COLORS = ['#6366f1', '#22d3ee', '#f59e0b', '#ef4444', '#a855f7', '#10b981', '#f97316', '#ec4899', '#3b82f6', '#84cc16', '#14b8a6', '#e879f9', '#facc15', '#fb923c'];
 
 // Utility function to load Google Fonts
 const loadGoogleFonts = () => {
@@ -550,10 +550,14 @@ const AdminDashboard = () => {
       experienceCounts[level] = (experienceCounts[level] || 0) + 1;
     });
 
-    return Object.entries(experienceCounts).map(([level, count]) => ({
-      name: level,
-      value: count
-    }));
+    const total = sessions.length || 1;
+    return Object.entries(experienceCounts)
+      .map(([level, count]) => ({
+        name: level,
+        value: count,
+        percentage: ((count / total) * 100).toFixed(1)
+      }))
+      .sort((a, b) => b.value - a.value);
   };
 
   const getQuestionsOverTime = () => {
@@ -637,7 +641,7 @@ const AdminDashboard = () => {
         minHeight: "100vh",
         boxSizing: "border-box",
         maxWidth: "calc(100vw - 80px)",
-        overflow: "hidden",
+        overflow: "auto",
         backgroundColor: "#000000" // Ensure background is solid black
       }}>
         {/* Connection Status removed from here as it is now in Sidebar */}
@@ -732,65 +736,377 @@ const AdminDashboard = () => {
                   gridTemplateColumns: "repeat(auto-fit, minmax(min(350px, 100%), 1fr))",
                   marginBottom: "1.5rem"
                 }}>
-                  <ChartCard title="User Registrations by Month" height="clamp(300px, 50vw, 400px)">
-                    {chartData.length > 0 ? (
-                      <ResponsiveContainer width="100%" height="100%" minHeight={300}>
-                        <PieChart>
-                          <Pie
-                            data={chartData}
-                            cx="50%"
-                            cy="50%"
-                            labelLine={false}
-                            label={({ percentage }) => `${percentage}%`}
-                            outerRadius="80%"
-                            dataKey="value"
-                          >
-                            {chartData.map((entry, index) => (
-                              <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                            ))}
-                          </Pie>
-                          <Tooltip
-                            contentStyle={{
-                              backgroundColor: "#000",
-                              border: "1px solid #333",
-                              borderRadius: "8px",
-                              color: "white"
-                            }}
-                          />
-                          <Legend />
-                        </PieChart>
-                      </ResponsiveContainer>
-                    ) : (
-                      <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: "100%" }}>
-                        <p style={{ color: "#ccc" }}>No data available</p>
-                      </div>
-                    )}
-                  </ChartCard>
+                  {/* Premium Pie Chart Card */}
+                  <Card style={{
+                    height: "100%",
+                    display: "flex",
+                    flexDirection: "column",
+                    overflow: "hidden",
+                    position: "relative",
+                    background: "linear-gradient(145deg, #0a0a0a 0%, #111 100%)",
+                  }}>
+                    {/* Card Header */}
+                    <div style={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                      marginBottom: "0.5rem",
+                      flexShrink: 0,
+                    }}>
+                      <h3 style={{
+                        color: "white",
+                        fontFamily: baseStyles.fontFamily,
+                        fontWeight: "600",
+                        fontSize: "clamp(1rem, 3vw, 1.2rem)",
+                        margin: 0,
+                      }}>
+                        User Registrations
+                      </h3>
+                      <span style={{
+                        fontSize: "0.75rem",
+                        color: "#666",
+                        fontFamily: baseStyles.fontFamily,
+                        background: "#1a1a1a",
+                        padding: "4px 10px",
+                        borderRadius: "20px",
+                        border: "1px solid #222",
+                      }}>
+                        By Month
+                      </span>
+                    </div>
 
-                  <ChartCard title="Sessions by Experience Level">
-                    {sessionData.length > 0 ? (
-                      <ResponsiveContainer width="100%" height="100%" minHeight={250}>
-                        <BarChart data={sessionData}>
-                          <CartesianGrid />
-                          <XAxis dataKey="name" tick={{}} />
-                          <YAxis tick={{}} />
-                          <Tooltip
-                            contentStyle={{
-                              backgroundColor: "#000",
-                              border: "1px solid #333",
-                              borderRadius: "8px",
-                              color: "white"
-                            }}
-                          />
-                          <Bar dataKey="value" fill="#007bff" />
-                        </BarChart>
-                      </ResponsiveContainer>
+                    {chartData.length > 0 ? (
+                      <>
+                        {/* Donut Chart */}
+                        <div style={{ width: "100%", height: "380px", position: "relative" }}>
+                          <ResponsiveContainer width="100%" height="100%">
+                            <PieChart>
+                              <Pie
+                                data={chartData}
+                                cx="50%"
+                                cy="50%"
+                                innerRadius="55%"
+                                outerRadius="80%"
+                                paddingAngle={2}
+                                dataKey="value"
+                                stroke="none"
+                                animationBegin={0}
+                                animationDuration={800}
+                                label={({ cx, cy, midAngle, innerRadius, outerRadius, percentage }) => {
+                                  if (parseFloat(percentage) < 5) return null;
+                                  const RADIAN = Math.PI / 180;
+                                  const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
+                                  const x = cx + radius * Math.cos(-midAngle * RADIAN);
+                                  const y = cy + radius * Math.sin(-midAngle * RADIAN);
+                                  return (
+                                    <text x={x} y={y} fill="#fff" textAnchor="middle" dominantBaseline="central"
+                                      style={{ fontSize: '11px', fontWeight: '600', fontFamily: "'Montserrat', sans-serif", textShadow: '0 1px 3px rgba(0,0,0,0.8)' }}>
+                                      {percentage}%
+                                    </text>
+                                  );
+                                }}
+                                labelLine={false}
+                              >
+                                {chartData.map((entry, index) => (
+                                  <Cell
+                                    key={`cell-${index}`}
+                                    fill={COLORS[index % COLORS.length]}
+                                    style={{ filter: "drop-shadow(0 0 3px rgba(0,0,0,0.3))" }}
+                                  />
+                                ))}
+                              </Pie>
+                              <Tooltip
+                                wrapperStyle={{ zIndex: 1000 }}
+                                content={({ active, payload }) => {
+                                  if (active && payload && payload.length) {
+                                    const data = payload[0].payload;
+                                    return (
+                                      <div style={{
+                                        background: "rgba(0,0,0,0.95)",
+                                        border: "1px solid #333",
+                                        borderRadius: "12px",
+                                        padding: "12px 16px",
+                                        backdropFilter: "blur(10px)",
+                                        minWidth: "140px",
+                                      }}>
+                                        <div style={{
+                                          display: "flex",
+                                          alignItems: "center",
+                                          gap: "8px",
+                                          marginBottom: "6px",
+                                        }}>
+                                          <div style={{
+                                            width: "10px",
+                                            height: "10px",
+                                            borderRadius: "50%",
+                                            background: payload[0].payload.fill || COLORS[0],
+                                            flexShrink: 0,
+                                          }} />
+                                          <span style={{
+                                            color: "#fff",
+                                            fontWeight: "600",
+                                            fontSize: "0.9rem",
+                                            fontFamily: baseStyles.fontFamily,
+                                          }}>
+                                            {data.name}
+                                          </span>
+                                        </div>
+                                        <div style={{
+                                          display: "flex",
+                                          justifyContent: "space-between",
+                                          alignItems: "baseline",
+                                          gap: "16px",
+                                        }}>
+                                          <span style={{ color: "#888", fontSize: "0.78rem" }}>Users</span>
+                                          <span style={{
+                                            color: "#fff",
+                                            fontWeight: "700",
+                                            fontSize: "1.1rem",
+                                            fontFamily: baseStyles.fontFamily,
+                                          }}>
+                                            {data.value}
+                                          </span>
+                                        </div>
+                                        <div style={{
+                                          display: "flex",
+                                          justifyContent: "space-between",
+                                          alignItems: "baseline",
+                                          gap: "16px",
+                                        }}>
+                                          <span style={{ color: "#888", fontSize: "0.78rem" }}>Share</span>
+                                          <span style={{
+                                            color: payload[0].payload.fill || COLORS[0],
+                                            fontWeight: "600",
+                                            fontSize: "0.95rem",
+                                          }}>
+                                            {data.percentage}%
+                                          </span>
+                                        </div>
+                                      </div>
+                                    );
+                                  }
+                                  return null;
+                                }}
+                              />
+                            </PieChart>
+                          </ResponsiveContainer>
+
+                          {/* Center Label */}
+                          <div style={{
+                            position: "absolute",
+                            top: "50%",
+                            left: "50%",
+                            transform: "translate(-50%, -50%)",
+                            textAlign: "center",
+                            pointerEvents: "none",
+                          }}>
+                            <div style={{
+                              fontSize: "clamp(1.8rem, 4vw, 2.4rem)",
+                              fontWeight: "700",
+                              color: "#fff",
+                              lineHeight: 1,
+                              fontFamily: baseStyles.fontFamily,
+                            }}>
+                              {users.length}
+                            </div>
+                            <div style={{
+                              fontSize: "0.7rem",
+                              color: "#666",
+                              fontWeight: "500",
+                              letterSpacing: "0.1em",
+                              textTransform: "uppercase",
+                              marginTop: "4px",
+                              fontFamily: baseStyles.fontFamily,
+                            }}>
+                              Total Users
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Custom Legend */}
+                        <div style={{
+                          display: "flex",
+                          flexWrap: "wrap",
+                          gap: "6px 12px",
+                          justifyContent: "center",
+                          padding: "8px 0 0",
+                          borderTop: "1px solid #1a1a1a",
+                          marginTop: "auto",
+                          maxHeight: "80px",
+                          overflowY: "auto",
+                        }}>
+                          {chartData.map((entry, index) => (
+                            <div key={entry.name} style={{
+                              display: "flex",
+                              alignItems: "center",
+                              gap: "5px",
+                              fontSize: "0.72rem",
+                              color: "#999",
+                              fontFamily: baseStyles.fontFamily,
+                              whiteSpace: "nowrap",
+                            }}>
+                              <div style={{
+                                width: "8px",
+                                height: "8px",
+                                borderRadius: "50%",
+                                background: COLORS[index % COLORS.length],
+                                flexShrink: 0,
+                              }} />
+                              <span>{entry.name}</span>
+                              <span style={{ color: "#555", fontWeight: "600" }}>
+                                {entry.value}
+                              </span>
+                            </div>
+                          ))}
+                        </div>
+                      </>
                     ) : (
-                      <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: "100%" }}>
-                        <p style={{ color: "#ccc" }}>No data available</p>
+                      <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: "100%", flex: 1 }}>
+                        <p style={{ color: "#555", fontSize: "0.9rem" }}>No registration data</p>
                       </div>
                     )}
-                  </ChartCard>
+                  </Card>
+
+                  {/* Premium Sessions by Experience Card */}
+                  <Card style={{
+                    height: "100%",
+                    display: "flex",
+                    flexDirection: "column",
+                    overflow: "hidden",
+                    position: "relative",
+                    background: "linear-gradient(145deg, #0a0a0a 0%, #111 100%)",
+                  }}>
+                    {/* Card Header */}
+                    <div style={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                      marginBottom: "1.2rem",
+                      flexShrink: 0,
+                    }}>
+                      <h3 style={{
+                        color: "white",
+                        fontFamily: baseStyles.fontFamily,
+                        fontWeight: "600",
+                        fontSize: "clamp(1rem, 3vw, 1.2rem)",
+                        margin: 0,
+                      }}>
+                        Experience Levels
+                      </h3>
+                      <span style={{
+                        fontSize: "0.75rem",
+                        color: "#666",
+                        fontFamily: baseStyles.fontFamily,
+                        background: "#1a1a1a",
+                        padding: "4px 10px",
+                        borderRadius: "20px",
+                        border: "1px solid #222",
+                      }}>
+                        {sessions.length} Sessions
+                      </span>
+                    </div>
+
+                    {sessionData.length > 0 ? (
+                      <div style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: "12px",
+                        flex: 1,
+                      }}>
+                        {(() => {
+                          const EXP_COLORS = {
+                            'Beginner': '#22d3ee',
+                            'Intermediate': '#a855f7',
+                            'Advanced': '#f59e0b',
+                            'Expert': '#ef4444',
+                            'Unknown': '#666',
+                          };
+                          const maxVal = Math.max(...sessionData.map(d => d.value));
+                          return sessionData.map((item, index) => {
+                            const barColor = EXP_COLORS[item.name] || COLORS[index % COLORS.length];
+                            return (
+                              <div key={item.name} style={{
+                                display: "flex",
+                                flexDirection: "column",
+                                gap: "6px",
+                              }}>
+                                {/* Label row */}
+                                <div style={{
+                                  display: "flex",
+                                  justifyContent: "space-between",
+                                  alignItems: "center",
+                                }}>
+                                  <div style={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                    gap: "8px",
+                                  }}>
+                                    <div style={{
+                                      width: "8px",
+                                      height: "8px",
+                                      borderRadius: "50%",
+                                      background: barColor,
+                                      flexShrink: 0,
+                                    }} />
+                                    <span style={{
+                                      color: "#ccc",
+                                      fontSize: "0.85rem",
+                                      fontWeight: "500",
+                                      fontFamily: baseStyles.fontFamily,
+                                    }}>
+                                      {item.name}
+                                    </span>
+                                  </div>
+                                  <div style={{
+                                    display: "flex",
+                                    alignItems: "baseline",
+                                    gap: "6px",
+                                  }}>
+                                    <span style={{
+                                      color: "#fff",
+                                      fontSize: "1rem",
+                                      fontWeight: "700",
+                                      fontFamily: baseStyles.fontFamily,
+                                    }}>
+                                      {item.value}
+                                    </span>
+                                    <span style={{
+                                      color: "#555",
+                                      fontSize: "0.75rem",
+                                      fontWeight: "500",
+                                    }}>
+                                      {item.percentage}%
+                                    </span>
+                                  </div>
+                                </div>
+                                {/* Progress bar */}
+                                <div style={{
+                                  width: "100%",
+                                  height: "6px",
+                                  borderRadius: "3px",
+                                  background: "#1a1a1a",
+                                  overflow: "hidden",
+                                }}>
+                                  <div style={{
+                                    height: "100%",
+                                    width: `${(item.value / maxVal) * 100}%`,
+                                    borderRadius: "3px",
+                                    background: `linear-gradient(90deg, ${barColor}, ${barColor}dd)`,
+                                    transition: "width 0.8s cubic-bezier(0.4, 0, 0.2, 1)",
+                                    boxShadow: `0 0 8px ${barColor}40`,
+                                  }} />
+                                </div>
+                              </div>
+                            );
+                          });
+                        })()}
+                      </div>
+                    ) : (
+                      <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: "100%", flex: 1 }}>
+                        <p style={{ color: "#555", fontSize: "0.9rem" }}>No session data</p>
+                      </div>
+                    )}
+                  </Card>
                 </div>
 
                 {/* Line Chart */}
@@ -802,6 +1118,7 @@ const AdminDashboard = () => {
                         <XAxis dataKey="name" tick={{ fill: 'white' }} />
                         <YAxis tick={{ fill: 'white' }} />
                         <Tooltip
+                          wrapperStyle={{ zIndex: 1000 }}
                           contentStyle={{
                             backgroundColor: "#000",
                             border: "1px solid #333",

@@ -51,7 +51,7 @@ export const StatsCard = ({ value, label, subtitle, color }) => (
 );
 
 export const ChartCard = ({ title, children, height = "clamp(250px, 40vw, 300px)" }) => (
-  <Card style={{ height: "100%", display: "flex", flexDirection: "column" }}>
+  <Card style={{ height: "100%", display: "flex", flexDirection: "column", overflow: "visible", position: "relative", zIndex: 1 }}>
     <h3 style={{
       color: "white",
       marginBottom: "1rem",
@@ -63,7 +63,7 @@ export const ChartCard = ({ title, children, height = "clamp(250px, 40vw, 300px)
     }}>
       {title}
     </h3>
-    <div style={{ width: "100%", flex: 1, minHeight: "250px", height: "100%" }}>
+    <div style={{ width: "100%", flex: 1, minHeight: "250px", height: "100%", overflow: "visible" }}>
       {children}
     </div>
   </Card>
